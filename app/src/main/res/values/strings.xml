@@ -1,0 +1,72 @@
+<resources>
+    <string name="app_name">SairaMedicalStore</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <!--
+    <string name="default_web_client_id" translatable="false">CHANGE-ME</string>
+-->
+    <string name="progress_dialog_authenticating_with_firebase">Authenticating with Firebase…</string>
+    <string name="title_activity_main">Saira</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+    <!-- Strings related to MainActivity -->
+    <string name="hint_search">Search</string>
+
+    <!-- Strings related to AddNewMedicine -->
+    <string name="title_activity_add_new_medicine">Add Medicine</string>
+    <string name="button_text_upload_medicine_image">Upload Image</string>
+    <string name="hint_medicine_name">Medicine Name</string>
+    <string name="hint_medicine_manufacturer_name">Manufacturer Name</string>
+    <string name="hint_medicine_composition">Composition</string>
+    <string name="hint_display_category">Display Category (Opt)</string>
+    <string name="hint_medicine_category">Category Name</string>
+    <string name="hint_medicine_type">Medicine Type</string>
+    <string name="hint_no_of_items_in_one_Pack">Items in one pack</string>
+    <string name="hint_price_per_pack">Price per Pack</string>
+    <string name="hint_is_medicine_availability">Availability</string>
+    <string name="hint_is_loose_medicine_available">Loose medicine availability</string>
+    <string name="save_medicine">Save Medicine</string>
+    <string-array name="availability_options">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+    <string-array name="availability_values">
+        <item>True</item>
+        <item>False</item>
+    </string-array>
+
+    <!-- Strings related to AddNewOffer -->
+    <string name="title_activity_add_new_offer">Create New Offer</string>
+    <string name="hint_offer_name">Offer Name</string>
+    <string name="hint_offer_description">Offer Description</string>
+    <string name="hint_offer_value">Offer Value</string>
+    <string name="hint_offer_valid_for_minimum_perches">Offer Valid For Minimum Perches</string>
+    <string name="hint_offer_maximum_discountable_amount">Maximum Discountable Amount</string>
+    <string-array name="offer_value_type_options">
+        <item>RS</item>
+        <item>%</item>
+    </string-array>
+    <string-array name="offer_value_type_values">
+        <item>RS</item>
+        <item>%</item>
+    </string-array>
+    <string-array name="boolean_options">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+    <string-array name="boolean_values">
+        <item>True</item>
+        <item>False</item>
+    </string-array>
+
+    <!-- Strings related to CreateOrUpdatePoster -->
+    <string name="hint_poster_name">Poster Name</string>
+    <string name="hint_poster_about">About Poster</string>
+
+
+</resources>

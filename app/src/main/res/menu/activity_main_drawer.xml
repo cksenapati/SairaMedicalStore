@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:title="Product Category">
+    <menu>
+        <item
+            android:id="@+id/nav_prescription_medicine"
+            android:icon="@drawable/prescription_icon"
+            android:title="Prescription medicines" />
+        <item
+            android:id="@+id/nav_over_the_counter_medicine"
+            android:icon="@drawable/otc_icon"
+            android:title="OTC" />
+        <item
+            android:id="@+id/nav_persional_care"
+            android:icon="@drawable/persional_care_icon"
+            android:title="Personal care" />
+    </menu>
+    </item>
+
+
+    <item android:title="Personal Info">
+    <menu>
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home_icon"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_my_profile"
+            android:icon="@drawable/my_profile_icon"
+            android:title="My Profile" />
+        <item
+            android:id="@+id/nav_my_prescriptions"
+            android:icon="@drawable/my_prescriptions_icon"
+            android:title="My Prescriptions" />
+        <item
+            android:id="@+id/nav_my_orders"
+            android:icon="@drawable/my_orders_icon"
+            android:title="My Orders" />
+        <item
+            android:id="@+id/nav_rate_us"
+            android:icon="@drawable/rate_us_icon"
+            android:title="Rate Saira" />
+        <item
+            android:id="@+id/nav_customer_support"
+            android:icon="@drawable/customer_support_icon"
+            android:title="Customer Support" />
+        <item
+            android:id="@+id/nav_sign_out"
+            android:icon="@drawable/sign_out_icon"
+            android:title="Sign Out" />
+    </menu>
+    </item>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>
+
+
+
+</menu>

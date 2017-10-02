@@ -1,0 +1,41 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linear_layout_login_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/background2"
+    tools:context=".ui.login.LoginActivity">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/regular_margin"
+        android:layout_marginTop="@dimen/regular_margin"
+        android:elevation="12dp"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:thicknessRatio="1.9"
+        app:cardCornerRadius="@dimen/corner_radius_big_logo">
+
+        <ImageView
+            android:id="@+id/imageview_logo_image"
+            android:layout_width="@dimen/big_logo_image_width"
+            android:layout_height="@dimen/big_logo_image_height"
+            android:src="@drawable/logo2" />
+
+
+
+    </android.support.v7.widget.CardView>
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/login_with_google"
+        android:background="@android:color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

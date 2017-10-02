@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@color/primary_light"
+    tools:context="com.example.android.sairamedicalstore.ui.search.SearchActivity"
+    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="8dp">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_dark"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/tw__solid_white"
+            android:gravity="center_horizontal"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+
+            android:layout_marginBottom="@dimen/extra_small_margin"
+            android:layout_marginLeft="@dimen/extra_small_margin"
+            android:layout_marginRight="@dimen/extra_small_margin">
+
+            <EditText
+                android:id="@+id/edit_text_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tw__solid_white"
+                android:drawableRight="@drawable/search_icon"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textEmailAddress"
+                android:padding="@dimen/double_extra_small_margin"
+                android:textColor="@color/secondary_text"
+                android:visibility="visible" />
+        </android.support.design.widget.TextInputLayout>
+
+
+    </android.support.design.widget.AppBarLayout>
+    <Button
+        android:id="@+id/button_add_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/extra_small_margin"
+        android:layout_marginRight="@dimen/extra_small_margin"
+        android:text="Add New Item"
+        android:onClick="onAddClick"
+        android:layout_below="@id/app_bar_layout"
+        />
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/extra_small_margin"
+        android:layout_below="@id/button_add_item"
+        >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_selected_items"
+            android:layout_below="@id/linear_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/button_done"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Done"
+            android:background="@color/tw__transparent"
+            android:padding="@dimen/extra_small_margin"
+            android:onClick="onDoneClick"
+            />
+    </LinearLayout>
+
+
+
+    <ListView
+        android:id="@+id/list_view_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/extra_small_margin"
+        android:layout_marginLeft="@dimen/extra_small_margin"
+        android:layout_marginRight="@dimen/extra_small_margin"
+        android:layout_below="@id/linear_layout">
+    </ListView>
+
+</RelativeLayout>

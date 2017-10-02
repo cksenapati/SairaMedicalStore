@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "742083180661",
+    "firebase_url": "https://sairamedicalstore-4b9c2.firebaseio.com",
+    "project_id": "sairamedicalstore-4b9c2",
+    "storage_bucket": "sairamedicalstore-4b9c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742083180661:android:648f4557d570eafb",
+        "android_client_info": {
+          "package_name": "com.example.android.sairamedicalstore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742083180661-k7tu2ee9pcdair1340e3lntjbhba2u9k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.sairamedicalstore",
+            "certificate_hash": "aa017bf164cb61de297a0dbcc4a77b84c161849f"
+          }
+        },
+        {
+          "client_id": "742083180661-vm6739mr76hohs4u70p2j09d21cv4evd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1NNEbFO1JCjHOu04h7kdgwFKGDlNsjIc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742083180661-vm6739mr76hohs4u70p2j09d21cv4evd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

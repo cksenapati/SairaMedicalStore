@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.android.sairamedicalstore.ui.CreateOrUpdateOfferActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_dark"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/colorPrimary"
+            android:gravity="center_horizontal"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_below="@id/app_bar_layout">
+
+        <LinearLayout
+            android:id="@+id/linear_layout_offer_details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edit_text_offer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/extra_small_margin"
+                android:background="@color/tw__solid_white"
+                android:hint="@string/hint_offer_name"
+                android:padding="@dimen/double_extra_small_margin"
+                />
+
+            <EditText
+                android:id="@+id/edit_text_offer_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/extra_small_margin"
+                android:background="@color/tw__solid_white"
+                android:hint="@string/hint_offer_description"
+                android:padding="@dimen/double_extra_small_margin"
+                />
+
+            <LinearLayout
+                android:id="@+id/linear_layout_offer_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/extra_small_margin"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/edit_text_offer_value"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:background="@color/tw__solid_white"
+                    android:hint="@string/hint_offer_value"
+                    android:inputType="numberDecimal"
+                    android:padding="@dimen/double_extra_small_margin"
+                    />
+                <Spinner
+                    android:id="@+id/spinner_offer_value_type"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/extra_small_margin"
+                    android:background="@color/tw__solid_white" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edit_text_offer_valid_for_min_perches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/extra_small_margin"
+                android:background="@color/tw__solid_white"
+                android:hint="@string/hint_offer_valid_for_minimum_perches"
+                android:inputType="numberDecimal"
+                android:padding="@dimen/double_extra_small_margin"
+                />
+
+            <EditText
+                android:id="@+id/edit_text_offer_maximum_discountable_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/extra_small_margin"
+                android:background="@color/tw__solid_white"
+                android:hint="@string/hint_offer_maximum_discountable_amount"
+                android:inputType="numberDecimal"
+                android:padding="@dimen/double_extra_small_margin"
+                />
+
+            <LinearLayout
+                android:id="@+id/linear_layout_offer_active"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/extra_small_margin"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary_text"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/small_text_size"
+                    android:text="Is Offer Active?"/>
+                <Spinner
+                    android:id="@+id/spinner_offer_active"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/extra_small_margin"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/tw__solid_white" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/text_view_create_or_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/extra_small_margin"
+        android:background="@color/primary_dark"
+        android:text="Create"
+        android:textColor="@color/tw__solid_white"
+        android:textSize="@dimen/regular_text_size"
+        android:onClick="onCreateOrUpdateClick"
+        android:gravity="center"
+        />
+
+</LinearLayout>
