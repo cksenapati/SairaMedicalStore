@@ -247,6 +247,12 @@ public class MainActivity extends AppCompatActivity
         startActivity(intentCreateNewOffer);
     }
 
+    public void onCreatePosterClick(View v)
+    {
+        Intent intentCreateNewPoster = new Intent(MainActivity.this, CreateOrUpdatePoster.class);
+        startActivity(intentCreateNewPoster);
+    }
+
     public void onSearchPosterClick()
     {
         Intent searchActivity = new Intent(MainActivity.this, SearchActivity.class);

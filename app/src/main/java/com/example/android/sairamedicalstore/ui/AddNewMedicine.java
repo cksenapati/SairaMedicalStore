@@ -291,8 +291,6 @@ public class AddNewMedicine extends AppCompatActivity {
         for( int i = 0; i < mLinearLayoutMainContent.getChildCount(); i++ ){
             View view = mLinearLayoutMainContent.getChildAt(i);
             if (view instanceof EditText) {
-                if(view.getId() == R.id.edit_text_display_category)
-
                 if(((EditText)view).getText().toString().trim().length() < 1 && view.getId() != R.id.edit_text_display_category)
                     return false;
             }
