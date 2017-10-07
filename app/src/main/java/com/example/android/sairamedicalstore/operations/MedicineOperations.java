@@ -18,8 +18,7 @@ import com.example.android.sairamedicalstore.models.DisplayCategory;
 import com.example.android.sairamedicalstore.models.DisplayProduct;
 import com.example.android.sairamedicalstore.models.Manufacturer;
 import com.example.android.sairamedicalstore.models.Medicine;
-import com.example.android.sairamedicalstore.models.MedicinePic;
-import com.example.android.sairamedicalstore.models.SelectedItem;
+import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.firebase.client.DataSnapshot;
@@ -31,8 +30,6 @@ import com.firebase.client.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static android.R.attr.category;
-
 /**
  * Created by chandan on 15-08-2017.
  */
@@ -41,7 +38,7 @@ public class MedicineOperations {
 
     Firebase mFirebaseAllMedicinesReference, mFirebaseAllManufacturerRef, mFirebaseAllCompositionsRef;
     User mCurrentUser;
-    ArrayList<MedicinePic> mArrayListDefaultMedicinePics;
+    ArrayList<DefaultKeyValuePair> mArrayListDefaultMedicinePics;
     Activity mActivity;
 
     public MedicineOperations(User currentUser,Activity callingActivity) {
@@ -50,7 +47,7 @@ public class MedicineOperations {
         this.mFirebaseAllManufacturerRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_MANUFACTURERS);
         this.mFirebaseAllCompositionsRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_COMPOSITIONS);
         mCurrentUser = currentUser;
-        mArrayListDefaultMedicinePics = new ArrayList<MedicinePic>();
+        mArrayListDefaultMedicinePics = new ArrayList<DefaultKeyValuePair>();
     }
 
     public void AddNewMedicine(final String medicineName, String medicineManufacturerName, String medicineComposition, String medicineCategory,
@@ -268,6 +265,7 @@ public class MedicineOperations {
         final Application sairaMedicalStoreApplication = mActivity.getApplication();
 
         Firebase allDefaultValuesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_DEFAULT_VALUES);
+
         Firebase defaultMedicinePics = allDefaultValuesRef.child(Constants.FIREBASE_PROPERTY_DEFAULT_MEDICINE_PICS);
         defaultMedicinePics.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -275,7 +273,7 @@ public class MedicineOperations {
                 if (dataSnapshot.exists()) {
                     mArrayListDefaultMedicinePics.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        MedicinePic pic = snapshot.getValue(MedicinePic.class);
+                        DefaultKeyValuePair pic = snapshot.getValue(DefaultKeyValuePair.class);
                         mArrayListDefaultMedicinePics.add(pic);
                     }
 

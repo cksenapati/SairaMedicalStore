@@ -8,8 +8,6 @@ import android.widget.Toast;
 
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
-import com.example.android.sairamedicalstore.models.Medicine;
-import com.example.android.sairamedicalstore.models.MedicinePic;
 import com.example.android.sairamedicalstore.models.Offer;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.utils.Constants;
@@ -18,10 +16,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ServerValue;
 import com.firebase.client.ValueEventListener;
-import com.firebase.client.realtime.util.StringListReader;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

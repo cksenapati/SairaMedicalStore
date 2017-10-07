@@ -10,13 +10,13 @@ import java.util.HashMap;
  */
 
 public class Poster {
-    String posterId,posterName,displayCategory,aboutPoster,posterImageURI,posterCreatedBy;
-    private HashMap<String, Object> timestampCreated,timestampLastUpdate;
+    String posterId,posterName,displayCategory,posterImageURI,posterCreatedBy;
+    private HashMap<String, Object> timestampCreated,timestampLastUpdate,aboutPoster;
 
     public Poster() {
     }
 
-    public Poster(String posterId, String posterName, String displayCategory, String aboutPoster, String posterImageURI, String posterCreatedBy, HashMap<String, Object> timestampCreated, HashMap<String, Object> timestampLastUpdate) {
+    public Poster(String posterId, String posterName, String displayCategory, HashMap<String, Object> aboutPoster, String posterImageURI, String posterCreatedBy, HashMap<String, Object> timestampCreated, HashMap<String, Object> timestampLastUpdate) {
         this.posterId = posterId;
         this.posterName = posterName;
         this.displayCategory = displayCategory;
@@ -51,11 +51,11 @@ public class Poster {
         this.displayCategory = displayCategory;
     }
 
-    public String getAboutPoster() {
+    public HashMap<String, Object> getAboutPoster() {
         return aboutPoster;
     }
 
-    public void setAboutPoster(String aboutPoster) {
+    public void setAboutPoster(HashMap<String, Object> aboutPoster) {
         this.aboutPoster = aboutPoster;
     }
 

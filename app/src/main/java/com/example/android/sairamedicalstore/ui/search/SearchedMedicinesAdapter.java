@@ -9,15 +9,12 @@ import com.bumptech.glide.Glide;
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Medicine;
-import com.example.android.sairamedicalstore.models.MedicinePic;
+import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
 import com.example.android.sairamedicalstore.utils.Utils;
-import com.firebase.client.Firebase;
 import com.firebase.client.Query;
 import com.firebase.ui.FirebaseListAdapter;
 
 import java.util.ArrayList;
-
-import static android.R.attr.x;
 
 /**
  * Created by chandan on 17-08-2017.
@@ -25,7 +22,7 @@ import static android.R.attr.x;
 
 public class SearchedMedicinesAdapter extends FirebaseListAdapter<Medicine> {
 
-    ArrayList<MedicinePic> mArrayListDefaultMedicinePics;
+    ArrayList<DefaultKeyValuePair> mArrayListDefaultMedicinePics;
 
     public SearchedMedicinesAdapter(Activity activity,Class<Medicine> modelClass, int modelLayout, Query ref) {
         super(activity,modelClass, modelLayout, ref);
@@ -65,10 +62,10 @@ public class SearchedMedicinesAdapter extends FirebaseListAdapter<Medicine> {
         if(imageUrl.equals("default"))
         {
             for (int i = 0; i < mArrayListDefaultMedicinePics.size(); i++) {
-                if(mArrayListDefaultMedicinePics.get(i).getMedicineType().equals(medicineType))
-                    return mArrayListDefaultMedicinePics.get(i).getPicUrl();
+                if(mArrayListDefaultMedicinePics.get(i).getKey().equals(medicineType))
+                    return mArrayListDefaultMedicinePics.get(i).getValue();
             }
-            return mArrayListDefaultMedicinePics.get(0).getPicUrl();
+            return mArrayListDefaultMedicinePics.get(0).getValue();
         }
         else
             return imageUrl;

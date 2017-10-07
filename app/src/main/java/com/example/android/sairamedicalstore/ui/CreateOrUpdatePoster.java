@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.android.sairamedicalstore.R;
+import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
+import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
 import com.example.android.sairamedicalstore.models.Poster;
 import com.example.android.sairamedicalstore.operations.PosterOperations;
 import com.example.android.sairamedicalstore.utils.Constants;
@@ -30,9 +32,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import static android.R.attr.key;
 
 public class CreateOrUpdatePoster extends AppCompatActivity {
 
@@ -49,8 +54,10 @@ public class CreateOrUpdatePoster extends AppCompatActivity {
     private static final int RC_PHOTO_PICKER =  1;
     String mCurrentPosterId;
     Poster mCurrentPoster;
-    Uri mCurrentPosterImageURI;
+    public static Uri mCurrentPosterImageURI;
     String mCurrentPosterImageDownloadUrl;
+
+    ArrayList<DefaultKeyValuePair> mArrayListCommonDefaultValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +116,6 @@ public class CreateOrUpdatePoster extends AppCompatActivity {
 
             }
         });
-
-
 
     }
 
@@ -246,9 +251,6 @@ public class CreateOrUpdatePoster extends AppCompatActivity {
             operation.CreateNewPoster(mCurrentPosterImageURI,mEditTextPosterName.getText().toString().toUpperCase(),
                     null,getAllAboutPoster(),mCurrentPosterImageDownloadUrl);
         }
-        else
-            Toast.makeText(this,"Fields can't be empty",Toast.LENGTH_SHORT).show();
-
     }
 
     private HashMap<String, Object> getAllAboutPoster()
@@ -271,8 +273,14 @@ public class CreateOrUpdatePoster extends AppCompatActivity {
 
     private boolean validateAllEditTextFields()
     {
-        if(mEditTextPosterName.getText().toString().trim().length() < 1)
+        if(mEditTextPosterName.getText().toString().trim().length() < 1) {
+            Toast.makeText(this,"Fields can't be empty",Toast.LENGTH_SHORT).show();
             return false;
+        }
+        if(mCurrentPosterImageURI == null) {
+            Toast.makeText(this,"Upload a photo",Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
         for( int i = 0; i < mLinearLayoutAboutPoster.getChildCount(); i++ ){
             View view = mLinearLayoutAboutPoster.getChildAt(i);
@@ -282,6 +290,7 @@ public class CreateOrUpdatePoster extends AppCompatActivity {
             }
         }
 
+        Toast.makeText(this,"Fields can't be empty",Toast.LENGTH_SHORT).show();
         return false;
     }
 }

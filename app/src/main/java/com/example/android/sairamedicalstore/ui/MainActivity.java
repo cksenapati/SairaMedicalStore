@@ -30,6 +30,7 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.DisplayProduct;
+import com.example.android.sairamedicalstore.models.Poster;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.models.item;
 import com.example.android.sairamedicalstore.ui.search.SearchActivity;
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity
 
     User mCurrentUser;
 
+    Firebase mFirebaseAllPostersRef;
+
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
@@ -74,43 +77,12 @@ public class MainActivity extends AppCompatActivity
 
         initializeScreen();
 
-
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-
-        HashMap<String,String> url_maps = new HashMap<String, String>();
-        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
-        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
-
-        /*HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
-        file_maps.put("Hannibal",R.drawable.hannibal);
-        file_maps.put("Big Bang Theory",R.drawable.bigbang);
-        file_maps.put("House of Cards",R.drawable.house);
-        file_maps.put("Game of Thrones", R.drawable.game_of_thrones);*/
-
-        for(String name : url_maps.keySet()) {
-            TextSliderView textSliderView = new TextSliderView(this);
-            // initialize a SliderLayout
-            textSliderView
-                    .description(name)
-                    .image(url_maps.get(name))
-                    .setScaleType(BaseSliderView.ScaleType.Fit);
-                    //.setOnSliderClickListener(this);
-
-            //add your extra information
-            textSliderView.bundle(new Bundle());
-            textSliderView.getBundle()
-                    .putString("extra", name);
-
-            mDemoSlider.addSlider(textSliderView);
-        }
-
+        setPosterSliders();
         setDisplayCategories();
 
         mEditTextSearchMedicine.setOnClickListener(new View.OnClickListener() {
@@ -226,6 +198,8 @@ public class MainActivity extends AppCompatActivity
         mButtonAddNewMedicine = (Button) headerView.findViewById(R.id.button_add_new_medicine);
         mLinearLayoutForRecyclerView = (LinearLayout) findViewById(R.id.linear_layout_for_recycler_view);
         mArrayListDisplayProduct = new ArrayList<DisplayProduct>();
+
+        mFirebaseAllPostersRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_POSTERS);
     }
 
     private void setProfilePic()
@@ -288,6 +262,8 @@ public class MainActivity extends AppCompatActivity
                         RecyclerView.Adapter adapter = new DisplayProductsAdapter(arrayListDisplayProducts,MainActivity.this);
                         recyclerView.setAdapter(adapter);
 
+
+
                         mLinearLayoutForRecyclerView.addView(recyclerView);
 
                     }
@@ -303,7 +279,80 @@ public class MainActivity extends AppCompatActivity
 
     public void setPosterSliders()
     {
+        mFirebaseAllPostersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    int count =0;
+                    for (DataSnapshot snapshot:dataSnapshot.getChildren()) {
+                        Poster eachPoster = snapshot.getValue(Poster.class);
+                        if(eachPoster != null)
+                        {
+                            count++;
+                            TextSliderView textSliderView = new TextSliderView(MainActivity.this);
+                            // initialize a SliderLayout
+                            textSliderView
+                                    .description(eachPoster.getPosterName())
+                                    .image(eachPoster.getPosterImageURI())
+                                    .setScaleType(BaseSliderView.ScaleType.Fit);
+                            //.setOnSliderClickListener(this);
 
+                            //add your extra information
+                            /*textSliderView.bundle(new Bundle());
+                            textSliderView.getBundle()
+                                    .putString("extra", name);*/
+
+                            mDemoSlider.addSlider(textSliderView);
+                        }
+                    }
+                    if(count <= 0)
+                        mDemoSlider.setVisibility(View.GONE);
+                    else
+                        mDemoSlider.setVisibility(View.VISIBLE);
+                }
+                else
+                    mDemoSlider.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+
+        /*HashMap<String,String> url_maps = new HashMap<String, String>();
+        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
+        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
+        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
+        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
+
+        *//*HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
+        file_maps.put("Hannibal",R.drawable.hannibal);
+        file_maps.put("Big Bang Theory",R.drawable.bigbang);
+        file_maps.put("House of Cards",R.drawable.house);
+        file_maps.put("Game of Thrones", R.drawable.game_of_thrones);*//*
+
+        for(String name : url_maps.keySet()) {
+            TextSliderView textSliderView = new TextSliderView(this);
+            // initialize a SliderLayout
+            textSliderView
+                    .description(name)
+                    .image(url_maps.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit);
+            //.setOnSliderClickListener(this);
+
+            //add your extra information
+            textSliderView.bundle(new Bundle());
+            textSliderView.getBundle()
+                    .putString("extra", name);
+
+            mDemoSlider.addSlider(textSliderView);
+        }
+*/
     }
 
 }

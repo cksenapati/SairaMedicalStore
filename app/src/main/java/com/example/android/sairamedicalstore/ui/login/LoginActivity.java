@@ -10,10 +10,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
+import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.operations.MedicineOperations;
 import com.example.android.sairamedicalstore.ui.MainActivity;
@@ -262,6 +264,35 @@ public class LoginActivity extends AppCompatActivity {
     {
         MedicineOperations obj = new MedicineOperations(loggedinUser,this);
         obj.getAllDefaultValues();
+
+        final Application sairaMedicalStoreApplication = this.getApplication();
+        final ArrayList<DefaultKeyValuePair> mArrayListCommonDefaultValues = new ArrayList<>();
+        Firebase allDefaultValuesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_DEFAULT_VALUES);
+
+        Firebase commonDefaultValues = allDefaultValuesRef.child(Constants.FIREBASE_PROPERTY_COMMON_DEFAULT_VALUES);
+        commonDefaultValues.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        DefaultKeyValuePair defaultKeyValuePair = snapshot.getValue(DefaultKeyValuePair.class);
+                        if(defaultKeyValuePair != null)
+                        {
+                            mArrayListCommonDefaultValues.add(defaultKeyValuePair);
+                        }
+                    }
+
+                    ((SairaMedicalStoreApplication) sairaMedicalStoreApplication).
+                            setArrayListCommonDefaultValues(mArrayListCommonDefaultValues);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
+
 }
 

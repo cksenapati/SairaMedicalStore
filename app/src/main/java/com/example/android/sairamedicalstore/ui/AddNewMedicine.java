@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
-import com.example.android.sairamedicalstore.models.MedicinePic;
+import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.operations.MedicineOperations;
 import com.example.android.sairamedicalstore.ui.search.SearchActivity;
@@ -39,7 +39,7 @@ public class AddNewMedicine extends AppCompatActivity {
     MedicineOperations operationObject;
     String mMedicineImageUrl;
     ArrayList<String> mArrayListMedicineCategories, mArrayListMedicineTypes;
-    ArrayList<MedicinePic>  mArrayListDefaultMedicinePics;
+    ArrayList<DefaultKeyValuePair>  mArrayListDefaultMedicinePics;
 
     private static final int RC_COMPOSITION_PICKER = 1;
     private static final int RC_MANUFACTURER_PICKER = 2;
@@ -70,7 +70,7 @@ public class AddNewMedicine extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Glide.with(mImageViewMedicineImage.getContext())
-                        .load(mArrayListDefaultMedicinePics.get(getIndexFromArrayList(mSpinnerMedicineType.getSelectedItem().toString())).getPicUrl())
+                        .load(mArrayListDefaultMedicinePics.get(getIndexFromArrayList(mSpinnerMedicineType.getSelectedItem().toString())).getValue())
                         .into(mImageViewMedicineImage);
             }
 
@@ -181,7 +181,7 @@ public class AddNewMedicine extends AppCompatActivity {
 
         mArrayListMedicineCategories = new ArrayList<String>();
         mArrayListMedicineTypes = new ArrayList<String>();
-        mArrayListDefaultMedicinePics = new ArrayList<MedicinePic>();
+        mArrayListDefaultMedicinePics = new ArrayList<DefaultKeyValuePair>();
 
         mMedicineImageUrl = "default";
     }
@@ -213,7 +213,7 @@ public class AddNewMedicine extends AppCompatActivity {
                     selectedAvailabilityValue, selectedLooseAvailabilityValue);
 
             Glide.with(mImageViewMedicineImage.getContext())
-                    .load(mArrayListDefaultMedicinePics.get(getIndexFromArrayList(mSpinnerMedicineType.getSelectedItem().toString())).getPicUrl())
+                    .load(mArrayListDefaultMedicinePics.get(getIndexFromArrayList(mSpinnerMedicineType.getSelectedItem().toString())).getValue())
                     .into(mImageViewMedicineImage);
         }
         else
@@ -273,7 +273,7 @@ public class AddNewMedicine extends AppCompatActivity {
 
                     //set default pic as capsule as spineer's default value is capsule
                     Glide.with(mImageViewMedicineImage.getContext())
-                            .load(mArrayListDefaultMedicinePics.get(getIndexFromArrayList(mSpinnerMedicineType.getSelectedItem().toString())).getPicUrl())
+                            .load(mArrayListDefaultMedicinePics.get(getIndexFromArrayList(mSpinnerMedicineType.getSelectedItem().toString())).getValue())
                             .into(mImageViewMedicineImage);
                 }
             }
@@ -302,7 +302,7 @@ public class AddNewMedicine extends AppCompatActivity {
     private int getIndexFromArrayList(String key)
     {
         for (int i = 0; i < mArrayListDefaultMedicinePics.size(); i++) {
-            if(mArrayListDefaultMedicinePics.get(i).getMedicineType().equals(key))
+            if(mArrayListDefaultMedicinePics.get(i).getKey().equals(key))
                 return i;
         }
 

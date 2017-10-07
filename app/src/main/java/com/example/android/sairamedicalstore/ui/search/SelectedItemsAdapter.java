@@ -8,11 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.android.sairamedicalstore.R;
-import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
-import com.example.android.sairamedicalstore.models.DisplayProduct;
-import com.example.android.sairamedicalstore.models.MedicinePic;
 import com.example.android.sairamedicalstore.models.SelectedItem;
 
 import java.util.ArrayList;

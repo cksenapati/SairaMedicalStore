@@ -7,17 +7,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.android.sairamedicalstore.R;
-import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
-import com.example.android.sairamedicalstore.models.Medicine;
-import com.example.android.sairamedicalstore.models.MedicinePic;
 import com.example.android.sairamedicalstore.models.Poster;
 import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.Query;
 import com.firebase.ui.FirebaseListAdapter;
-
-import java.util.ArrayList;
-
-import retrofit2.http.POST;
 
 /**
  * Created by chandan on 17-08-2017.

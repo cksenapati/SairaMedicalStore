@@ -125,11 +125,11 @@
                 android:layout_gravity="center"/>
 
             <Button
-                android:id="@+id/button_create_search_poster"
+                android:id="@+id/button_create_create_poster"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Search poster"
-                android:onClick="onSearchPosterClick"
+                android:text="Create poster"
+                android:onClick="onCreatePosterClick"
                 android:layout_gravity="center"/>
 
             <android.support.design.widget.FloatingActionButton

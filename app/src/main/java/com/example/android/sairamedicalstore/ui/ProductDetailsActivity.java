@@ -10,14 +10,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Medicine;
-import com.example.android.sairamedicalstore.models.MedicinePic;
+import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -34,7 +33,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     Medicine mCurrentMedicine;
     String mMedicineId,mUserType;
-    ArrayList<MedicinePic> mArrayListDefaultMedicinePics;
+    ArrayList<DefaultKeyValuePair> mArrayListDefaultMedicinePics;
     ArrayList<Integer> mArrayListQuantity;
     int noOfItemsSelected;
     double priceForSelectedNoOfItems;
@@ -210,8 +209,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
         if(imageUrl.equals("default"))
         {
             for (int i = 0; i < mArrayListDefaultMedicinePics.size(); i++) {
-                if(mArrayListDefaultMedicinePics.get(i).getMedicineType().equals(medicineType)) {
-                    imageUrl = mArrayListDefaultMedicinePics.get(i).getPicUrl();
+                if(mArrayListDefaultMedicinePics.get(i).getKey().equals(medicineType)) {
+                    imageUrl = mArrayListDefaultMedicinePics.get(i).getValue();
                     break;
                 }
             }

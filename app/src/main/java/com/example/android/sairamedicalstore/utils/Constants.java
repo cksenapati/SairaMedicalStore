@@ -17,6 +17,8 @@ public final class Constants {
     public static final String FIREBASE_PROPERTY_POSTER_NAME = "posterName";
     public static final String FIREBASE_PROPERTY_PIC_URL = "picUrl";
     public static final String FIREBASE_PROPERTY_DEFAULT_MEDICINE_PICS = "defaultMedicinePics";
+    public static final String FIREBASE_PROPERTY_COMMON_DEFAULT_VALUES = "commonDefaultValues";
+
 
     public static final String FIREBASE_LOCATION_ALL_USERS = "allUsers";
     public static final String FIREBASE_LOCATION_All_MEDICINES = "allMedicines";

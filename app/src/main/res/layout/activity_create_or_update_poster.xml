@@ -57,7 +57,7 @@
                     android:id="@+id/image_view_poster_image"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
-                    android:src="@drawable/bigbang"
+                    android:src="@drawable/upload_image"
                     />
                 <ImageView
                     android:id="@+id/image_view_edit_poster_icon"
