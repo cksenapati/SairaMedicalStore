@@ -212,6 +212,7 @@ public class CreateOrUpdatePoster extends AppCompatActivity {
 
     private void setPosterDetails()
     {
+        mCurrentPosterImageDownloadUrl = mCurrentPoster.getPosterImageURI();
         Glide.with(mImageViewPosterImage.getContext())
                 .load(mCurrentPoster.getPosterImageURI())
                 .into(mImageViewPosterImage);
@@ -227,8 +228,13 @@ public class CreateOrUpdatePoster extends AppCompatActivity {
             else{
                 EditText myEditText = new EditText(this);
                 myEditText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)); // Pass two args; must be LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, or an integer pixel value.
-                myEditText.setHint("About Poster");
-                myEditText.setPadding(7,7,7,7);
+
+                int padding_in_dp = 7;
+                final float scale = getResources().getDisplayMetrics().density;
+                int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
+
+                myEditText.setPadding(padding_in_px,padding_in_px,padding_in_px,padding_in_px);
+
                 myEditText.setBackgroundResource(R.color.tw__solid_white);
                 myEditText.setText(entry.getValue().toString());
 
@@ -248,8 +254,14 @@ public class CreateOrUpdatePoster extends AppCompatActivity {
         if(validateAllEditTextFields())
         {
             PosterOperations operation = new PosterOperations(this);
+            if(mCurrentPosterId == null)
             operation.CreateNewPoster(mCurrentPosterImageURI,mEditTextPosterName.getText().toString().toUpperCase(),
                     null,getAllAboutPoster(),mCurrentPosterImageDownloadUrl);
+            else {
+                operation.UpdateOldPoster(mCurrentPosterId, mCurrentPosterImageURI, mEditTextPosterName.getText().toString().toUpperCase(),
+                        null, getAllAboutPoster(), mCurrentPosterImageDownloadUrl);
+                finish();
+            }
         }
     }
 
@@ -277,7 +289,7 @@ public class CreateOrUpdatePoster extends AppCompatActivity {
             Toast.makeText(this,"Fields can't be empty",Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(mCurrentPosterImageURI == null) {
+        if(mCurrentPosterImageDownloadUrl == null) {
             Toast.makeText(this,"Upload a photo",Toast.LENGTH_SHORT).show();
             return false;
         }

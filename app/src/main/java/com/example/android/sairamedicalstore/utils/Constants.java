@@ -31,6 +31,10 @@ public final class Constants {
     public static final String FIREBASE_LOCATION_All_COMPOSITIONS = "allCompositions";
     public static final String FIREBASE_LOCATION_All_OFFERS = "allOffers";
     public static final String FIREBASE_LOCATION_All_POSTERS = "allPosters";
+    public static final String FIREBASE_LOCATION_All_CARTS = "allCarts";
+    public static final String FIREBASE_LOCATION_All_PRESCRIPTIONS = "allPrescriptions";
+
+
 
 
     public static final String FIREBASE_URL = "https://sairamedicalstore-4b9c2.firebaseio.com/";
@@ -45,12 +49,17 @@ public final class Constants {
     public static final String FIREBASE_URL_SAIRA_All_COMPOSITIONS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_COMPOSITIONS;
     public static final String FIREBASE_URL_SAIRA_All_OFFERS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_OFFERS;
     public static final String FIREBASE_URL_SAIRA_All_POSTERS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_POSTERS;
+    public static final String FIREBASE_URL_SAIRA_All_CARTS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_CARTS;
+    public static final String FIREBASE_URL_SAIRA_All_PRESCRIPTIONS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_PRESCRIPTIONS;
 
 
     public static final String USER_TYPE_END_USER = "endUser";
     public static final String USER_TYPE_DEVELOPER = "developer";
     public static final String USER_TYPE_EMPLOYEE = "employee";
     public static final String USER_TYPE_OWNER = "owner";
+
+    public static final String MEDICINE_CATEGORY_PRESCRIPTION = "Prescription";
+    public static final String MEDICINE_CATEGORY_OTC = "Over the counter";
 
     public static final String MEDICINE_TYPE_CAPSULE = "Capsule";
     public static final String MEDICINE_TYPE_TABLET = "Tablet";
@@ -65,7 +74,9 @@ public final class Constants {
 
 
     public static final String UPLOAD_SUCCESSFUL = "Upload successful";
+    public static final String UPDATE_SUCCESSFUL = "Update successful";
     public static final String UPLOAD_FAIL = "Upload failed";
+    public static final String UPDATE_FAIL = "Update failed";
     public static final String ITEM_ALREADY_EXISTS = "Item already exists..Upload failed";
 
 

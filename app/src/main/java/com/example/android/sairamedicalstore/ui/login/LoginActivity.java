@@ -222,6 +222,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+
     private void gotoMainActivity(final String encodedEmail)
     {
         Firebase mCurrentUserRef = new Firebase(Constants.FIREBASE_URL_SAIRA_ALL_USERS).child(encodedEmail);

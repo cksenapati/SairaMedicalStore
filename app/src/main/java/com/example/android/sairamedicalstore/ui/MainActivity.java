@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity
         startActivity(intentCreateNewPoster);
     }
 
-    public void onSearchPosterClick()
+    public void onSearchPosterClick(View view)
     {
         Intent searchActivity = new Intent(MainActivity.this, SearchActivity.class);
         searchActivity.putExtra("whatToSearch",Constants.SEARCH_POSTER);
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity
                 {
                     int count =0;
                     for (DataSnapshot snapshot:dataSnapshot.getChildren()) {
-                        Poster eachPoster = snapshot.getValue(Poster.class);
+                        final Poster eachPoster = snapshot.getValue(Poster.class);
                         if(eachPoster != null)
                         {
                             count++;
@@ -295,9 +295,17 @@ public class MainActivity extends AppCompatActivity
                             textSliderView
                                     .description(eachPoster.getPosterName())
                                     .image(eachPoster.getPosterImageURI())
-                                    .setScaleType(BaseSliderView.ScaleType.Fit);
-                            //.setOnSliderClickListener(this);
+                                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                                    .setOnSliderClickListener(MainActivity.this);
 
+                            textSliderView.setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+                                @Override
+                                public void onSliderClick(BaseSliderView slider) {
+                                    Intent searchActivity = new Intent(MainActivity.this, PosterDetailsActivity.class);
+                                    searchActivity.putExtra("posterId",eachPoster.getPosterId());
+                                    startActivity(searchActivity);
+                                }
+                            });
                             //add your extra information
                             /*textSliderView.bundle(new Bundle());
                             textSliderView.getBundle()

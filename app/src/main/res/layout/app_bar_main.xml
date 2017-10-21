@@ -93,12 +93,12 @@
                 custom:pager_animation="Accordion"
                 custom:pager_animation_span="1100" />
 
-            <android.support.v7.widget.RecyclerView
+            <!--<android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            </android.support.v7.widget.RecyclerView>
+            </android.support.v7.widget.RecyclerView>-->
 
             <LinearLayout
                 android:id="@+id/linear_layout_for_recycler_view"
@@ -125,11 +125,19 @@
                 android:layout_gravity="center"/>
 
             <Button
-                android:id="@+id/button_create_create_poster"
+                android:id="@+id/button_create_poster"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Create poster"
                 android:onClick="onCreatePosterClick"
+                android:layout_gravity="center"/>
+
+            <Button
+                android:id="@+id/button_search_poster"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search poster"
+                android:onClick="onSearchPosterClick"
                 android:layout_gravity="center"/>
 
             <android.support.design.widget.FloatingActionButton

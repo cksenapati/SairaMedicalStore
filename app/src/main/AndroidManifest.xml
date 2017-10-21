@@ -13,7 +13,7 @@
     <application
         android:name=".SairaMedicalStoreApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo2"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -33,7 +33,11 @@
         <activity android:name=".ui.search.SearchActivity" />
         <activity android:name=".ui.ProductDetailsActivity" />
         <activity android:name=".ui.CreateOrUpdateOfferActivity" />
-        <activity android:name=".ui.CreateOrUpdatePoster"></activity>
+        <activity android:name=".ui.CreateOrUpdatePoster" />
+        <activity android:name=".ui.PosterDetailsActivity" />
+        <activity android:name=".ui.CartActivity" />
+        <activity android:name=".ui.PrescriptionsActivity" />
+        <activity android:name=".ui.AddNewPrescriptionActivity"></activity>
     </application>
 
 </manifest>

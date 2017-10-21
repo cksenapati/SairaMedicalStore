@@ -15,15 +15,20 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
+import com.example.android.sairamedicalstore.models.Cart;
 import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
+import com.example.android.sairamedicalstore.models.User;
+import com.example.android.sairamedicalstore.operations.CartOperations;
 import com.example.android.sairamedicalstore.utils.Constants;
+import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static android.media.CamcorderProfile.get;
 
@@ -31,6 +36,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     Firebase mFirebaseAllProductRef, mFirebaseCurrentMedicineRef;
 
+    User mCurrentUser;
+    Cart mCurrentCart;
     Medicine mCurrentMedicine;
     String mMedicineId,mUserType;
     ArrayList<DefaultKeyValuePair> mArrayListDefaultMedicinePics;
@@ -42,7 +49,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
     ImageView mImageViewSearch,mImageViewCart,mImageViewCloseOffers,mImageViewProduct;
     LinearLayout mLinearLayoutOffers,mLinearLayoutPricing,mLinearLayoutProductDetails,mLinearLayoutProductInfo;
     TextView mTextViewOffers,mTextViewProductName,mTextViewProductManufacturer,mTextViewProductComposition,mTextViewProductPricePerUnit,
-             mTextViewAvailability,mTextViewPriceForSelectedQuantity,mTextViewSubstitute,mTextViewAddToCart;
+             mTextViewAvailability,mTextViewPriceForSelectedQuantity,mTextViewSubstitute;
+    public static TextView mTextViewAddToCart;
     Spinner mSpinnerQuantity;
     ProgressBar mProgressBarFetchingData;
 
@@ -55,11 +63,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
         if (intent != null) {
             mMedicineId = intent.getStringExtra("medicineId");
         }
+        mCurrentUser = ((SairaMedicalStoreApplication) this.getApplication()).getCurrentUser();
         mUserType = ((SairaMedicalStoreApplication) this.getApplication()).getUserType();
 
         initializeScreen();
         mArrayListDefaultMedicinePics = ((SairaMedicalStoreApplication) this.getApplication()).getArrayListDefaultMedicinePics();
-
 
         getProduct();
     }
@@ -124,6 +132,43 @@ public class ProductDetailsActivity extends AppCompatActivity {
         });
     }
 
+    public void setAddToCartText()
+    {
+        String encodedEmail = Utils.encodeEmail(mCurrentUser.getEmail());
+
+        final Firebase firebaseCurrentCartRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_CARTS).child(encodedEmail);
+        firebaseCurrentCartRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    mCurrentCart = dataSnapshot.getValue(Cart.class);
+                    mTextViewAddToCart.setText("Add to cart");
+
+                    if(mCurrentCart != null && mCurrentCart.getProductIdAndItemCount() != null)
+                    {
+                        for (Map.Entry<String, Integer> eachProduct : mCurrentCart.getProductIdAndItemCount().entrySet())
+                        {
+                            if(eachProduct.getKey().equals(mCurrentMedicine.getMedicineId())) {
+                                mTextViewAddToCart.setText("Go to cart");
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    mTextViewAddToCart.setText("Add to cart");
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                mTextViewAddToCart.setText("Add to cart");
+            }
+        });
+    }
+
     private void displayDataForCustomer()
     {
 
@@ -135,7 +180,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 Integer.toString(mCurrentMedicine.getNoOfItemsInOnePack()) +" "+ mCurrentMedicine.getMedicineType() +"(s)");
 
         setAvailability();
-
+        setAddToCartText();
     }
 
 
@@ -222,5 +267,20 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 .into(mImageViewProduct);
     }
 
+
+    public void onAddToCartClick(View view)
+    {
+        if(mTextViewAddToCart.getText().equals("Add to cart"))
+        {
+            CartOperations obj = new CartOperations(this);
+            obj.AddNewProductToCart(mCurrentMedicine.getMedicineId(),noOfItemsSelected);
+        }
+        else
+        {
+            Intent cartIntent = new Intent(this,CartActivity.class);
+            startActivity(cartIntent);
+
+        }
+    }
 
 }

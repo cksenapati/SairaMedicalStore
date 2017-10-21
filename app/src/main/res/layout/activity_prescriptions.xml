@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/primary_light"
+    tools:context="com.example.android.sairamedicalstore.ui.PrescriptionsActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_dark"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/colorPrimary"
+            android:gravity="center_horizontal"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:id="@+id/text_view_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Select Prescriptions"
+                android:textColor="@color/tw__solid_white"
+                android:textSize="@dimen/small_text_size" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/text_view_prescription_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/extra_small_margin"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/regular_text_size"/>
+        <ImageView
+            android:id="@+id/image_view_prescription_selection_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/extra_small_margin"
+            android:src="@drawable/ic_check_48"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/image_view_prescription"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/text_view_no_prescriptions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="@dimen/large_text_size"
+        android:text="No Prescriptions"/>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_for_prescriptions_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_margin="@dimen/extra_small_margin"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/image_view_upload_new_prescription"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_upload_prescription_24"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/primary_text"
+                android:text="NEW"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
+

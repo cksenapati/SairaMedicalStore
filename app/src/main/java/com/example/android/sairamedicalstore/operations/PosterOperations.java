@@ -89,6 +89,47 @@ public class PosterOperations {
         });
     }
 
+    public void UpdateOldPoster(final String posterId,final Uri posterImageURI,final String posterName, String displayCategory, HashMap<String, Object> aboutPoster,
+                                final String posterImageDownloadUrl)
+    {
+        HashMap<String, Object> timestampLastUpdate = new HashMap<String, Object>();
+        timestampLastUpdate.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
+
+        final Poster updatedPoster = new Poster(posterId,posterName,displayCategory,aboutPoster,posterImageDownloadUrl,null,null,timestampLastUpdate);
+
+        mFirebaseAllPosters.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Poster eachPoster = snapshot.getValue(Poster.class);
+                    if (eachPoster.getPosterId().equals(posterId)) {
+
+                        updatedPoster.setPosterCreatedBy(eachPoster.getPosterCreatedBy());
+                        updatedPoster.setTimestampCreated(eachPoster.getTimestampCreated());
+
+                        try {
+                            mFirebaseAllPosters.child(posterId).setValue(updatedPoster);
+                            if(posterImageURI != null)
+                              uploadImageInStorage(posterImageURI,posterId,posterImageDownloadUrl);
+                            resetAllControlsFromCreateOrUpdatePage();
+                            Toast.makeText(mActivity, Constants.UPDATE_SUCCESSFUL, Toast.LENGTH_SHORT).show();
+
+                        } catch (Exception ex) {
+                            Toast.makeText(mActivity, Constants.UPDATE_FAIL, Toast.LENGTH_SHORT).show();
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
     private void uploadImageInStorage(Uri posterImageURI,final String posterId,final String posterImageDownloadUrl)
     {
         FirebaseStorage  mFirebaseStorage = FirebaseStorage.getInstance();

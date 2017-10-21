@@ -29,6 +29,7 @@ import com.example.android.sairamedicalstore.models.SelectedItem;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.operations.MedicineOperations;
 import com.example.android.sairamedicalstore.ui.AddNewMedicine;
+import com.example.android.sairamedicalstore.ui.CreateOrUpdatePoster;
 import com.example.android.sairamedicalstore.ui.ProductDetailsActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
@@ -265,9 +266,9 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Poster poster = mSearchedPostersAdapter.getItem(position);
-                /*Intent intentProductDetails = new Intent(SearchActivity.this, ProductDetailsActivity.class);
-                intentProductDetails.putExtra("medicineId", medicine.getMedicineId());
-                startActivity(intentProductDetails);*/
+                Intent intentCreateOrUpdatePoster = new Intent(SearchActivity.this, CreateOrUpdatePoster.class);
+                intentCreateOrUpdatePoster.putExtra("posterId", poster.getPosterId());
+                startActivity(intentCreateOrUpdatePoster);
             }
         });
     }

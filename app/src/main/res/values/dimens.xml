@@ -29,13 +29,14 @@
     <dimen name="corner_radius_profile_pic">35dp</dimen>
 
     <!-- Text size  -->
-    <dimen name="double_extra_small_text_size">05sp</dimen>
+    <dimen name="triple_extra_small_text_size">05sp</dimen>
+    <dimen name="double_extra_small_text_size">10sp</dimen>
     <dimen name="extra_small_text_size">15sp</dimen>
     <dimen name="small_text_size">20sp</dimen>
     <dimen name="regular_text_size">30sp</dimen>
     <dimen name="large_text_size">40sp</dimen>
     <dimen name="extra_large_text_size">50sp</dimen>
-    <dimen name="double_extra_large_text_size">600sp</dimen>
+    <dimen name="double_extra_large_text_size">60sp</dimen>
 
     <!-- AddNewMedicine  -->
     <dimen name="medicine_pic_image_width">100dp</dimen>
