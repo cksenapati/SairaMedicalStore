@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/primary_light"
+    tools:context="com.example.android.sairamedicalstore.ui.address.DeliveryAddressActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_dark"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/colorPrimary"
+            android:gravity="center_horizontal"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:id="@+id/text_view_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Delivery Address"
+                android:textColor="@color/tw__solid_white"
+                android:textSize="@dimen/small_text_size" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:id="@+id/text_view_add_new_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_margin="@dimen/extra_small_margin"
+        android:padding="@dimen/double_extra_small_margin"
+        android:textColor="@color/primary"
+        android:background="@drawable/rectangle_border"
+        android:text="+ Add New"/>
+
+    <ListView
+        android:id="@+id/list_view_saved_delivery_addresses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tw__solid_white"
+        android:divider="@color/primary_light"
+        android:dividerHeight="5.0sp"
+        android:layout_margin="@dimen/extra_small_margin">
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/text_view_no_saved_address"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="No Address"
+        android:gravity="center"
+        android:textSize="@dimen/large_text_size"
+        android:visibility="gone"/>
+
+</LinearLayout>
+

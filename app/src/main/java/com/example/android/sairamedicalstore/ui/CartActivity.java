@@ -3,21 +3,21 @@ package com.example.android.sairamedicalstore.ui;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Cart;
 import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.User;
+import com.example.android.sairamedicalstore.ui.address.DeliveryAddressActivity;
+import com.example.android.sairamedicalstore.ui.search.SearchActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.DataSnapshot;
@@ -35,10 +35,13 @@ public class CartActivity extends AppCompatActivity {
 
 
     ArrayList<Medicine> mArrayListCartProducts;
+    ArrayList<String> mArrayListSelectedPrescriptionIds;
     int productCounter;
     User mCurrentUser;
     public static Cart mCurrentCart;
     static double subtotalPrice,shippingPrice;
+    private static final int RC_PRISCRIPTIONS_PICKER = 1;
+    boolean isPrescriptionsAdded;
 
 
     LinearLayout mLinearLayoutOffer,mLinearLayoutUploadPrescription;
@@ -66,9 +69,50 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent prescriptionActivityIntent = new Intent(CartActivity.this,PrescriptionsActivity.class);
-                startActivity(prescriptionActivityIntent);
+                prescriptionActivityIntent.putExtra("arrayListSelectedPrescriptionIds",mArrayListSelectedPrescriptionIds);
+                startActivityForResult(Intent.createChooser(prescriptionActivityIntent, "Complete action using"), RC_PRISCRIPTIONS_PICKER);
             }
         });
+
+        mTextViewProceedToDeliveryAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isPrescriptionsAdded)
+                {
+                    Intent intentToDeliveryAddress = new Intent(CartActivity.this, DeliveryAddressActivity.class);
+                    startActivity(intentToDeliveryAddress);
+                }
+                else
+                    Toast.makeText(CartActivity.this,"Please upload required prescriptions.",Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_PRISCRIPTIONS_PICKER) {
+            if (resultCode == RESULT_OK) {
+                mArrayListSelectedPrescriptionIds = data.getStringArrayListExtra("arrayListSelectedPrescriptionIds");
+                if (mArrayListSelectedPrescriptionIds != null && mArrayListSelectedPrescriptionIds.size() > 0) {
+                    isPrescriptionsAdded = true;
+                    mTextViewGoNext.setVisibility(View.GONE);
+                    mTextViewPrescriptionUploaded.setVisibility(View.VISIBLE);
+                }
+                else {
+                    isPrescriptionsAdded = false;
+                    mTextViewGoNext.setVisibility(View.VISIBLE);
+                    mTextViewPrescriptionUploaded.setVisibility(View.GONE);
+                }
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // Unable to pick this file
+                // progressBar.setVisibility(View.GONE);
+                Toast.makeText(this, "Data Unchanged.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void initializeScreen()
@@ -122,6 +166,7 @@ public class CartActivity extends AppCompatActivity {
                     }
                     mArrayListCartProducts.clear();
                     mLinearLayoutUploadPrescription.setVisibility(View.GONE);
+                    isPrescriptionsAdded = true;
                     subtotalPrice = 0;
                     productCounter = 0;
 
@@ -152,6 +197,7 @@ public class CartActivity extends AppCompatActivity {
                                                 if(mLinearLayoutUploadPrescription.getVisibility() == View.GONE && eachMedicine.isMedicineAvailability() && eachMedicine.getMedicineCategory().equals(Constants.MEDICINE_CATEGORY_PRESCRIPTION))
                                                 {
                                                     mLinearLayoutUploadPrescription.setVisibility(View.VISIBLE);
+                                                    isPrescriptionsAdded = false;
                                                 }
                                             }
                                         }
@@ -163,6 +209,7 @@ public class CartActivity extends AppCompatActivity {
 
                                             mListViewCartProducts.setVisibility(View.VISIBLE);
                                             mTextViewEmptyCart.setVisibility(View.GONE);
+                                            mTextViewProceedToDeliveryAddress.setVisibility(View.VISIBLE);
 
                                         }
                                     }
@@ -171,6 +218,7 @@ public class CartActivity extends AppCompatActivity {
                                     public void onCancelled(FirebaseError firebaseError) {
                                         mListViewCartProducts.setVisibility(View.GONE);
                                         mTextViewEmptyCart.setVisibility(View.VISIBLE);
+                                        mTextViewProceedToDeliveryAddress.setVisibility(View.GONE);
                                     }
                                 });
                             }
@@ -181,6 +229,7 @@ public class CartActivity extends AppCompatActivity {
                         {
                             mListViewCartProducts.setVisibility(View.GONE);
                             mTextViewEmptyCart.setVisibility(View.VISIBLE);
+                            mTextViewProceedToDeliveryAddress.setVisibility(View.GONE);
                         }
 
                     }
@@ -188,6 +237,7 @@ public class CartActivity extends AppCompatActivity {
                     {
                         mListViewCartProducts.setVisibility(View.GONE);
                         mTextViewEmptyCart.setVisibility(View.VISIBLE);
+                        mTextViewProceedToDeliveryAddress.setVisibility(View.GONE);
                     }
                 }
             }
@@ -196,6 +246,7 @@ public class CartActivity extends AppCompatActivity {
             public void onCancelled(FirebaseError firebaseError) {
                 mListViewCartProducts.setVisibility(View.GONE);
                 mTextViewEmptyCart.setVisibility(View.VISIBLE);
+                mTextViewProceedToDeliveryAddress.setVisibility(View.GONE);
             }
         });
     }

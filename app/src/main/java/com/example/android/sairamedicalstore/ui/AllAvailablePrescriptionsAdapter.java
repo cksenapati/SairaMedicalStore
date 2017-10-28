@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -16,7 +17,11 @@ import com.example.android.sairamedicalstore.models.Prescription;
 
 import java.util.ArrayList;
 
+import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.arrayListSelectedPrescriptionIds;
+import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.mCurrentPageNumber;
+import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.mCurrentPrescription;
 import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.mImageViewPrescription;
+import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.mImageViewPrescriptionSelectionOption;
 import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.mTextViewPrescriptionName;
 
 /**
@@ -38,10 +43,12 @@ class AllAvailablePrescriptionsAdapter extends RecyclerView.Adapter<AllAvailable
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
+        public LinearLayout mLinearLayoutRecycleItem;
         public ImageView mImageViewPrescription;
         public TextView mTextViewPrescriptionName;
         public ViewHolder(View itemView) {
             super(itemView);
+            mLinearLayoutRecycleItem = (LinearLayout) itemView.findViewById(R.id.linear_layout_recycle_item);
             mImageViewPrescription = (ImageView) itemView.findViewById(R.id.image_view_prescription);
             mTextViewPrescriptionName = (TextView) itemView.findViewById(R.id.text_view_prescription_name);
         }
@@ -60,18 +67,22 @@ class AllAvailablePrescriptionsAdapter extends RecyclerView.Adapter<AllAvailable
 
     @Override
     public void onBindViewHolder(AllAvailablePrescriptionsAdapter.ViewHolder holder, final int position) {
+
         Glide.with(holder.mImageViewPrescription.getContext())
                 .load(mArrayListAllAvailablePrescriptions.get(position).getPrescriptionPages().get("page1"))
                 .into(holder.mImageViewPrescription);
         holder.mTextViewPrescriptionName.setText(mArrayListAllAvailablePrescriptions.get(position).getPrescriptionName());
 
-       holder.mImageViewPrescription.setOnClickListener(new View.OnClickListener() {
+       holder.mLinearLayoutRecycleItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCurrentPrescription = mArrayListAllAvailablePrescriptions.get(position);
+                mCurrentPageNumber = 1;
                 Glide.with(mImageViewPrescription.getContext())
-                        .load(mArrayListAllAvailablePrescriptions.get(position).getPrescriptionPages().get("page1"))
+                        .load(mCurrentPrescription.getPrescriptionPages().get("page"+mCurrentPageNumber))
                         .into(mImageViewPrescription);
-                mTextViewPrescriptionName.setText(mArrayListAllAvailablePrescriptions.get(position).getPrescriptionName());
+                mTextViewPrescriptionName.setText(mCurrentPrescription.getPrescriptionName());
+                checkWhetherPrescriptionIsSelected();
             }
         });
     }
@@ -79,6 +90,20 @@ class AllAvailablePrescriptionsAdapter extends RecyclerView.Adapter<AllAvailable
     @Override
     public int getItemCount() {
         return mArrayListAllAvailablePrescriptions.size();
+    }
+
+    public void checkWhetherPrescriptionIsSelected()
+    {
+        for (String eachPrescriptionId:arrayListSelectedPrescriptionIds) {
+           if(eachPrescriptionId.equals(mCurrentPrescription.getPrescriptionId()))
+           {
+               mImageViewPrescriptionSelectionOption.setImageResource(R.drawable.ic_checked_48);
+               return;
+           }
+        }
+
+        mImageViewPrescriptionSelectionOption.setImageResource(R.drawable.ic_check_48);
+
     }
 
 

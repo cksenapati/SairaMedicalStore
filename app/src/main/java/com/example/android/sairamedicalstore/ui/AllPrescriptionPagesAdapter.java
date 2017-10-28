@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.android.sairamedicalstore.R;
@@ -33,10 +35,14 @@ class AllPrescriptionPagesAdapter extends RecyclerView.Adapter<AllPrescriptionPa
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
+        public LinearLayout mLinearLayoutRecycleItem;
         public ImageView mImageViewPrescription;
+        public TextView mTextViewPrescriptionName;
         public ViewHolder(View itemView) {
             super(itemView);
+            mLinearLayoutRecycleItem = (LinearLayout) itemView.findViewById(R.id.linear_layout_recycle_item);
             mImageViewPrescription = (ImageView) itemView.findViewById(R.id.image_view_prescription);
+            mTextViewPrescriptionName = (TextView) itemView.findViewById(R.id.text_view_prescription_name);
         }
     }
 
@@ -56,8 +62,9 @@ class AllPrescriptionPagesAdapter extends RecyclerView.Adapter<AllPrescriptionPa
         Glide.with(holder.mImageViewPrescription.getContext())
                 .load(mHashMapPrescriptionPages.get("page"+(position+1)))
                 .into(holder.mImageViewPrescription);
+        holder.mTextViewPrescriptionName.setText("page"+(position+1));
 
-       holder.mImageViewPrescription.setOnClickListener(new View.OnClickListener() {
+       holder.mLinearLayoutRecycleItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Glide.with(mImageViewPrescriptionPage.getContext())

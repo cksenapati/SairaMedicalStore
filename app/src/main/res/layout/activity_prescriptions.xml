@@ -25,14 +25,30 @@
             android:gravity="center_horizontal"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <TextView
-                android:id="@+id/text_view_toolbar"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Select Prescriptions"
-                android:textColor="@color/tw__solid_white"
-                android:textSize="@dimen/small_text_size" />
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/text_view_toolbar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:text="Select Prescriptions"
+                    android:textColor="@color/tw__solid_white"
+                    android:textSize="@dimen/small_text_size" />
+                <TextView
+                    android:id="@+id/text_view_done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/extra_small_margin"
+                    android:textSize="@dimen/regular_text_size"
+                    android:textColor="@color/tw__solid_white"
+                    android:textStyle="bold"
+                    android:text="Done"/>
+            </LinearLayout>
+
 
         </android.support.v7.widget.Toolbar>
 
@@ -50,7 +66,7 @@
             android:layout_weight="1"
             android:padding="@dimen/extra_small_margin"
             android:textColor="@color/primary_text"
-            android:textSize="@dimen/regular_text_size"/>
+            android:textSize="@dimen/small_text_size"/>
         <ImageView
             android:id="@+id/image_view_prescription_selection_option"
             android:layout_width="wrap_content"
@@ -60,13 +76,33 @@
             android:src="@drawable/ic_check_48"/>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/image_view_prescription"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        />
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/image_view_prescription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"/>
+        <ImageView
+            android:id="@+id/image_view_left_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/extra_small_margin"
+            android:src="@drawable/ic_left_arrow_48"/>
+        <ImageView
+            android:id="@+id/image_view_right_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/extra_small_margin"
+            android:src="@drawable/ic_right_arrow_48"/>
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/text_view_no_prescriptions"
@@ -81,7 +117,7 @@
     <LinearLayout
         android:id="@+id/linear_layout_for_prescriptions_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="90dp"
         android:layout_margin="@dimen/extra_small_margin"
         android:orientation="horizontal">
         <LinearLayout

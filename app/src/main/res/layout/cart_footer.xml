@@ -9,6 +9,7 @@
         android:id="@+id/linear_layout_upload_prescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/extra_small_margin"
         android:background="@color/tw__solid_white"
         android:visibility="gone"
         android:orientation="horizontal">
@@ -26,7 +27,7 @@
             android:textSize="@dimen/small_text_size"
             android:textColor="@color/primary_text"
             android:padding="@dimen/extra_small_margin"
-            android:text="Upload Prescription"/>
+            android:text="Add Prescription(s)"/>
         <TextView
             android:id="@+id/text_view_go_next"
             android:layout_width="wrap_content"

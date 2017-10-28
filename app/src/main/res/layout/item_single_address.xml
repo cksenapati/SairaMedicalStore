@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/regular_margin"
+    android:background="@color/tw__solid_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linear_layout_selectable_item"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/extra_small_margin"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/text_view_address_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="hkjhkjhkjhkjh\niuhuhjhkjhkjhkjhkjhygugjkkjkg\nfhgfhgfhgfhgfhgfhgf">
+        </TextView>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_go_next_24"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/tw__light_gray" />
+    <LinearLayout
+        android:id="@+id/linear_layout_edit_or_remove"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/extra_small_margin"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/text_view_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/primary"
+            android:text="Edit"/>
+        <View
+            android:layout_width="1dip"
+            android:layout_height="fill_parent"
+            android:background="@color/tw__light_gray" />
+        <TextView
+            android:id="@+id/text_view_remove"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/primary"
+            android:text="Remove"/>
+    </LinearLayout>
+
+
+</LinearLayout>

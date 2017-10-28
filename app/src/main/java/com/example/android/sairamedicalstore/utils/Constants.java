@@ -7,6 +7,7 @@ package com.example.android.sairamedicalstore.utils;
 public final class Constants {
 
     public static final String FIREBASE_PROPERTY_TIMESTAMP = "timestamp";
+    public static final String FIREBASE_PROPERTY_TIMESTAMP_LAST_UPDATE = "timestampLastUpdate";
     public static final String FIREBASE_PROPERTY_DEFAULT_IMAGE_URL = "defaultImageURL";
     public static final String FIREBASE_PROPERTY_MEDICINE_NAME = "medicineName";
     public static final String FIREBASE_PROPERTY_MANUFACTURER_NAME = "manufacturerName";
@@ -33,6 +34,7 @@ public final class Constants {
     public static final String FIREBASE_LOCATION_All_POSTERS = "allPosters";
     public static final String FIREBASE_LOCATION_All_CARTS = "allCarts";
     public static final String FIREBASE_LOCATION_All_PRESCRIPTIONS = "allPrescriptions";
+    public static final String FIREBASE_LOCATION_All_ADDRESSES = "allAddresses";
 
 
 
@@ -51,6 +53,8 @@ public final class Constants {
     public static final String FIREBASE_URL_SAIRA_All_POSTERS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_POSTERS;
     public static final String FIREBASE_URL_SAIRA_All_CARTS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_CARTS;
     public static final String FIREBASE_URL_SAIRA_All_PRESCRIPTIONS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_PRESCRIPTIONS;
+    public static final String FIREBASE_URL_SAIRA_All_ADDRESSES = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_ADDRESSES;
+
 
 
     public static final String USER_TYPE_END_USER = "endUser";
