@@ -39,7 +39,8 @@
         <activity android:name=".ui.PrescriptionsActivity" />
         <activity android:name=".ui.AddNewPrescriptionActivity" />
         <activity android:name=".ui.address.DeliveryAddressActivity" />
-        <activity android:name=".ui.address.AddNewAddressActivity"></activity>
+        <activity android:name=".ui.address.AddOrUpdateAddressActivity" />
+        <activity android:name=".ui.order.OrderDetailsActivity"></activity>
     </application>
 
 </manifest>

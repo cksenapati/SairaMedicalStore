@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/primary_light"
-    tools:context="com.example.android.sairamedicalstore.ui.address.AddNewAddressActivity">
+    tools:context="com.example.android.sairamedicalstore.ui.address.AddOrUpdateAddressActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -110,7 +110,7 @@
 
 
     <TextView
-        android:id="@+id/text_view_add_address"
+        android:id="@+id/text_view_add_or_update_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/extra_small_margin"

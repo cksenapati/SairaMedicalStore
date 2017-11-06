@@ -32,6 +32,7 @@ import static com.example.android.sairamedicalstore.ui.CartActivity.mTextViewShi
 import static com.example.android.sairamedicalstore.ui.CartActivity.mTextViewSubtotal;
 import static com.example.android.sairamedicalstore.ui.CartActivity.shippingPrice;
 import static com.example.android.sairamedicalstore.ui.CartActivity.subtotalPrice;
+import static com.example.android.sairamedicalstore.ui.CartActivity.totalPayablePrice;
 
 /**
  * Created by chandan on 08-03-2017.
@@ -138,9 +139,10 @@ public class ProductsInCartAdapter extends ArrayAdapter<Medicine> {
 
         subtotalPrice = subtotalPrice + priceForSelectedNoOfItems;
         subtotalPrice = (double) Math.round(subtotalPrice *100) / 100;
+        totalPayablePrice = (double) Math.round((subtotalPrice+shippingPrice) *100) / 100;
         mTextViewSubtotal.setText("RS. "+  Double.toString(subtotalPrice));
         mTextViewShippingCharges.setText("RS. "+  Double.toString(shippingPrice));
-        mTextViewOrderTotal.setText("RS. "+  Double.toString((double) Math.round((subtotalPrice+shippingPrice) *100) / 100));
+        mTextViewOrderTotal.setText("RS. "+  Double.toString(totalPayablePrice));
 
 
         spinnerQuantity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

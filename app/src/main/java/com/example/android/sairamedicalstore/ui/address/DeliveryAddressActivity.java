@@ -4,18 +4,14 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Address;
-import com.example.android.sairamedicalstore.models.Medicine;
+import com.example.android.sairamedicalstore.models.Order;
 import com.example.android.sairamedicalstore.models.User;
-import com.example.android.sairamedicalstore.ui.ProductDetailsActivity;
-import com.example.android.sairamedicalstore.ui.search.SearchActivity;
-import com.example.android.sairamedicalstore.ui.search.SearchedMedicinesAdapter;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.DataSnapshot;
@@ -32,6 +28,7 @@ public class DeliveryAddressActivity extends AppCompatActivity {
 
     User mCurrentUser;
     private AllSavedAddressesAdapter mAllSavedAddressesAdapter;
+    public static Order mCurrentTemporaryOrder;
 
 
     @Override
@@ -39,9 +36,15 @@ public class DeliveryAddressActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery_address);
 
+        Intent intent = getIntent();
+        if (intent != null) {
+            mCurrentTemporaryOrder = (Order) intent.getSerializableExtra("currentOrder");
+        }
+
         mCurrentUser = ((SairaMedicalStoreApplication) this.getApplication()).getCurrentUser();
 
         initialization();
+
 
         mFirebaseCurrentUserAllSavedAddressRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -72,7 +75,7 @@ public class DeliveryAddressActivity extends AppCompatActivity {
         mTextViewAddNewAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentToAddNewAddress = new Intent(DeliveryAddressActivity.this,AddNewAddressActivity.class);
+                Intent intentToAddNewAddress = new Intent(DeliveryAddressActivity.this,AddOrUpdateAddressActivity.class);
                 startActivity(intentToAddNewAddress);
             }
         });
@@ -99,14 +102,5 @@ public class DeliveryAddressActivity extends AppCompatActivity {
 
         mListViewSavedDeliveryAddresses.setAdapter(mAllSavedAddressesAdapter);
 
-        /*mListViewSavedDeliveryAddresses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Medicine medicine = mAllSavedAddressesAdapter.getItem(position);
-                Intent intentProductDetails = new Intent(SearchActivity.this, ProductDetailsActivity.class);
-                intentProductDetails.putExtra("medicineId", medicine.getMedicineId());
-                startActivity(intentProductDetails);
-            }
-        });*/
     }
 }

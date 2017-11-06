@@ -15,6 +15,7 @@ import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Cart;
 import com.example.android.sairamedicalstore.models.Medicine;
+import com.example.android.sairamedicalstore.models.Order;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.ui.address.DeliveryAddressActivity;
 import com.example.android.sairamedicalstore.ui.search.SearchActivity;
@@ -26,6 +27,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CartActivity extends AppCompatActivity {
@@ -36,13 +38,15 @@ public class CartActivity extends AppCompatActivity {
 
     ArrayList<Medicine> mArrayListCartProducts;
     ArrayList<String> mArrayListSelectedPrescriptionIds;
+    HashMap<String,Double> mHashMapOrderPricingDetails;
+
     int productCounter;
     User mCurrentUser;
     public static Cart mCurrentCart;
-    static double subtotalPrice,shippingPrice;
+    static double subtotalPrice,shippingPrice,totalPayablePrice;
     private static final int RC_PRISCRIPTIONS_PICKER = 1;
-    boolean isPrescriptionsAdded;
-
+    boolean isPrescriptionsAdded,isAllProductsInCartAvailable;
+    Order mCurrentOrder;
 
     LinearLayout mLinearLayoutOffer,mLinearLayoutUploadPrescription;
     LinearLayout mLinearLayoutPriceDetails;
@@ -77,13 +81,25 @@ public class CartActivity extends AppCompatActivity {
         mTextViewProceedToDeliveryAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isPrescriptionsAdded)
+                if(isAllProductsInCartAvailable)
                 {
-                    Intent intentToDeliveryAddress = new Intent(CartActivity.this, DeliveryAddressActivity.class);
-                    startActivity(intentToDeliveryAddress);
+                    if(isPrescriptionsAdded)
+                    {
+                        mHashMapOrderPricingDetails.put("Subtotal",subtotalPrice);
+                        mHashMapOrderPricingDetails.put("Shipping Charges",shippingPrice);
+                        mHashMapOrderPricingDetails.put("COD Charges",0.0);
+
+                        mCurrentOrder = new Order(null,null,null,null,mCurrentUser.getEmail(),mCurrentCart,null,mArrayListSelectedPrescriptionIds,null,null,mHashMapOrderPricingDetails,null,null,null);
+                        Intent intentToDeliveryAddress = new Intent(CartActivity.this, DeliveryAddressActivity.class);
+                        intentToDeliveryAddress.putExtra("currentOrder",mCurrentOrder);
+                        startActivity(intentToDeliveryAddress);
+                    }
+                    else
+                        Toast.makeText(CartActivity.this,"Please upload required prescriptions.",Toast.LENGTH_LONG).show();
+
                 }
                 else
-                    Toast.makeText(CartActivity.this,"Please upload required prescriptions.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(CartActivity.this,"Remove the Out-Of-Stuck product(s) from cart",Toast.LENGTH_LONG).show();
 
             }
         });
@@ -149,7 +165,10 @@ public class CartActivity extends AppCompatActivity {
         mFirebaseAllMedicinesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_ALL_MEDICINES);
 
         mArrayListCartProducts = new ArrayList<>();
+        mHashMapOrderPricingDetails = new HashMap<>();
+
         subtotalPrice = 0;
+        totalPayablePrice = 0;
         shippingPrice= 49.0 ;
     }
 
@@ -167,8 +186,10 @@ public class CartActivity extends AppCompatActivity {
                     mArrayListCartProducts.clear();
                     mLinearLayoutUploadPrescription.setVisibility(View.GONE);
                     isPrescriptionsAdded = true;
+                    isAllProductsInCartAvailable = true;
                     subtotalPrice = 0;
                     productCounter = 0;
+                    totalPayablePrice = 0;
 
                     mCurrentCart = dataSnapshot.getValue(Cart.class);
                     if(mCurrentCart != null)
@@ -193,6 +214,7 @@ public class CartActivity extends AppCompatActivity {
                                                     mLinearLayoutPriceDetails.setVisibility(View.GONE);
                                                     mTextViewPriceDetailsMessage.setVisibility(View.VISIBLE);
                                                     mTextViewPriceDetailsMessage.setTextColor(colorCode);
+                                                    isAllProductsInCartAvailable = false;
                                                 }
                                                 if(mLinearLayoutUploadPrescription.getVisibility() == View.GONE && eachMedicine.isMedicineAvailability() && eachMedicine.getMedicineCategory().equals(Constants.MEDICINE_CATEGORY_PRESCRIPTION))
                                                 {

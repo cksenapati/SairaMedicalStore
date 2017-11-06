@@ -1,5 +1,6 @@
 package com.example.android.sairamedicalstore.ui.address;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,32 +10,39 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.util.Util;
 import com.example.android.sairamedicalstore.R;
-import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
-import com.example.android.sairamedicalstore.models.User;
+import com.example.android.sairamedicalstore.models.Address;
 import com.example.android.sairamedicalstore.operations.AddressOperations;
-import com.example.android.sairamedicalstore.utils.Constants;
-import com.example.android.sairamedicalstore.utils.Utils;
-import com.firebase.client.Firebase;
 
-public class AddNewAddressActivity extends AppCompatActivity {
+public class AddOrUpdateAddressActivity extends AppCompatActivity {
 
     EditText mEditTextPinCode,mEditTextFullName,mEditTextPhoneNumber,mEditTextAddress,mEditTextLandmark,mEditTextCity;
     Spinner mSpinnerState;
-    TextView mTextViewAddAddress;
+    TextView mTextViewAddOrUpdateAddress,mTextViewToolbar;
     LinearLayout mLinearLayoutAddressInformation;
 
-    User mCurrentUser;
+    Address mAddressToBeUpdated;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_new_address);
+        setContentView(R.layout.activity_add_or_update_address);
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            mAddressToBeUpdated = (Address) intent.getSerializableExtra("addressToBeUpdated");
+        }
 
         initialization();
 
-        mTextViewAddAddress.setOnClickListener(new View.OnClickListener() {
+        if(mAddressToBeUpdated != null) {
+            displayOldAddressDetails();
+            mTextViewToolbar.setText("Update Address");
+            mTextViewAddOrUpdateAddress.setText("Update Address");
+        }
+
+        mTextViewAddOrUpdateAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onAddAddressClick();
@@ -56,8 +64,19 @@ public class AddNewAddressActivity extends AppCompatActivity {
 
         mSpinnerState = (Spinner) findViewById(R.id.spinner_state);
 
-        mTextViewAddAddress = (TextView) findViewById(R.id.text_view_add_address);
+        mTextViewAddOrUpdateAddress = (TextView) findViewById(R.id.text_view_add_or_update_address);
+        mTextViewToolbar = (TextView) findViewById(R.id.text_view_toolbar);
 
+    }
+
+    public void displayOldAddressDetails()
+    {
+        mEditTextPinCode.setText(mAddressToBeUpdated.getPinCode());
+        mEditTextFullName.setText(mAddressToBeUpdated.getFullName());
+        mEditTextAddress.setText(mAddressToBeUpdated.getAddress());
+        mEditTextLandmark.setText(mAddressToBeUpdated.getLandmark());
+        mEditTextCity.setText(mAddressToBeUpdated.getCity());
+        mEditTextPhoneNumber.setText(mAddressToBeUpdated.getPhoneNumber());
     }
 
     public void onAddAddressClick()
@@ -66,9 +85,20 @@ public class AddNewAddressActivity extends AppCompatActivity {
         {
             if(isDeliveryAvailableToPinCode()) {
                 AddressOperations obj = new AddressOperations(this);
-                obj.AddNewAddress(mEditTextPinCode.getText().toString(), mEditTextFullName.getText().toString(),
-                        mEditTextPhoneNumber.getText().toString(), mEditTextAddress.getText().toString(),
-                        mEditTextLandmark.getText().toString(), mEditTextCity.getText().toString(), "Odisha");
+                if(mAddressToBeUpdated == null)
+                    obj.AddNewAddress(mEditTextPinCode.getText().toString(), mEditTextFullName.getText().toString(),
+                            mEditTextPhoneNumber.getText().toString(), mEditTextAddress.getText().toString(),
+                            mEditTextLandmark.getText().toString(), mEditTextCity.getText().toString(), "Odisha");
+                else
+                {
+                    mAddressToBeUpdated.setPinCode(mEditTextPinCode.getText().toString());
+                    mAddressToBeUpdated.setFullName(mEditTextFullName.getText().toString());
+                    mAddressToBeUpdated.setAddress(mEditTextAddress.getText().toString());
+                    mAddressToBeUpdated.setLandmark(mEditTextLandmark.getText().toString());
+                    mAddressToBeUpdated.setCity(mEditTextCity.getText().toString());
+                    mAddressToBeUpdated.setPhoneNumber(mEditTextPhoneNumber.getText().toString());
+                    obj.UpdateSavedAddress(mAddressToBeUpdated);
+                }
             }
         }
         else

@@ -68,5 +68,16 @@
     <string name="hint_poster_name">Poster Name</string>
     <string name="hint_poster_about">About Poster</string>
 
+    <!-- Spinner value for return/refund reason -->
+    <string-array name="return_or_cancel_reason_options">
+        <item>Cancellation Reason</item>
+        <item>Order created by mistake</item>
+        <item>Shipping cost way too high</item>
+        <item>Item price way too high</item>
+        <item>Found cheaper some where else</item>
+        <item>Need to change payment method</item>
+        <item>Other</item>
+    </string-array>
+
 
 </resources>

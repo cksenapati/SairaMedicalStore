@@ -8,6 +8,8 @@ public final class Constants {
 
     public static final String FIREBASE_PROPERTY_TIMESTAMP = "timestamp";
     public static final String FIREBASE_PROPERTY_TIMESTAMP_LAST_UPDATE = "timestampLastUpdate";
+    public static final String FIREBASE_PROPERTY_TIMESTAMP_CREATED = "timestampCreated";
+
     public static final String FIREBASE_PROPERTY_DEFAULT_IMAGE_URL = "defaultImageURL";
     public static final String FIREBASE_PROPERTY_MEDICINE_NAME = "medicineName";
     public static final String FIREBASE_PROPERTY_MANUFACTURER_NAME = "manufacturerName";
@@ -19,6 +21,7 @@ public final class Constants {
     public static final String FIREBASE_PROPERTY_PIC_URL = "picUrl";
     public static final String FIREBASE_PROPERTY_DEFAULT_MEDICINE_PICS = "defaultMedicinePics";
     public static final String FIREBASE_PROPERTY_COMMON_DEFAULT_VALUES = "commonDefaultValues";
+    public static final String FIREBASE_PROPERTY_ORDER_ID = "orderId";
 
 
     public static final String FIREBASE_LOCATION_ALL_USERS = "allUsers";
@@ -35,6 +38,7 @@ public final class Constants {
     public static final String FIREBASE_LOCATION_All_CARTS = "allCarts";
     public static final String FIREBASE_LOCATION_All_PRESCRIPTIONS = "allPrescriptions";
     public static final String FIREBASE_LOCATION_All_ADDRESSES = "allAddresses";
+    public static final String FIREBASE_LOCATION_All_ORDERS = "allOrders";
 
 
 
@@ -54,6 +58,7 @@ public final class Constants {
     public static final String FIREBASE_URL_SAIRA_All_CARTS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_CARTS;
     public static final String FIREBASE_URL_SAIRA_All_PRESCRIPTIONS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_PRESCRIPTIONS;
     public static final String FIREBASE_URL_SAIRA_All_ADDRESSES = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_ADDRESSES;
+    public static final String FIREBASE_URL_SAIRA_All_ORDERS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_ORDERS;
 
 
 
@@ -75,6 +80,7 @@ public final class Constants {
     public static final String SEARCH_MEDICINE_COMPOSITION = "searchMedicineComposition";
     public static final String SEARCH_DISPLAY_CATEGORY = "searchDisplayCategory";
     public static final String SEARCH_POSTER = "searchPoster";
+    public static final String SEARCH_ORDER = "searchOrder";
 
 
     public static final String UPLOAD_SUCCESSFUL = "Upload successful";
@@ -83,6 +89,15 @@ public final class Constants {
     public static final String UPDATE_FAIL = "Update failed";
     public static final String ITEM_ALREADY_EXISTS = "Item already exists..Upload failed";
 
+
+
+    public static final String ORDER_STATUS_PLACED = "Order Placed";
+    public static final String ORDER_STATUS_DELIVERED = "Delivered";
+    public static final String ORDER_STATUS_CANCELED = "Canceled";
+    public static final String ORDER_STATUS_UNDER_PROCESS = "Under Process";
+    public static final String ORDER_STATUS_REQUESTED_FOR_RETURN = "Requested For Return";
+    public static final String ORDER_STATUS_DISPATCHED = "Dispatched";
+    public static final String ORDER_STATUS_RETURNED = "Returned";
 
 
 }

@@ -3,13 +3,14 @@ package com.example.android.sairamedicalstore.models;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by chandan on 28-10-2017.
  */
 
-public class Address {
+public class Address implements Serializable {
     String addressId,pinCode,fullName,phoneNumber,address,landmark,city,state;
     private HashMap<String, Object> timestampCreated,timestampLastUpdate;
 

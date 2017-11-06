@@ -24,6 +24,7 @@ import com.example.android.sairamedicalstore.models.Composition;
 import com.example.android.sairamedicalstore.models.DisplayCategory;
 import com.example.android.sairamedicalstore.models.Manufacturer;
 import com.example.android.sairamedicalstore.models.Medicine;
+import com.example.android.sairamedicalstore.models.Order;
 import com.example.android.sairamedicalstore.models.Poster;
 import com.example.android.sairamedicalstore.models.SelectedItem;
 import com.example.android.sairamedicalstore.models.User;
@@ -31,6 +32,7 @@ import com.example.android.sairamedicalstore.operations.MedicineOperations;
 import com.example.android.sairamedicalstore.ui.AddNewMedicine;
 import com.example.android.sairamedicalstore.ui.CreateOrUpdatePoster;
 import com.example.android.sairamedicalstore.ui.ProductDetailsActivity;
+import com.example.android.sairamedicalstore.ui.order.OrderDetailsActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.Firebase;
@@ -54,12 +56,13 @@ public class SearchActivity extends AppCompatActivity {
     User mCurrentUser;
     MedicineOperations operationObject;
     Firebase mFirebaseAllMedicinesRef, mFirebaseAllMedicineManufacturersRef,
-            mFirebaseAllMedicineCompositionsRef,mFirebaseAllDisplayCategoriesRef,mFirebaseAllPostersRef;
+            mFirebaseAllMedicineCompositionsRef,mFirebaseAllDisplayCategoriesRef,mFirebaseAllPostersRef,mFirebaseCurrentUserAllOrdersRef;
     private SearchedMedicinesAdapter mSearchedMedicinesAdapter;
     private SearchedManufacturersAdapter mSerarchedManufacturerAdapter;
     private SearchedCompositionsAdapter mSearchedCompositionAdapter;
     private SearchedDisplayCategoriesAdapter mSearchedDisplayCategoryAdapter;
     private SearchedPostersAdapter mSearchedPostersAdapter;
+    private SearchedOrdersAdapter mSearchedOrdersAdapter;
 
     ArrayList<SelectedItem> mArrayListSelectedItems;
 
@@ -98,11 +101,16 @@ public class SearchActivity extends AppCompatActivity {
                 if (mEditTextSearch.getText().toString().trim().length() > 0) {
                     String textEntered = mEditTextSearch.getText().toString().toUpperCase();
                     displayResultAccordingly(textEntered);
-                } else
+                }
+                else if(mWhatToSearch.equals(Constants.SEARCH_ORDER))
+                    displayAllOrders();
+                else
                     mListViewSearchResult.setAdapter(null);
             }
         });
 
+        if(mWhatToSearch.equals(Constants.SEARCH_ORDER))
+            displayAllOrders();
 
     }
 
@@ -129,7 +137,7 @@ public class SearchActivity extends AppCompatActivity {
         mFirebaseAllMedicineCompositionsRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_COMPOSITIONS);
         mFirebaseAllDisplayCategoriesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_DISPLAY_CATEGORIES);
         mFirebaseAllPostersRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_POSTERS);
-
+        mFirebaseCurrentUserAllOrdersRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_ORDERS).child(Utils.encodeEmail(mCurrentUser.getEmail()));
         setItemVisibilityAccordingToRequest();
 
     }
@@ -151,6 +159,9 @@ public class SearchActivity extends AppCompatActivity {
             case Constants.SEARCH_POSTER:
                 setTitle("Search Posters");
                 break;
+            case Constants.SEARCH_ORDER:
+                setTitle("Search Orders");
+                break;
         }
     }
 
@@ -170,6 +181,9 @@ public class SearchActivity extends AppCompatActivity {
                 break;
             case Constants.SEARCH_POSTER:
                 searchPosters(textEntered);
+                break;
+            case Constants.SEARCH_ORDER:
+                searchOrders(textEntered);
                 break;
         }
     }
@@ -273,6 +287,46 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    private void searchOrders(String textEntered) {
+        if (mSearchedOrdersAdapter != null)
+            mSearchedOrdersAdapter.cleanup();
+
+        mSearchedOrdersAdapter = new SearchedOrdersAdapter(SearchActivity.this, Order.class,
+                R.layout.item_single_order, mFirebaseCurrentUserAllOrdersRef.orderByChild(Constants.FIREBASE_PROPERTY_ORDER_ID).startAt(textEntered).endAt(textEntered + "~"));
+
+        mListViewSearchResult.setAdapter(mSearchedOrdersAdapter);
+
+        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Order order = mSearchedOrdersAdapter.getItem(position);
+                Intent intentToOrderDetails = new Intent(SearchActivity.this, OrderDetailsActivity.class);
+                intentToOrderDetails.putExtra("currentOrder", order);
+                startActivity(intentToOrderDetails);
+            }
+        });
+    }
+
+    private void displayAllOrders()
+    {
+        if (mSearchedOrdersAdapter != null)
+            mSearchedOrdersAdapter.cleanup();
+
+        mSearchedOrdersAdapter = new SearchedOrdersAdapter(SearchActivity.this, Order.class,
+                R.layout.item_single_order, mFirebaseCurrentUserAllOrdersRef.orderByChild(Constants.FIREBASE_PROPERTY_TIMESTAMP_CREATED + "/" + Constants.FIREBASE_PROPERTY_TIMESTAMP));
+
+        mListViewSearchResult.setAdapter(mSearchedOrdersAdapter);
+
+        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Order order = mSearchedOrdersAdapter.getItem(position);
+                Intent intentToOrderDetails = new Intent(SearchActivity.this, OrderDetailsActivity.class);
+                intentToOrderDetails.putExtra("currentOrder", order);
+                startActivity(intentToOrderDetails);
+            }
+        });
+    }
 
 
 
@@ -292,6 +346,10 @@ public class SearchActivity extends AppCompatActivity {
                 break;
             case Constants.SEARCH_POSTER:
                 mButtonAddItem.setVisibility(View.VISIBLE);
+                mButtonDone.setVisibility(View.GONE);
+                break;
+            case Constants.SEARCH_ORDER:
+                mButtonAddItem.setVisibility(View.GONE);
                 mButtonDone.setVisibility(View.GONE);
                 break;
         }

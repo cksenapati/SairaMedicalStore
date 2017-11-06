@@ -1,12 +1,13 @@
 package com.example.android.sairamedicalstore.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by chandan on 12-10-2017.
  */
 
-public class Cart {
+public class Cart implements Serializable {
     int noOfUniqueProductsInCart;
     private HashMap<String, Integer> productIdAndItemCount;
 

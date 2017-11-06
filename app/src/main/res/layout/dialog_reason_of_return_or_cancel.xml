@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/text_view_dialog_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Why do you want to return?"
+        android:layout_margin="@dimen/extra_small_margin"
+        android:textSize="@dimen/small_text_size"
+        android:textStyle="bold"/>
+   <Spinner
+       android:id="@+id/spinner_reasons"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_margin="@dimen/extra_small_margin"
+       android:background="@drawable/gradient_spinner"
+       android:popupBackground="#DFFFFFFF"
+       android:padding="@dimen/extra_small_margin">
+   </Spinner>
+
+    <EditText
+        android:id="@+id/edit_text_other_reason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_border"
+        android:layout_margin="@dimen/extra_small_margin"
+        android:paddingBottom="10dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/extra_small_margin">
+        <TextView
+            android:id="@+id/text_view_exit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Exit"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="@dimen/extra_small_margin"
+            android:textColor="@color/warning_message_text_color"
+            android:background="@color/warning_message_background_color"/>
+        <TextView
+            android:id="@+id/text_view_cancel_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel Order"
+            android:textColor="@color/fail_message_text_color"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="@dimen/extra_small_margin"
+            android:background="@color/fail_message_background_color"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>
