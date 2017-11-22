@@ -33,6 +33,11 @@ import com.example.android.sairamedicalstore.models.DisplayProduct;
 import com.example.android.sairamedicalstore.models.Poster;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.models.item;
+import com.example.android.sairamedicalstore.ui.medicine.AddNewMedicine;
+import com.example.android.sairamedicalstore.ui.offer.CreateOrUpdateOfferActivity;
+import com.example.android.sairamedicalstore.ui.poster.CreateOrUpdatePoster;
+import com.example.android.sairamedicalstore.ui.poster.PosterDetailsActivity;
+import com.example.android.sairamedicalstore.ui.profile.MyProfileActivity;
 import com.example.android.sairamedicalstore.ui.search.SearchActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
@@ -42,7 +47,6 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,BaseSliderView.OnSliderClickListener {
@@ -61,7 +65,7 @@ public class MainActivity extends AppCompatActivity
 
     User mCurrentUser;
 
-    Firebase mFirebaseAllPostersRef;
+    Firebase mFirebaseAllPostersRef,mFirebaseCurrentUserRef;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -77,6 +81,25 @@ public class MainActivity extends AppCompatActivity
 
         initializeScreen();
 
+        mFirebaseCurrentUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    mCurrentUser = dataSnapshot.getValue(User.class);
+                    if(mCurrentUser == null)
+                        finish();
+
+                    setProfilePic();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -91,6 +114,14 @@ public class MainActivity extends AppCompatActivity
                 Intent searchActivity = new Intent(MainActivity.this, SearchActivity.class);
                 searchActivity.putExtra("whatToSearch",Constants.SEARCH_MEDICINE);
                 startActivity(searchActivity);
+            }
+        });
+
+        mImageviewProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentToMyProfileActivity = new Intent(MainActivity.this, MyProfileActivity.class);
+                startActivity(intentToMyProfileActivity);
             }
         });
 
@@ -151,9 +182,12 @@ public class MainActivity extends AppCompatActivity
             searchActivity.putExtra("whatToSearch",Constants.SEARCH_ORDER);
             startActivity(searchActivity);
         }
-        /*else if (id == R.id.nav_gallery) {
+        else if (id == R.id.nav_my_profile) {
+            Intent intentToMyProfileActivity = new Intent(MainActivity.this, MyProfileActivity.class);
+            startActivity(intentToMyProfileActivity);
+        }
 
-        } else if (id == R.id.nav_slideshow) {
+        /*else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
@@ -161,8 +195,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
-        }
-*/        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        }*/
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -190,7 +225,6 @@ public class MainActivity extends AppCompatActivity
 
         View headerView =  navigationView.getHeaderView(0);
         mImageviewProfilePic = (ImageView) headerView.findViewById(R.id.image_view_profile_pic);
-        setProfilePic();
 
         mTextViewUserNickName = (TextView)headerView.findViewById(R.id.text_view_user_nickname);
         mTextViewUserNickName.setText("Hi, "+Utils.getFirstName(mCurrentUser.getName())+"!");
@@ -202,6 +236,8 @@ public class MainActivity extends AppCompatActivity
         mArrayListDisplayProduct = new ArrayList<DisplayProduct>();
 
         mFirebaseAllPostersRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_POSTERS);
+        mFirebaseCurrentUserRef = new Firebase(Constants.FIREBASE_URL_SAIRA_ALL_USERS).child(Utils.encodeEmail(mCurrentUser.getEmail()));
+
     }
 
     private void setProfilePic()

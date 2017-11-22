@@ -9,6 +9,8 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
 
+    <color name="light_black">#747474</color>
+    <color name="black">#616161</color>
 
     <color name="under_process_message_text_color">#00529B</color>
     <color name="under_process_message_background_color">#BDE5F8</color>

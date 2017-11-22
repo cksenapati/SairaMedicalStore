@@ -1,4 +1,4 @@
-package com.example.android.sairamedicalstore.ui;
+package com.example.android.sairamedicalstore.ui.prescription;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +14,7 @@ import com.example.android.sairamedicalstore.R;
 
 import java.util.HashMap;
 
-import static com.example.android.sairamedicalstore.ui.AddNewPrescriptionActivity.mImageViewPrescriptionPage;
+import static com.example.android.sairamedicalstore.ui.prescription.AddNewPrescriptionActivity.mImageViewPrescriptionPage;
 
 /**
  * Created by chandan on 12-08-2017.

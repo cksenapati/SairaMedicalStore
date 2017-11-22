@@ -1,8 +1,6 @@
-package com.example.android.sairamedicalstore.ui;
+package com.example.android.sairamedicalstore.ui.cart;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +24,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.android.sairamedicalstore.ui.CartActivity.mCurrentCart;
-import static com.example.android.sairamedicalstore.ui.CartActivity.mTextViewOrderTotal;
-import static com.example.android.sairamedicalstore.ui.CartActivity.mTextViewShippingCharges;
-import static com.example.android.sairamedicalstore.ui.CartActivity.mTextViewSubtotal;
-import static com.example.android.sairamedicalstore.ui.CartActivity.shippingPrice;
-import static com.example.android.sairamedicalstore.ui.CartActivity.subtotalPrice;
-import static com.example.android.sairamedicalstore.ui.CartActivity.totalPayablePrice;
+import static com.example.android.sairamedicalstore.ui.cart.CartActivity.mCurrentCart;
+import static com.example.android.sairamedicalstore.ui.cart.CartActivity.mTextViewOrderTotal;
+import static com.example.android.sairamedicalstore.ui.cart.CartActivity.mTextViewShippingCharges;
+import static com.example.android.sairamedicalstore.ui.cart.CartActivity.mTextViewSubtotal;
+import static com.example.android.sairamedicalstore.ui.cart.CartActivity.shippingPrice;
+import static com.example.android.sairamedicalstore.ui.cart.CartActivity.subtotalPrice;
+import static com.example.android.sairamedicalstore.ui.cart.CartActivity.totalPayablePrice;
 
 /**
  * Created by chandan on 08-03-2017.

@@ -2,8 +2,6 @@ package com.example.android.sairamedicalstore.operations;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,23 +10,20 @@ import android.widget.Toast;
 
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
-import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.Poster;
 import com.example.android.sairamedicalstore.models.User;
-import com.example.android.sairamedicalstore.ui.CreateOrUpdatePoster;
+import com.example.android.sairamedicalstore.ui.poster.CreateOrUpdatePoster;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ServerValue;
 import com.firebase.client.ValueEventListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.util.HashMap;
 
 /**

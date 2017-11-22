@@ -43,5 +43,12 @@
         <item name="android:textColorPrimary">@color/primary_text</item>
     </style>
 
+    <style name="FAB">
+        <item name="android:layout_margin">0dp</item>
+        <item name="fabSize">normal</item>
+        <item name="rippleColor">@android:color/white</item>
+        <item name="backgroundTint">@color/tw__solid_white</item>
+    </style>
+
 
 </resources>

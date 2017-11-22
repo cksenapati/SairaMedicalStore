@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="com.example.android.sairamedicalstore.ui.AddNewMedicine"
+    tools:context="com.example.android.sairamedicalstore.ui.medicine.AddNewMedicine"
     tools:layout_editor_absoluteX="8dp"
     tools:layout_editor_absoluteY="8dp">
 

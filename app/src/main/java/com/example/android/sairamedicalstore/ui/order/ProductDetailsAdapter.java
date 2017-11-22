@@ -1,11 +1,13 @@
 package com.example.android.sairamedicalstore.ui.order;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -14,6 +16,7 @@ import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
 import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.User;
+import com.example.android.sairamedicalstore.ui.ProductDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -46,6 +49,7 @@ class ProductDetailsAdapter extends RecyclerView.Adapter<ProductDetailsAdapter.V
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
+        public LinearLayout mLinearLayoutOrderedProduct;
         public ImageView mImageViewProductImage;
         public TextView mTextViewProductName;
         public TextView mTextViewSelectedQuantity;
@@ -53,6 +57,7 @@ class ProductDetailsAdapter extends RecyclerView.Adapter<ProductDetailsAdapter.V
 
         public ViewHolder(View itemView) {
             super(itemView);
+            mLinearLayoutOrderedProduct = (LinearLayout) itemView.findViewById(R.id.linear_layout_ordered_product);
             mImageViewProductImage = (ImageView) itemView.findViewById(R.id.image_view_product_image);
             mTextViewProductName = (TextView) itemView.findViewById(R.id.text_view_product_name);
             mTextViewSelectedQuantity = (TextView) itemView.findViewById(R.id.text_view_product_selected_quantity);
@@ -81,7 +86,14 @@ class ProductDetailsAdapter extends RecyclerView.Adapter<ProductDetailsAdapter.V
         holder.mTextViewProductName.setText(mArrayListAllProductsInCart.get(position).getMedicineName());
         holder.mTextViewSelectedQuantity.setText("Quantity: "+setSelectedQuantity(mArrayListAllProductsInCart.get(position).getMedicineId()));
         holder.mTextViewPriceForSelectedQuantity.setText(getPricing(mArrayListAllProductsInCart.get(position)));
-
+        holder.mLinearLayoutOrderedProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentToProductDetails = new Intent(mActivity, ProductDetailsActivity.class);
+                intentToProductDetails.putExtra("medicineId", mArrayListAllProductsInCart.get(position).getMedicineId());
+                mActivity.startActivity(intentToProductDetails);
+            }
+        });
     }
 
     @Override

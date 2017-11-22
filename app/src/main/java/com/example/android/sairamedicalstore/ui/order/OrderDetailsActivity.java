@@ -38,9 +38,9 @@ import com.firebase.client.ServerValue;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 
 
 public class OrderDetailsActivity extends AppCompatActivity {
@@ -51,14 +51,14 @@ public class OrderDetailsActivity extends AppCompatActivity {
     RecyclerView.Adapter recyclerViewAdapterForProducts;
 
 
-    TextView mTextViewToolbar, mTextViewAction,mTextViewPriceDetailsMessage,mTextViewPaymentMethodMessage,mTextViewPageMessage, mTextViewAddressDetails,mTextViewEditAddress;
-    TextView mTextViewSubtotal,mTextViewCodCharges,mTextViewShippingCharges,mTextViewOrderTotal;
+    TextView mTextViewToolbar, mTextViewAction,mTextViewPriceDetailsMessage,mTextViewPaymentMethodMessage,mTextViewCancelOrReturnDetailsMessage,mTextViewPageMessage, mTextViewAddressDetails,mTextViewEditAddress;
+    TextView mTextViewSubtotal,mTextViewCodCharges,mTextViewShippingCharges,mTextViewOrderTotal,mTextViewCancelOrReturnActionBar;
 
     ImageView mImageViewShowOrHideCartProducts, mImageViewShowOrHidePriceDetails, mImageViewShowOrHideDeliveryAddress,mImageViewShowOrHidePrescriptionDetails,
-            mImageViewShowOrHidePaymentMethods, mImageViewSelectOrDeselectPrepaid, mImageViewSelectOrDeselectCod;
+            mImageViewShowOrHidePaymentMethods,mImageViewShowOrHideCancelOrReturnDetails, mImageViewSelectOrDeselectPrepaid, mImageViewSelectOrDeselectCod;
 
     LinearLayout mLinearLayoutProductDetailsActonBar,mLinearLayoutPriceDetailsActonBar,mLinearLayoutDeliveryAddressActonBar,
-            mLinearLayoutPaymentMethodsActonBar,mLinearLayoutPrescriptionDetailsActonBar,
+            mLinearLayoutPaymentMethodsActonBar,mLinearLayoutPrescriptionDetailsActonBar,mLinearLayoutCancelOrReturnOrderActonBar,
             mLinearLayoutProductDetails,mLinearLayoutPriceDetails,mLinearLayoutDeliveryAddress,mLinearLayoutPaymentMethods,mLinearLayoutPrescriptionDetails,
             mLinearLayoutCodCharges,mLinearLayoutShippingCharges,
             mLinearLayoutPrepaidPaymentMethod,mLinearLayoutCodPaymentMethod;
@@ -112,24 +112,28 @@ public class OrderDetailsActivity extends AppCompatActivity {
         mTextViewOrderTotal = (TextView) findViewById(R.id.text_view_order_total);
         mTextViewAddressDetails = (TextView) findViewById(R.id.text_view_address_details);
         mTextViewEditAddress = (TextView) findViewById(R.id.text_view_edit_address);
-        mImageViewSelectOrDeselectPrepaid = (ImageView) findViewById(R.id.image_view_select_or_deselect_prepaid);
-        mImageViewSelectOrDeselectCod = (ImageView) findViewById(R.id.image_view_select_or_deselect_cod);
+        mTextViewCancelOrReturnActionBar = (TextView) findViewById(R.id.text_view_cancel_or_return_action_bar);
         mTextViewPaymentMethodMessage = (TextView) findViewById(R.id.text_view_payment_method_message);
         mTextViewPriceDetailsMessage = (TextView) findViewById(R.id.text_view_price_details_message);
+        mTextViewCancelOrReturnDetailsMessage = (TextView) findViewById(R.id.text_view_cancel_or_return_details_message);
         mTextViewPageMessage = (TextView) findViewById(R.id.text_view_page_message);
         mTextViewCodCharges = (TextView) findViewById(R.id.text_view_cod_charges);
 
+        mImageViewSelectOrDeselectPrepaid = (ImageView) findViewById(R.id.image_view_select_or_deselect_prepaid);
+        mImageViewSelectOrDeselectCod = (ImageView) findViewById(R.id.image_view_select_or_deselect_cod);
         mImageViewShowOrHideCartProducts = (ImageView) findViewById(R.id.image_view_show_or_hide_cart_products);
         mImageViewShowOrHidePriceDetails = (ImageView) findViewById(R.id.image_view_show_or_hide_price_details);
         mImageViewShowOrHideDeliveryAddress = (ImageView) findViewById(R.id.image_view_show_or_hide_delivery_address);
         mImageViewShowOrHidePaymentMethods = (ImageView) findViewById(R.id.image_view_show_or_hide_payment_methods);
         mImageViewShowOrHidePrescriptionDetails = (ImageView) findViewById(R.id.image_view_show_or_hide_prescription_details);
+        mImageViewShowOrHideCancelOrReturnDetails = (ImageView) findViewById(R.id.image_view_show_or_hide_cancel_or_return_details);
 
         mLinearLayoutProductDetailsActonBar = (LinearLayout) findViewById(R.id.linear_layout_product_details_action_bar);
         mLinearLayoutPriceDetailsActonBar  = (LinearLayout) findViewById(R.id.linear_layout_price_details_action_bar);
         mLinearLayoutDeliveryAddressActonBar  = (LinearLayout) findViewById(R.id.linear_layout_delivery_address_action_bar);
         mLinearLayoutPaymentMethodsActonBar  = (LinearLayout) findViewById(R.id.linear_layout_payment_methods_action_bar);
         mLinearLayoutPrescriptionDetailsActonBar = (LinearLayout) findViewById(R.id.linear_layout_prescription_details_action_bar);
+        mLinearLayoutCancelOrReturnOrderActonBar = (LinearLayout) findViewById(R.id.linear_layout_cancel_or_return_action_bar);
 
         mLinearLayoutProductDetails = (LinearLayout) findViewById(R.id.linear_layout_product_details);
         mLinearLayoutPriceDetails  = (LinearLayout) findViewById(R.id.linear_layout_price_details);
@@ -184,6 +188,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPrescriptionDetails,View.GONE,mImageViewShowOrHidePrescriptionDetails);
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutDeliveryAddress,View.GONE,mImageViewShowOrHideDeliveryAddress);
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPaymentMethods,View.GONE,mImageViewShowOrHidePaymentMethods);
+                    setVisibilityOfLinearLayoutAndAdjustArrowMark(mTextViewCancelOrReturnDetailsMessage,View.GONE,mImageViewShowOrHideCancelOrReturnDetails);
+
                 }
             }
         });
@@ -204,6 +210,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPrescriptionDetails,View.GONE,mImageViewShowOrHidePrescriptionDetails);
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutDeliveryAddress,View.GONE,mImageViewShowOrHideDeliveryAddress);
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPaymentMethods,View.GONE,mImageViewShowOrHidePaymentMethods);
+                    setVisibilityOfLinearLayoutAndAdjustArrowMark(mTextViewCancelOrReturnDetailsMessage,View.GONE,mImageViewShowOrHideCancelOrReturnDetails);
 
                     if(mCurrentOrder.getOrderId() == null)
                       getPricingDetails();
@@ -226,6 +233,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPrescriptionDetails,View.VISIBLE,mImageViewShowOrHidePrescriptionDetails);
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutDeliveryAddress,View.GONE,mImageViewShowOrHideDeliveryAddress);
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPaymentMethods,View.GONE,mImageViewShowOrHidePaymentMethods);
+                    setVisibilityOfLinearLayoutAndAdjustArrowMark(mTextViewCancelOrReturnDetailsMessage,View.GONE,mImageViewShowOrHideCancelOrReturnDetails);
 
                     mTextViewPriceDetailsMessage.setVisibility(View.GONE);
                 }
@@ -245,6 +253,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPrescriptionDetails,View.GONE,mImageViewShowOrHidePrescriptionDetails);
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutDeliveryAddress,View.VISIBLE,mImageViewShowOrHideDeliveryAddress);
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPaymentMethods,View.GONE,mImageViewShowOrHidePaymentMethods);
+                    setVisibilityOfLinearLayoutAndAdjustArrowMark(mTextViewCancelOrReturnDetailsMessage,View.GONE,mImageViewShowOrHideCancelOrReturnDetails);
 
                     mTextViewPriceDetailsMessage.setVisibility(View.GONE);
 
@@ -267,6 +276,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPrescriptionDetails,View.GONE,mImageViewShowOrHidePrescriptionDetails);
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutDeliveryAddress,View.GONE,mImageViewShowOrHideDeliveryAddress);
                     setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPaymentMethods,View.VISIBLE,mImageViewShowOrHidePaymentMethods);
+                    setVisibilityOfLinearLayoutAndAdjustArrowMark(mTextViewCancelOrReturnDetailsMessage,View.GONE,mImageViewShowOrHideCancelOrReturnDetails);
 
                     mTextViewPriceDetailsMessage.setVisibility(View.GONE);
                 }
@@ -376,6 +386,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
                         setActionBarBehaviourForAlreadyPlacedOrder();
                         getPrescriptionsRecyclerView();
                         getPaymentDetailsForPlacedOrder();
+
+                        if (mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_CANCELED))
+                           getCancellationDetails();
+                        else if(mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_REQUESTED_FOR_RETURN) ||
+                                mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_RETURNED))
+                            getReturnDetails();
+
                         setPageMessage();
                         setActionTextViewText();
                     }
@@ -578,14 +595,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
         {
             mTextViewPaymentMethodMessage.setText("Transaction Id: " +mCurrentOrder.getTransactionId()+ "\n(Prepaid order of RS. "+totalPayable+")");
 
-            if(mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_RETURNED) && mCurrentOrder.getOrderReturnDetails().getRefundTransactionId() != null)
-                mTextViewPaymentMethodMessage.setText(mTextViewPaymentMethodMessage.getText() + "\nRefund transaction Id: "+mCurrentOrder.getOrderReturnDetails().getRefundTransactionId());
-            else if (mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_CANCELED) && mCurrentOrder.getOrderCancellationDetails().getRefundTransactionId() != null)
-                mTextViewPaymentMethodMessage.setText(mTextViewPaymentMethodMessage.getText() + "\nRefund transaction Id: "+mCurrentOrder.getOrderCancellationDetails().getRefundTransactionId());
-            else if(mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_RETURNED) ||
-                        mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_CANCELED))
-                mTextViewPaymentMethodMessage.setText(mTextViewPaymentMethodMessage.getText() + "\nIt may take 3 to 5 working days for refund.");
-
             colorCode = OrderDetailsActivity.this.getResources().getColor(R.color.success_message_text_color);
             mTextViewPaymentMethodMessage.setTextColor(colorCode);
 
@@ -646,8 +655,15 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
         textViewDialogName.setText("Why do you want to "+cancelOrReturn+"?");
 
-        ArrayAdapter<CharSequence> reasonAdapter = ArrayAdapter.createFromResource(this,
-                R.array.return_or_cancel_reason_options, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> reasonAdapter;
+        if (mTextViewAction.getText().equals("Cancel Order"))
+            reasonAdapter = ArrayAdapter.createFromResource(this,
+                    R.array.cancel_reason_options, android.R.layout.simple_spinner_item);
+        else
+            reasonAdapter = ArrayAdapter.createFromResource(this,
+                    R.array.return_reason_options, android.R.layout.simple_spinner_item);
+
+
         reasonAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerReason.setAdapter(reasonAdapter);
         spinnerReason.setSelection(selectedItemPositionOfSpinner);
@@ -722,12 +738,125 @@ public class OrderDetailsActivity extends AppCompatActivity {
         HashMap<String, Object> timestampOrderReturnRequestedOn = new HashMap<>();
         timestampOrderReturnRequestedOn.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
 
-        OrderReturnDetails orderReturnDetails = new OrderReturnDetails(mCurrentOrder.getOrderId(),null,returnReason,null,timestampOrderReturnRequestedOn);
+        OrderReturnDetails orderReturnDetails = new OrderReturnDetails(mCurrentOrder.getOrderId(),null,returnReason,null,null,timestampOrderReturnRequestedOn);
         mCurrentOrder.setOrderReturnDetails(orderReturnDetails);
         mCurrentOrder.setOrderStatus(Constants.ORDER_STATUS_REQUESTED_FOR_RETURN);
 
         OrderOperations obj = new OrderOperations(OrderDetailsActivity.this);
         obj.updateOldOrder(mCurrentOrder);
+    }
+
+    public void getCancellationDetails()
+    {
+        mTextViewCancelOrReturnDetailsMessage.setVisibility(View.GONE);
+
+        if(mCurrentOrder.getOrderCancellationDetails() == null)
+            mLinearLayoutCancelOrReturnOrderActonBar.setVisibility(View.GONE);
+        else
+        {
+            mLinearLayoutCancelOrReturnOrderActonBar.setVisibility(View.VISIBLE);
+            mTextViewCancelOrReturnActionBar.setText("Cancellation Details");
+
+            if(mCurrentOrder.getOrderCancellationDetails().getTimestampOrderCanceledOn() != null)
+                mTextViewCancelOrReturnDetailsMessage.setText("Canceled on : "+Utils.SIMPLE_DATE_ONLY_FORMAT.format(
+                        new Date(mCurrentOrder.getOrderCancellationDetails().getTimestampOrderCancelledOnLong())) + "\n");
+            if (mCurrentOrder.getTransactionId() != null)
+            {
+                if(mCurrentOrder.getOrderCancellationDetails().getRefundTransactionId() == null)
+                    mTextViewCancelOrReturnDetailsMessage.setText(mTextViewCancelOrReturnDetailsMessage.getText() +
+                    "The amount will be refunded to your account in 3 to 5 working days.");
+                else
+                    mTextViewCancelOrReturnDetailsMessage.setText(mTextViewCancelOrReturnDetailsMessage.getText() +
+                            "Refund transaction Id: "+mCurrentOrder.getOrderCancellationDetails().getRefundTransactionId());
+            }
+
+            mLinearLayoutCancelOrReturnOrderActonBar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mTextViewCancelOrReturnDetailsMessage.getVisibility() == View.VISIBLE)
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mTextViewCancelOrReturnDetailsMessage,View.GONE,mImageViewShowOrHideCancelOrReturnDetails);
+                    else
+                    {
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutProductDetails,View.GONE,mImageViewShowOrHideCartProducts);
+
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPriceDetails,View.GONE,mImageViewShowOrHidePriceDetails);
+                        mTextViewPriceDetailsMessage.setVisibility(View.GONE);
+
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPrescriptionDetails,View.GONE,mImageViewShowOrHidePrescriptionDetails);
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutDeliveryAddress,View.GONE,mImageViewShowOrHideDeliveryAddress);
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPaymentMethods,View.GONE,mImageViewShowOrHidePaymentMethods);
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mTextViewCancelOrReturnDetailsMessage,View.VISIBLE,mImageViewShowOrHideCancelOrReturnDetails);
+
+                    }
+                }
+            });
+        }
+
+
+    }
+
+    public void getReturnDetails()
+    {
+        mTextViewCancelOrReturnDetailsMessage.setVisibility(View.GONE);
+
+        if(mCurrentOrder.getOrderReturnDetails() == null)
+            mLinearLayoutCancelOrReturnOrderActonBar.setVisibility(View.GONE);
+        else
+        {
+            mLinearLayoutCancelOrReturnOrderActonBar.setVisibility(View.VISIBLE);
+            mTextViewCancelOrReturnActionBar.setText("Return Details");
+
+            if(mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_REQUESTED_FOR_RETURN))
+            {
+                if(mCurrentOrder.getOrderReturnDetails().getTimestampOrderReturnRequestedOn() != null)
+                    mTextViewCancelOrReturnDetailsMessage.setText("Return requested on : "+Utils.SIMPLE_DATE_ONLY_FORMAT.format(
+                            new Date(mCurrentOrder.getOrderReturnDetails().getTimestampOrderReturnRequestedOnLong())) + "\n");
+
+                if(mCurrentOrder.getOrderReturnDetails().getTimestampOrderReturnScheduledOn() != null)
+                    mTextViewCancelOrReturnDetailsMessage.setText("Pickup scheduled on : "+Utils.SIMPLE_DATE_TIME_FORMAT.format(
+                            new Date(mCurrentOrder.getOrderReturnDetails().getTimestampOrderReturnScheduledOnLong())) + "\n");
+
+            }
+            else if(mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_RETURNED))
+            {
+                if(mCurrentOrder.getOrderReturnDetails().getTimestampOrderReturnedOn() != null)
+                    mTextViewCancelOrReturnDetailsMessage.setText("Returned on : "+Utils.SIMPLE_DATE_ONLY_FORMAT.format(
+                            new Date(mCurrentOrder.getOrderReturnDetails().getTimestampOrderReturnedOnLong())) + "\n");
+
+            }
+
+            if (mCurrentOrder.getTransactionId() != null)
+            {
+                if(mCurrentOrder.getOrderReturnDetails().getRefundTransactionId() == null)
+                    mTextViewCancelOrReturnDetailsMessage.setText(mTextViewCancelOrReturnDetailsMessage.getText() +
+                            "The amount will be refunded to your account in 3 to 5 working days.");
+                else
+                    mTextViewCancelOrReturnDetailsMessage.setText(mTextViewCancelOrReturnDetailsMessage.getText() +
+                            "Refund transaction Id: "+mCurrentOrder.getOrderReturnDetails().getRefundTransactionId());
+            }
+
+            mLinearLayoutCancelOrReturnOrderActonBar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mTextViewCancelOrReturnDetailsMessage.getVisibility() == View.VISIBLE)
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mTextViewCancelOrReturnDetailsMessage,View.GONE,mImageViewShowOrHideCancelOrReturnDetails);
+                    else
+                    {
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutProductDetails,View.GONE,mImageViewShowOrHideCartProducts);
+
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPriceDetails,View.GONE,mImageViewShowOrHidePriceDetails);
+                        mTextViewPriceDetailsMessage.setVisibility(View.GONE);
+
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPrescriptionDetails,View.GONE,mImageViewShowOrHidePrescriptionDetails);
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutDeliveryAddress,View.GONE,mImageViewShowOrHideDeliveryAddress);
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mLinearLayoutPaymentMethods,View.GONE,mImageViewShowOrHidePaymentMethods);
+                        setVisibilityOfLinearLayoutAndAdjustArrowMark(mTextViewCancelOrReturnDetailsMessage,View.VISIBLE,mImageViewShowOrHideCancelOrReturnDetails);
+                    }
+                }
+            });
+        }
+
+
     }
 
     public void setPageMessage()
@@ -752,9 +881,18 @@ public class OrderDetailsActivity extends AppCompatActivity {
         {
             if(mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_PLACED))
             {
-                messageToBeShown = "Order Placed Successfully";
-                textColorCode = OrderDetailsActivity.this.getResources().getColor(R.color.success_message_text_color);
-                backgroundColorCode = R.color.success_message_background_color;
+                if(mCurrentOrder.getTimestampDeliveryScheduledOn() != null)
+                {
+                    messageToBeShown = "Expected Delivery date : " + Utils.SIMPLE_DATE_ONLY_FORMAT.format(
+                            new Date(mCurrentOrder.getTimestampDeliveryScheduledOnLong()));
+                    textColorCode = OrderDetailsActivity.this.getResources().getColor(R.color.under_process_message_text_color);
+                    backgroundColorCode = R.color.under_process_message_background_color;
+                }
+                else {
+                    messageToBeShown = "Order Placed Successfully";
+                    textColorCode = OrderDetailsActivity.this.getResources().getColor(R.color.success_message_text_color);
+                    backgroundColorCode = R.color.success_message_background_color;
+                }
             }
             else if(mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_DELIVERED))
             {
@@ -776,9 +914,16 @@ public class OrderDetailsActivity extends AppCompatActivity {
             }
             else if(mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_REQUESTED_FOR_RETURN))
             {
-                messageToBeShown = "Return Request Accepted Successfully";
-                textColorCode = OrderDetailsActivity.this.getResources().getColor(R.color.fail_message_text_color);
-                backgroundColorCode = R.color.fail_message_background_color;
+                if(mCurrentOrder.getOrderReturnDetails() != null && mCurrentOrder.getOrderReturnDetails().getTimestampOrderReturnScheduledOn() != null)
+                {
+                    messageToBeShown = "Expected pickup date : "+Utils.SIMPLE_DATE_TIME_FORMAT.format(
+                            new Date(mCurrentOrder.getOrderReturnDetails().getTimestampOrderReturnScheduledOnLong()));
+                }
+                else
+                    messageToBeShown = "Return request is under process";
+
+                textColorCode = OrderDetailsActivity.this.getResources().getColor(R.color.under_process_message_text_color);
+                backgroundColorCode = R.color.under_process_message_background_color;
             }
             else if(mCurrentOrder.getOrderStatus().equals(Constants.ORDER_STATUS_DISPATCHED))
             {

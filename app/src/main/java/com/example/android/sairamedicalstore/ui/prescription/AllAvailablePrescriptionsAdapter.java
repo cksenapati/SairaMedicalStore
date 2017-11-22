@@ -1,7 +1,6 @@
-package com.example.android.sairamedicalstore.ui;
+package com.example.android.sairamedicalstore.ui.prescription;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,17 +11,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.android.sairamedicalstore.R;
-import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Prescription;
 
 import java.util.ArrayList;
 
-import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.arrayListSelectedPrescriptionIds;
-import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.mCurrentPageNumber;
-import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.mCurrentPrescription;
-import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.mImageViewPrescription;
-import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.mImageViewPrescriptionSelectionOption;
-import static com.example.android.sairamedicalstore.ui.PrescriptionsActivity.mTextViewPrescriptionName;
+import static com.example.android.sairamedicalstore.ui.prescription.PrescriptionsActivity.arrayListSelectedPrescriptionIds;
+import static com.example.android.sairamedicalstore.ui.prescription.PrescriptionsActivity.mCurrentPageNumber;
+import static com.example.android.sairamedicalstore.ui.prescription.PrescriptionsActivity.mCurrentPrescription;
+import static com.example.android.sairamedicalstore.ui.prescription.PrescriptionsActivity.mImageViewPrescription;
+import static com.example.android.sairamedicalstore.ui.prescription.PrescriptionsActivity.mImageViewPrescriptionSelectionOption;
+import static com.example.android.sairamedicalstore.ui.prescription.PrescriptionsActivity.mTextViewPrescriptionName;
 
 /**
  * Created by chandan on 12-08-2017.

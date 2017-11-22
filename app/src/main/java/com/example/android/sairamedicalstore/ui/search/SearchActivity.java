@@ -29,8 +29,8 @@ import com.example.android.sairamedicalstore.models.Poster;
 import com.example.android.sairamedicalstore.models.SelectedItem;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.operations.MedicineOperations;
-import com.example.android.sairamedicalstore.ui.AddNewMedicine;
-import com.example.android.sairamedicalstore.ui.CreateOrUpdatePoster;
+import com.example.android.sairamedicalstore.ui.medicine.AddNewMedicine;
+import com.example.android.sairamedicalstore.ui.poster.CreateOrUpdatePoster;
 import com.example.android.sairamedicalstore.ui.ProductDetailsActivity;
 import com.example.android.sairamedicalstore.ui.order.OrderDetailsActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
@@ -102,15 +102,12 @@ public class SearchActivity extends AppCompatActivity {
                     String textEntered = mEditTextSearch.getText().toString().toUpperCase();
                     displayResultAccordingly(textEntered);
                 }
-                else if(mWhatToSearch.equals(Constants.SEARCH_ORDER))
-                    displayAllOrders();
                 else
-                    mListViewSearchResult.setAdapter(null);
+                    displayAllData();
             }
         });
 
-        if(mWhatToSearch.equals(Constants.SEARCH_ORDER))
-            displayAllOrders();
+        displayAllData();
 
     }
 
@@ -188,6 +185,52 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    private void displayAllData() {
+        switch (mWhatToSearch) {
+            case Constants.SEARCH_MEDICINE:
+                displayAllMedicines();
+                break;
+            case Constants.SEARCH_MEDICINE_MANUFACTURER:
+                displayAllMedicineManufacturer();
+                break;
+            case Constants.SEARCH_MEDICINE_COMPOSITION:
+                displayAllMedicineComposition();
+                break;
+            case Constants.SEARCH_DISPLAY_CATEGORY:
+                displayAllDisplayCategories();
+                break;
+            case Constants.SEARCH_POSTER:
+                displayAllPosters();
+                break;
+            case Constants.SEARCH_ORDER:
+                displayAllOrders();
+                break;
+        }
+    }
+
+
+    private void displayAllMedicines()
+    {
+        if (mSearchedMedicinesAdapter != null)
+            mSearchedMedicinesAdapter.cleanup();
+
+        mSearchedMedicinesAdapter = new SearchedMedicinesAdapter(SearchActivity.this, Medicine.class,
+                R.layout.item_single_medicine, mFirebaseAllMedicinesRef.
+                orderByChild(Constants.FIREBASE_PROPERTY_MEDICINE_NAME));
+
+        mListViewSearchResult.setAdapter(mSearchedMedicinesAdapter);
+
+        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Medicine medicine = mSearchedMedicinesAdapter.getItem(position);
+                Intent intentProductDetails = new Intent(SearchActivity.this, ProductDetailsActivity.class);
+                intentProductDetails.putExtra("medicineId", medicine.getMedicineId());
+                startActivity(intentProductDetails);
+            }
+        });
+    }
+
     private void searchMedicine(String textEntered) {
         if (mSearchedMedicinesAdapter != null)
             mSearchedMedicinesAdapter.cleanup();
@@ -204,6 +247,28 @@ public class SearchActivity extends AppCompatActivity {
                 Intent intentProductDetails = new Intent(SearchActivity.this, ProductDetailsActivity.class);
                 intentProductDetails.putExtra("medicineId", medicine.getMedicineId());
                 startActivity(intentProductDetails);
+            }
+        });
+    }
+
+    private void displayAllMedicineManufacturer() {
+        if (mSerarchedManufacturerAdapter != null)
+            mSerarchedManufacturerAdapter.cleanup();
+
+        mSerarchedManufacturerAdapter = new SearchedManufacturersAdapter(SearchActivity.this, Manufacturer.class,
+                R.layout.item_single_selectable, mFirebaseAllMedicineManufacturersRef.
+                orderByChild(Constants.FIREBASE_PROPERTY_MANUFACTURER_NAME));
+
+        mListViewSearchResult.setAdapter(mSerarchedManufacturerAdapter);
+
+        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Manufacturer manufacturer = mSerarchedManufacturerAdapter.getItem(position);
+                Intent intentToAddMedicine = new Intent(SearchActivity.this, AddNewMedicine.class);
+                intentToAddMedicine.putExtra("returnText", Utils.toLowerCaseExceptFirstLetter(manufacturer.getManufacturerName()));
+                setResult(Activity.RESULT_OK, intentToAddMedicine);
+                finish();
             }
         });
     }
@@ -229,6 +294,25 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    private void displayAllMedicineComposition() {
+        if (mSearchedCompositionAdapter != null)
+            mSearchedCompositionAdapter.cleanup();
+
+        mSearchedCompositionAdapter = new SearchedCompositionsAdapter(SearchActivity.this, Composition.class,
+                R.layout.item_single_selectable, mFirebaseAllMedicineCompositionsRef.
+                orderByChild(Constants.FIREBASE_PROPERTY_COMPOSITION_NAME), mArrayListSelectedItems);
+
+        mListViewSearchResult.setAdapter(mSearchedCompositionAdapter);
+
+        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Composition composition = mSearchedCompositionAdapter.getItem(position);
+                onListViewItemClick(Utils.toLowerCaseExceptFirstLetter(composition.getCompositionName()),view);
+            }
+        });
+    }
+
     private void searchMedicineComposition(String textEntered) {
         if (mSearchedCompositionAdapter != null)
             mSearchedCompositionAdapter.cleanup();
@@ -243,6 +327,26 @@ public class SearchActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Composition composition = mSearchedCompositionAdapter.getItem(position);
                 onListViewItemClick(Utils.toLowerCaseExceptFirstLetter(composition.getCompositionName()),view);
+            }
+        });
+    }
+
+    private void displayAllDisplayCategories()
+    {
+        if (mSearchedDisplayCategoryAdapter != null)
+            mSearchedDisplayCategoryAdapter.cleanup();
+
+        mSearchedDisplayCategoryAdapter = new SearchedDisplayCategoriesAdapter(SearchActivity.this, DisplayCategory.class,
+                R.layout.item_single_selectable, mFirebaseAllDisplayCategoriesRef.
+                orderByChild(Constants.FIREBASE_PROPERTY_DISPLAY_CATEGORY_NAME), mArrayListSelectedItems);
+
+        mListViewSearchResult.setAdapter(mSearchedDisplayCategoryAdapter);
+
+        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DisplayCategory displayCategory = mSearchedDisplayCategoryAdapter.getItem(position);
+                onListViewItemClick(Utils.toLowerCaseExceptFirstLetter(displayCategory.getDisplayCategoryName()),view);
             }
         });
     }
@@ -262,6 +366,28 @@ public class SearchActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DisplayCategory displayCategory = mSearchedDisplayCategoryAdapter.getItem(position);
                 onListViewItemClick(Utils.toLowerCaseExceptFirstLetter(displayCategory.getDisplayCategoryName()),view);
+            }
+        });
+    }
+
+    private void displayAllPosters()
+    {
+        if (mSearchedPostersAdapter != null)
+            mSearchedPostersAdapter.cleanup();
+
+        mSearchedPostersAdapter = new SearchedPostersAdapter(SearchActivity.this, Poster.class,
+                R.layout.item_single_poster, mFirebaseAllPostersRef.
+                orderByChild(Constants.FIREBASE_PROPERTY_POSTER_NAME));
+
+        mListViewSearchResult.setAdapter(mSearchedPostersAdapter);
+
+        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Poster poster = mSearchedPostersAdapter.getItem(position);
+                Intent intentCreateOrUpdatePoster = new Intent(SearchActivity.this, CreateOrUpdatePoster.class);
+                intentCreateOrUpdatePoster.putExtra("posterId", poster.getPosterId());
+                startActivity(intentCreateOrUpdatePoster);
             }
         });
     }

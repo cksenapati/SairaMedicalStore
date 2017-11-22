@@ -1,11 +1,9 @@
 package com.example.android.sairamedicalstore.operations;
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.util.Util;
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Prescription;
@@ -20,7 +18,7 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.HashMap;
 
-import static com.example.android.sairamedicalstore.ui.AddNewPrescriptionActivity.saveDataDialog;
+import static com.example.android.sairamedicalstore.ui.prescription.AddNewPrescriptionActivity.saveDataDialog;
 
 /**
  * Created by chandan on 17-10-2017.

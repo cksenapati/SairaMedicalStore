@@ -102,9 +102,7 @@
         android:id="@+id/list_view_search_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/extra_small_margin"
-        android:layout_marginLeft="@dimen/extra_small_margin"
-        android:layout_marginRight="@dimen/extra_small_margin"
+        android:layout_margin="@dimen/extra_small_margin"
         android:divider="@color/primary_light"
         android:dividerHeight="3.0sp"
         android:layout_below="@id/linear_layout">

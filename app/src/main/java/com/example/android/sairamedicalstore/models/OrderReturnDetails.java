@@ -12,16 +12,17 @@ import java.util.HashMap;
 
 public class OrderReturnDetails  implements Serializable {
     String orderId,refundTransactionId,returnReason;
-    private HashMap<String, Object> timestampOrderReturnedOn,timestampOrderReturnRequestedOn;
+    private HashMap<String, Object> timestampOrderReturnScheduledOn,timestampOrderReturnedOn,timestampOrderReturnRequestedOn;
 
     public OrderReturnDetails() {
     }
 
-    public OrderReturnDetails(String orderId, String refundTransactionId, String returnReason,
+    public OrderReturnDetails(String orderId, String refundTransactionId, String returnReason,HashMap<String, Object>  timestampOrderReturnScheduledOn,
                               HashMap<String, Object> timestampOrderReturnedOn, HashMap<String, Object> timestampOrderReturnRequestedOn) {
         this.orderId = orderId;
         this.refundTransactionId = refundTransactionId;
         this.returnReason = returnReason;
+        this.timestampOrderReturnScheduledOn = timestampOrderReturnScheduledOn;
         this.timestampOrderReturnedOn = timestampOrderReturnedOn;
         this.timestampOrderReturnRequestedOn = timestampOrderReturnRequestedOn;
     }
@@ -48,6 +49,20 @@ public class OrderReturnDetails  implements Serializable {
 
     public void setReturnReason(String returnReason) {
         this.returnReason = returnReason;
+    }
+
+    public HashMap<String, Object> getTimestampOrderReturnScheduledOn() {
+        return timestampOrderReturnScheduledOn;
+    }
+
+    public void setTimestampOrderReturnScheduledOn(HashMap<String, Object> timestampOrderReturnScheduledOn) {
+        this.timestampOrderReturnScheduledOn = timestampOrderReturnScheduledOn;
+    }
+
+    @JsonIgnore
+    public long getTimestampOrderReturnScheduledOnLong() {
+
+        return (long) timestampOrderReturnScheduledOn.get(Constants.FIREBASE_PROPERTY_TIMESTAMP);
     }
 
     public HashMap<String, Object> getTimestampOrderReturnedOn() {

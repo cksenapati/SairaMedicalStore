@@ -333,8 +333,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="@dimen/extra_small_margin"
-                    android:text="jkhdkfsdkfksjdlkfjlksdjlkcjlkjclkjlkcjslkjslkjfslkjdlksjdlksjdlkjslkdjlskjdlksjdkjslkjdlkjslkjdklsjdlkjslkjdlksjdlkjslkdjlksjdlkjslkjflskjclksjdlksjls"/>
+                    android:padding="@dimen/extra_small_margin" />
                 <TextView
                     android:id="@+id/text_view_edit_address"
                     android:layout_width="wrap_content"
@@ -445,6 +444,52 @@
                     android:textSize="@dimen/extra_small_text_size"
                     android:visibility="gone"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_cancel_or_return_action_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginLeft="@dimen/extra_small_margin"
+                android:layout_marginRight="@dimen/extra_small_margin"
+                android:background="@color/tw__solid_white"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/text_view_cancel_or_return_action_bar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:textSize="@dimen/small_text_size"
+                    android:textColor="@color/primary_text"
+                    android:padding="@dimen/extra_small_margin"
+                    android:text="Cancellation Details"/>
+                <ImageView
+                    android:id="@+id/image_view_show_or_hide_cancel_or_return_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_down_arrow_24"
+                    android:padding="@dimen/extra_small_margin"/>
+            </LinearLayout>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:background="@color/tw__light_gray" />
+            <TextView
+                android:id="@+id/text_view_cancel_or_return_details_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/small_margin"
+                android:textColor="@color/primary"
+                android:layout_marginLeft="@dimen/extra_small_margin"
+                android:layout_marginRight="@dimen/extra_small_margin"
+                android:textStyle="bold"
+                android:background="@color/tw__solid_white"
+                android:visibility="gone"
+                android:textSize="@dimen/extra_small_text_size"/>
+
         </LinearLayout>
     </ScrollView>
 

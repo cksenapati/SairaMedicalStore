@@ -1,4 +1,4 @@
-package com.example.android.sairamedicalstore.ui;
+package com.example.android.sairamedicalstore.ui.offer;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.android.sairamedicalstore.ui.poster.PosterDetailsActivity">
+    android:background="@color/light_black"
+    tools:context=".ui.mediaFileUpload.ViewOrUploadImageActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -28,36 +29,36 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <LinearLayout
-            android:id="@+id/linear_layout_main_content"
+        <ImageView
+            android:id="@+id/image_view_image_to_display"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_edit_image"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            style="@style/FAB"
+            android:src="@drawable/ic_edit_48" />
 
-            <ImageView
-                android:id="@+id/image_view_poster_image"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:src="@drawable/image_not_found"
-                />
+        <ProgressBar
+            android:id="@+id/progress_bar_image_loading"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"/>
 
-            <LinearLayout
-                android:id="@+id/linear_layout_about_poster"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
-
+    </RelativeLayout>
 
 </LinearLayout>

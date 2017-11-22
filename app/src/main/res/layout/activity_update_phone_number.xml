@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.android.sairamedicalstore.ui.profile.UpdatePhoneNumberActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_dark"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/tw__solid_white"
+            android:gravity="center_horizontal"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:id="@+id/text_view_old_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/extra_small_margin"
+        android:padding="@dimen/extra_small_margin"
+        android:background="@color/tw__solid_white"
+        android:textSize="@dimen/small_text_size"
+        android:text="Old No : +91 8763717165"/>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_new_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner_country_codes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/extra_small_margin"
+            android:background="@drawable/gradient_spinner"
+            android:popupBackground="#B3BBCC"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/extra_small_margin">
+        </Spinner>
+
+        <EditText
+            android:id="@+id/edit_text_phone_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/rectangle_border"
+            android:layout_margin="@dimen/extra_small_margin"
+            android:layout_gravity="center_vertical"
+            android:inputType="number"
+            android:maxLength="10"
+            android:hint="Phone Number"
+            android:padding="10dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_otp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_text_otp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:background="@drawable/rectangle_border"
+            android:layout_margin="@dimen/extra_small_margin"
+            android:layout_gravity="center"
+            android:inputType="phone"
+            android:gravity="center"
+            android:maxLength="4"
+            android:hint="OTP"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/text_view_otp_verify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/extra_small_margin"
+            android:text="Verify"
+            android:textStyle="bold"
+            android:padding="@dimen/extra_small_margin"
+            android:textColor="@color/success_message_text_color"
+            android:background="@color/success_message_background_color"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/extra_small_margin">
+        <TextView
+            android:id="@+id/text_view_next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Send Otp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="@dimen/extra_small_margin"
+            android:textColor="@color/success_message_text_color"
+            android:background="@color/success_message_background_color"/>
+        <TextView
+            android:id="@+id/text_view_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:textColor="@color/fail_message_text_color"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="@dimen/extra_small_margin"
+            android:background="@color/fail_message_background_color"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

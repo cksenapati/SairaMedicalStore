@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class Utils {
 
     public static final SimpleDateFormat SIMPLE_DATE_ONLY_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final SimpleDateFormat SIMPLE_DATE_TIME_FORMAT = new SimpleDateFormat("dd-MMM-yyyy h:mm a");
 
     public static String encodeEmail(String userEmail) {
         return userEmail.replace(".", ",");

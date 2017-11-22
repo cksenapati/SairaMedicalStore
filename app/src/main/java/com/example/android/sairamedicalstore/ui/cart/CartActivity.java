@@ -1,4 +1,4 @@
-package com.example.android.sairamedicalstore.ui;
+package com.example.android.sairamedicalstore.ui.cart;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +18,7 @@ import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.Order;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.ui.address.DeliveryAddressActivity;
-import com.example.android.sairamedicalstore.ui.search.SearchActivity;
+import com.example.android.sairamedicalstore.ui.prescription.PrescriptionsActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.DataSnapshot;
@@ -89,7 +89,7 @@ public class CartActivity extends AppCompatActivity {
                         mHashMapOrderPricingDetails.put("Shipping Charges",shippingPrice);
                         mHashMapOrderPricingDetails.put("COD Charges",0.0);
 
-                        mCurrentOrder = new Order(null,null,null,null,mCurrentUser.getEmail(),mCurrentCart,null,mArrayListSelectedPrescriptionIds,null,null,mHashMapOrderPricingDetails,null,null,null);
+                        mCurrentOrder = new Order(null,null,null,null,mCurrentUser.getEmail(),mCurrentCart,null,mArrayListSelectedPrescriptionIds,null,null,null,mHashMapOrderPricingDetails,null,null,null);
                         Intent intentToDeliveryAddress = new Intent(CartActivity.this, DeliveryAddressActivity.class);
                         intentToDeliveryAddress.putExtra("currentOrder",mCurrentOrder);
                         startActivity(intentToDeliveryAddress);

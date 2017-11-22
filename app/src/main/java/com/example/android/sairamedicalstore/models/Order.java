@@ -17,7 +17,7 @@ public class Order implements Serializable {
     Address orderDeliveryAddress;
     ArrayList<String> orderPrescriptionIds;
     ArrayList<String> orderComplaintIds;
-    private HashMap<String, Object> timestampCreated;
+    private HashMap<String, Object> timestampCreated,timestampDeliveryScheduledOn;
     private HashMap<String,Double> orderPricingDetails;
     private HashMap<String,Double> individualProductPricing;
     private OrderReturnDetails orderReturnDetails;
@@ -28,7 +28,7 @@ public class Order implements Serializable {
     }
 
     public Order(String orderId, String orderStatus,String transactionId,String paymentMethod, String orderPlaceBy ,Cart cart, Address orderDeliveryAddress,
-                 ArrayList<String> orderPrescriptionIds, ArrayList<String> orderComplaintIds, HashMap<String, Object> timestampOrderPlaced,
+                 ArrayList<String> orderPrescriptionIds, ArrayList<String> orderComplaintIds, HashMap<String, Object> timestampOrderPlaced,HashMap<String, Object> timestampDeliveryScheduledOn,
                  HashMap<String, Double> orderPricingDetails, HashMap<String, Double> individualProductPricing,
                  OrderReturnDetails orderReturnDetails,OrderCancellationDetails orderCancelDetails) {
         this.orderId = orderId;
@@ -41,6 +41,7 @@ public class Order implements Serializable {
         this.orderPrescriptionIds = orderPrescriptionIds;
         this.orderComplaintIds = orderComplaintIds;
         this.timestampCreated = timestampOrderPlaced;
+        this.timestampDeliveryScheduledOn = timestampDeliveryScheduledOn;
         this.orderPricingDetails = orderPricingDetails;
         this.individualProductPricing = individualProductPricing;
         this.orderReturnDetails = orderReturnDetails;
@@ -133,6 +134,21 @@ public class Order implements Serializable {
     public long getTimestampOrderPlacedLong() {
 
         return (long) timestampCreated.get(Constants.FIREBASE_PROPERTY_TIMESTAMP);
+    }
+
+
+    public HashMap<String, Object> getTimestampDeliveryScheduledOn() {
+        return timestampDeliveryScheduledOn;
+    }
+
+    public void setTimestampDeliveryScheduledOn(HashMap<String, Object> timestampDeliveryScheduledOn) {
+        this.timestampDeliveryScheduledOn = timestampDeliveryScheduledOn;
+    }
+
+    @JsonIgnore
+    public long getTimestampDeliveryScheduledOnLong() {
+
+        return (long) timestampDeliveryScheduledOn.get(Constants.FIREBASE_PROPERTY_TIMESTAMP);
     }
 
     public HashMap<String, Double> getOrderPricingDetails() {

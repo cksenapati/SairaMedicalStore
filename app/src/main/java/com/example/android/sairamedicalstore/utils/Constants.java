@@ -39,6 +39,7 @@ public final class Constants {
     public static final String FIREBASE_LOCATION_All_PRESCRIPTIONS = "allPrescriptions";
     public static final String FIREBASE_LOCATION_All_ADDRESSES = "allAddresses";
     public static final String FIREBASE_LOCATION_All_ORDERS = "allOrders";
+    public static final String FIREBASE_LOCATION_All_PROFILE_PICS = "allProfilePics";
 
 
 
@@ -98,6 +99,9 @@ public final class Constants {
     public static final String ORDER_STATUS_REQUESTED_FOR_RETURN = "Requested For Return";
     public static final String ORDER_STATUS_DISPATCHED = "Dispatched";
     public static final String ORDER_STATUS_RETURNED = "Returned";
+
+    public static final String ACTIVITY_TITLE_PROFILE_PIC = "Profile Pic";
+
 
 
 }
