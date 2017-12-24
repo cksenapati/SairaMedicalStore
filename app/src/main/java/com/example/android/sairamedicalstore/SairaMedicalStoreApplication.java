@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class SairaMedicalStoreApplication extends Application {
 
     private User mCurrentUser;
-    private String mUserType;
     private ArrayList<DefaultKeyValuePair> mArrayListDefaultMedicinePics;
     private ArrayList<DefaultKeyValuePair> mArrayListCommonDefaultValues;
 
@@ -26,13 +25,7 @@ public class SairaMedicalStoreApplication extends Application {
         this.mCurrentUser = mCurrentUser;
     }
 
-    public String getUserType() {
-        return mUserType;
-    }
 
-    public void setUserType(String mUserType) {
-        this.mUserType = mUserType;
-    }
 
     public ArrayList<DefaultKeyValuePair> getArrayListDefaultMedicinePics() {
         return mArrayListDefaultMedicinePics;

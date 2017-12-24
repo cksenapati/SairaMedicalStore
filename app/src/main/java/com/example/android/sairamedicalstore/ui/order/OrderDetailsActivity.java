@@ -641,7 +641,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
             reasonOfReturnOrCancelDialog = null;
         }
 
-        reasonOfReturnOrCancelDialog = new Dialog(this);
+        reasonOfReturnOrCancelDialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
         reasonOfReturnOrCancelDialog.setContentView(R.layout.dialog_reason_of_return_or_cancel);
 
         selectedItemPositionOfSpinner = 0;

@@ -25,7 +25,7 @@ import com.firebase.client.ValueEventListener;
 
 public class CreateOrUpdateOfferActivity extends AppCompatActivity {
 
-    String mOfferId,mUserType;
+    String mOfferId;
     Offer mCurrentOffer;
 
     LinearLayout mLinearLayoutOfferDetails;
@@ -47,7 +47,6 @@ public class CreateOrUpdateOfferActivity extends AppCompatActivity {
             mOfferId = intent.getStringExtra("offerId");
         }
 
-        mUserType = ((SairaMedicalStoreApplication) this.getApplication()).getUserType();
 
         initializeScreen();
 

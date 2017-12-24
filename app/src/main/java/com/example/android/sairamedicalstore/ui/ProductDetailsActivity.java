@@ -40,7 +40,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     User mCurrentUser;
     Cart mCurrentCart;
     Medicine mCurrentMedicine;
-    String mMedicineId,mUserType;
+    String mMedicineId;
     ArrayList<DefaultKeyValuePair> mArrayListDefaultMedicinePics;
     ArrayList<Integer> mArrayListQuantity;
     int noOfItemsSelected;
@@ -65,7 +65,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
             mMedicineId = intent.getStringExtra("medicineId");
         }
         mCurrentUser = ((SairaMedicalStoreApplication) this.getApplication()).getCurrentUser();
-        mUserType = ((SairaMedicalStoreApplication) this.getApplication()).getUserType();
 
         initializeScreen();
         mArrayListDefaultMedicinePics = ((SairaMedicalStoreApplication) this.getApplication()).getArrayListDefaultMedicinePics();

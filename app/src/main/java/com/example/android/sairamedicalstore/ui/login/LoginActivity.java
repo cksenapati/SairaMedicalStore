@@ -202,7 +202,7 @@ public class LoginActivity extends AppCompatActivity {
         final HashMap<String, Object> timestampJoined = new HashMap<String, Object>();
         timestampJoined.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
 
-        final User newUser = new User(userName.toUpperCase(), userEmail.toUpperCase(),phoneNo, userPhotoUrl, timestampJoined);
+        final User newUser = new User(userName.toUpperCase(), userEmail.toUpperCase(),phoneNo, userPhotoUrl, timestampJoined,Constants.USER_TYPE_END_USER);
 
         final Firebase currentUserReference = new Firebase(Constants.FIREBASE_URL_SAIRA_ALL_USERS).child(encodedEmail);
 
@@ -238,7 +238,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (loggedinUser != null) {
 
                     ((SairaMedicalStoreApplication) sairaMedicalStoreApplication).setCurrentUser(loggedinUser);
-                    updateUserType(encodedEmail);
                     getDefaultValues(loggedinUser);
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -254,12 +253,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void updateUserType(String encodedEmail)
-    {
-        final Application sairaMedicalStoreApplication = this.getApplication();
-        ((SairaMedicalStoreApplication) sairaMedicalStoreApplication).setUserType(Constants.USER_TYPE_END_USER);
-
-    }
 
     private void getDefaultValues(User loggedinUser)
     {

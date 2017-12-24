@@ -3,11 +3,11 @@ package com.example.android.sairamedicalstore.ui.search;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -15,20 +15,28 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Composition;
 import com.example.android.sairamedicalstore.models.DisplayCategory;
+import com.example.android.sairamedicalstore.models.Faq;
 import com.example.android.sairamedicalstore.models.Manufacturer;
 import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.Order;
 import com.example.android.sairamedicalstore.models.Poster;
+import com.example.android.sairamedicalstore.models.Query;
 import com.example.android.sairamedicalstore.models.SelectedItem;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.operations.MedicineOperations;
+import com.example.android.sairamedicalstore.ui.customerSupport.AddOrUpdateFaqActivity;
+import com.example.android.sairamedicalstore.ui.customerSupport.QueryTicketDetailsActivity;
 import com.example.android.sairamedicalstore.ui.medicine.AddNewMedicine;
 import com.example.android.sairamedicalstore.ui.poster.CreateOrUpdatePoster;
 import com.example.android.sairamedicalstore.ui.ProductDetailsActivity;
@@ -40,31 +48,43 @@ import com.firebase.client.Firebase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity {
 
-    String mUserType, mWhatToSearch;
+    String  mWhatToSearch;
     ListView mListViewSearchResult;
     EditText mEditTextSearch;
-    Button mButtonAddItem, mButtonDone;
+    Button /*mButtonAddItem,*/ mButtonDone;
     RecyclerView mRecyclerViewSelectedItems;
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mRecyclerAdapter;
+    FloatingActionButton mFabAddItem;
+    ImageView mImageViewSort,mImageViewBackArrow;
+    TextView mTextViewActivityTitle;
 
-    String errorMessage;
+    String errorMessage,searchOrderBy;
     Boolean isSuccess;
     User mCurrentUser;
+    int maximumNoOfQueriesToDisplay;
     MedicineOperations operationObject;
     Firebase mFirebaseAllMedicinesRef, mFirebaseAllMedicineManufacturersRef,
-            mFirebaseAllMedicineCompositionsRef,mFirebaseAllDisplayCategoriesRef,mFirebaseAllPostersRef,mFirebaseCurrentUserAllOrdersRef;
+            mFirebaseAllMedicineCompositionsRef,mFirebaseAllDisplayCategoriesRef,mFirebaseAllPostersRef,mFirebaseCurrentUserAllOrdersRef,
+            mFirebaseAllQueriesRef,mFirebaseAllFaqsRef;
     private SearchedMedicinesAdapter mSearchedMedicinesAdapter;
     private SearchedManufacturersAdapter mSerarchedManufacturerAdapter;
     private SearchedCompositionsAdapter mSearchedCompositionAdapter;
     private SearchedDisplayCategoriesAdapter mSearchedDisplayCategoryAdapter;
     private SearchedPostersAdapter mSearchedPostersAdapter;
     private SearchedOrdersAdapter mSearchedOrdersAdapter;
+    private SearchedQueriesAdapter mSearchedQueriesAdapter;
+    private SearchedFaqsAdapter mSearchedFaqsAdapter;
+
 
     ArrayList<SelectedItem> mArrayListSelectedItems;
+    ArrayList<Query> mArrayListQueriesFromAllUsers;
+    HashMap<String,String> mHashMapSortOptions;
 
 
     @Override
@@ -79,9 +99,10 @@ public class SearchActivity extends AppCompatActivity {
             oldSelectedData = intent.getStringExtra("oldSelectedData");
         }
 
-        mUserType = ((SairaMedicalStoreApplication) this.getApplication()).getUserType();
 
         initializeScreen();
+
+        setActivityTitle();
 
         getOldSelectedData(oldSelectedData);
 
@@ -99,7 +120,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (mEditTextSearch.getText().toString().trim().length() > 0) {
-                    String textEntered = mEditTextSearch.getText().toString().toUpperCase();
+                    String textEntered = mEditTextSearch.getText().toString();
                     displayResultAccordingly(textEntered);
                 }
                 else
@@ -109,18 +130,40 @@ public class SearchActivity extends AppCompatActivity {
 
         displayAllData();
 
+        mFabAddItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onAddClick();
+            }
+        });
+
+        mImageViewBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchActivity.this.finish();
+            }
+        });
+
+        mImageViewSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortListViewAccordingToSearch();
+            }
+        });
+
     }
 
     private void initializeScreen() {
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        /* Common toolbar setup */
-        setSupportActionBar(toolbar);
-        setActivityTitle();
+
+        mImageViewSort = (ImageView) findViewById(R.id.image_view_filter);
+        mTextViewActivityTitle = (TextView) findViewById(R.id.text_view_activity_title);
+        mImageViewBackArrow  = (ImageView) findViewById(R.id.image_view_back_arrow);
+
 
         mListViewSearchResult = (ListView) findViewById(R.id.list_view_search_result);
         mEditTextSearch = (EditText) findViewById(R.id.edit_text_search);
-        mButtonAddItem = (Button) findViewById(R.id.button_add_item);
+        //mButtonAddItem = (Button) findViewById(R.id.button_add_item);
         mButtonDone = (Button) findViewById(R.id.button_done);
         mRecyclerViewSelectedItems = (RecyclerView) findViewById(R.id.recycler_view_selected_items);
         mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
@@ -128,6 +171,10 @@ public class SearchActivity extends AppCompatActivity {
         mCurrentUser = ((SairaMedicalStoreApplication) this.getApplication()).getCurrentUser();
 
         mArrayListSelectedItems = new ArrayList<SelectedItem>();
+        mArrayListQueriesFromAllUsers = new ArrayList<>();
+        mHashMapSortOptions = new HashMap<>();
+
+        mFabAddItem = (FloatingActionButton) findViewById(R.id.fab_add_item);
 
         mFirebaseAllMedicinesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_ALL_MEDICINES);
         mFirebaseAllMedicineManufacturersRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_MANUFACTURERS);
@@ -135,29 +182,45 @@ public class SearchActivity extends AppCompatActivity {
         mFirebaseAllDisplayCategoriesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_DISPLAY_CATEGORIES);
         mFirebaseAllPostersRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_POSTERS);
         mFirebaseCurrentUserAllOrdersRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_ORDERS).child(Utils.encodeEmail(mCurrentUser.getEmail()));
+        mFirebaseAllQueriesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_QUERIES);
+        mFirebaseAllFaqsRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_FAQS);
         setItemVisibilityAccordingToRequest();
+
+        maximumNoOfQueriesToDisplay = 10;
 
     }
 
     private void setActivityTitle() {
         switch (mWhatToSearch) {
             case Constants.SEARCH_MEDICINE:
-                setTitle("Search Medicines");
+                mTextViewActivityTitle.setText("Search Medicines");
                 break;
             case Constants.SEARCH_MEDICINE_MANUFACTURER:
-                setTitle("Search Manufacturer");
+                mTextViewActivityTitle.setText("Search Manufacturer");
                 break;
             case Constants.SEARCH_MEDICINE_COMPOSITION:
-                setTitle("Search Compositions");
+                mTextViewActivityTitle.setText("Search Compositions");
                 break;
             case Constants.SEARCH_DISPLAY_CATEGORY:
-                setTitle("Search Display categories");
+                mTextViewActivityTitle.setText("Search Display categories");
                 break;
             case Constants.SEARCH_POSTER:
-                setTitle("Search Posters");
+                mTextViewActivityTitle.setText("Search Posters");
                 break;
             case Constants.SEARCH_ORDER:
-                setTitle("Search Orders");
+                mTextViewActivityTitle.setText("Search Orders");
+                break;
+            case Constants.SEARCH_QUERY:
+                mTextViewActivityTitle.setText("Search Queries");
+                break;
+            case Constants.SEARCH_FAQ:
+                mTextViewActivityTitle.setText("FAQs");
+                break;
+            case Constants.SEARCH_ALL_QUERIES_FROM_ALL_USERS:
+                mTextViewActivityTitle.setText("All Queries");
+                break;
+            case Constants.SEARCH_AND_CHOOSE_ORDER:
+                mTextViewActivityTitle.setText("Choose Order");
                 break;
         }
     }
@@ -165,22 +228,34 @@ public class SearchActivity extends AppCompatActivity {
     private void displayResultAccordingly(String textEntered) {
         switch (mWhatToSearch) {
             case Constants.SEARCH_MEDICINE:
-                searchMedicine(textEntered);
+                searchMedicine(textEntered.toUpperCase());
                 break;
             case Constants.SEARCH_MEDICINE_MANUFACTURER:
-                searchMedicineManufacturer(textEntered);
+                searchMedicineManufacturer(textEntered.toUpperCase());
                 break;
             case Constants.SEARCH_MEDICINE_COMPOSITION:
-                searchMedicineComposition(textEntered);
+                searchMedicineComposition(textEntered.toUpperCase());
                 break;
             case Constants.SEARCH_DISPLAY_CATEGORY:
-                searchDisplayCategories(textEntered);
+                searchDisplayCategories(textEntered.toUpperCase());
                 break;
             case Constants.SEARCH_POSTER:
-                searchPosters(textEntered);
+                searchPosters(textEntered.toUpperCase());
                 break;
             case Constants.SEARCH_ORDER:
                 searchOrders(textEntered);
+                break;
+            case Constants.SEARCH_QUERY:
+                searchQueries();
+                break;
+            case Constants.SEARCH_FAQ:
+                searchFaqs(textEntered.toUpperCase());
+                break;
+            case Constants.SEARCH_ALL_QUERIES_FROM_ALL_USERS:
+                searchQueriesFromAllUsers(textEntered.toUpperCase());
+                break;
+            case Constants.SEARCH_AND_CHOOSE_ORDER:
+                searchAndChooseOrder(textEntered);
                 break;
         }
     }
@@ -188,55 +263,54 @@ public class SearchActivity extends AppCompatActivity {
     private void displayAllData() {
         switch (mWhatToSearch) {
             case Constants.SEARCH_MEDICINE:
-                displayAllMedicines();
+                searchMedicine(null);
                 break;
             case Constants.SEARCH_MEDICINE_MANUFACTURER:
-                displayAllMedicineManufacturer();
+                searchMedicineManufacturer(null);
                 break;
             case Constants.SEARCH_MEDICINE_COMPOSITION:
-                displayAllMedicineComposition();
+                searchMedicineComposition(null);
                 break;
             case Constants.SEARCH_DISPLAY_CATEGORY:
-                displayAllDisplayCategories();
+                searchDisplayCategories(null);
                 break;
             case Constants.SEARCH_POSTER:
-                displayAllPosters();
+                searchPosters(null);
                 break;
             case Constants.SEARCH_ORDER:
-                displayAllOrders();
+                searchOrders(null);
+                break;
+            case Constants.SEARCH_QUERY:
+                searchQueries();
+                break;
+            case Constants.SEARCH_FAQ:
+                searchFaqs(null);
+                break;
+            case Constants.SEARCH_ALL_QUERIES_FROM_ALL_USERS:
+                searchQueriesFromAllUsers(null);
+                break;
+            case Constants.SEARCH_AND_CHOOSE_ORDER:
+                searchAndChooseOrder(null);
                 break;
         }
     }
 
 
-    private void displayAllMedicines()
-    {
-        if (mSearchedMedicinesAdapter != null)
-            mSearchedMedicinesAdapter.cleanup();
-
-        mSearchedMedicinesAdapter = new SearchedMedicinesAdapter(SearchActivity.this, Medicine.class,
-                R.layout.item_single_medicine, mFirebaseAllMedicinesRef.
-                orderByChild(Constants.FIREBASE_PROPERTY_MEDICINE_NAME));
-
-        mListViewSearchResult.setAdapter(mSearchedMedicinesAdapter);
-
-        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Medicine medicine = mSearchedMedicinesAdapter.getItem(position);
-                Intent intentProductDetails = new Intent(SearchActivity.this, ProductDetailsActivity.class);
-                intentProductDetails.putExtra("medicineId", medicine.getMedicineId());
-                startActivity(intentProductDetails);
-            }
-        });
-    }
-
     private void searchMedicine(String textEntered) {
         if (mSearchedMedicinesAdapter != null)
             mSearchedMedicinesAdapter.cleanup();
 
-        mSearchedMedicinesAdapter = new SearchedMedicinesAdapter(SearchActivity.this, Medicine.class,
-                R.layout.item_single_medicine, mFirebaseAllMedicinesRef.orderByChild(Constants.FIREBASE_PROPERTY_MEDICINE_NAME).startAt(textEntered).endAt(textEntered + "~"));
+        if (searchOrderBy == null || searchOrderBy.length() < 1)
+            searchOrderBy = Constants.FIREBASE_PROPERTY_MEDICINE_NAME;
+
+        if (textEntered != null && textEntered.trim().length() >1)
+            mSearchedMedicinesAdapter = new SearchedMedicinesAdapter(SearchActivity.this, Medicine.class,
+                    R.layout.item_single_medicine, mFirebaseAllMedicinesRef.
+                    orderByChild(searchOrderBy).startAt(textEntered).endAt(textEntered + "~"));
+        else
+            mSearchedMedicinesAdapter = new SearchedMedicinesAdapter(SearchActivity.this, Medicine.class,
+                    R.layout.item_single_medicine, mFirebaseAllMedicinesRef.
+                    orderByChild(searchOrderBy));
 
         mListViewSearchResult.setAdapter(mSearchedMedicinesAdapter);
 
@@ -247,28 +321,6 @@ public class SearchActivity extends AppCompatActivity {
                 Intent intentProductDetails = new Intent(SearchActivity.this, ProductDetailsActivity.class);
                 intentProductDetails.putExtra("medicineId", medicine.getMedicineId());
                 startActivity(intentProductDetails);
-            }
-        });
-    }
-
-    private void displayAllMedicineManufacturer() {
-        if (mSerarchedManufacturerAdapter != null)
-            mSerarchedManufacturerAdapter.cleanup();
-
-        mSerarchedManufacturerAdapter = new SearchedManufacturersAdapter(SearchActivity.this, Manufacturer.class,
-                R.layout.item_single_selectable, mFirebaseAllMedicineManufacturersRef.
-                orderByChild(Constants.FIREBASE_PROPERTY_MANUFACTURER_NAME));
-
-        mListViewSearchResult.setAdapter(mSerarchedManufacturerAdapter);
-
-        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Manufacturer manufacturer = mSerarchedManufacturerAdapter.getItem(position);
-                Intent intentToAddMedicine = new Intent(SearchActivity.this, AddNewMedicine.class);
-                intentToAddMedicine.putExtra("returnText", Utils.toLowerCaseExceptFirstLetter(manufacturer.getManufacturerName()));
-                setResult(Activity.RESULT_OK, intentToAddMedicine);
-                finish();
             }
         });
     }
@@ -277,8 +329,17 @@ public class SearchActivity extends AppCompatActivity {
         if (mSerarchedManufacturerAdapter != null)
             mSerarchedManufacturerAdapter.cleanup();
 
-        mSerarchedManufacturerAdapter = new SearchedManufacturersAdapter(SearchActivity.this, Manufacturer.class,
-                R.layout.item_single_selectable, mFirebaseAllMedicineManufacturersRef.orderByChild(Constants.FIREBASE_PROPERTY_MANUFACTURER_NAME).startAt(textEntered).endAt(textEntered + "~"));
+        if (searchOrderBy == null || searchOrderBy.length() < 1)
+            searchOrderBy = Constants.FIREBASE_PROPERTY_MANUFACTURER_NAME;
+
+        if (textEntered != null && textEntered.trim().length() >1)
+            mSerarchedManufacturerAdapter = new SearchedManufacturersAdapter(SearchActivity.this, Manufacturer.class,
+                R.layout.item_single_selectable, mFirebaseAllMedicineManufacturersRef
+                .orderByChild(searchOrderBy).startAt(textEntered).endAt(textEntered + "~"));
+        else
+            mSerarchedManufacturerAdapter = new SearchedManufacturersAdapter(SearchActivity.this, Manufacturer.class,
+                    R.layout.item_single_selectable, mFirebaseAllMedicineManufacturersRef
+                    .orderByChild(searchOrderBy));
 
         mListViewSearchResult.setAdapter(mSerarchedManufacturerAdapter);
 
@@ -294,31 +355,21 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    private void displayAllMedicineComposition() {
-        if (mSearchedCompositionAdapter != null)
-            mSearchedCompositionAdapter.cleanup();
-
-        mSearchedCompositionAdapter = new SearchedCompositionsAdapter(SearchActivity.this, Composition.class,
-                R.layout.item_single_selectable, mFirebaseAllMedicineCompositionsRef.
-                orderByChild(Constants.FIREBASE_PROPERTY_COMPOSITION_NAME), mArrayListSelectedItems);
-
-        mListViewSearchResult.setAdapter(mSearchedCompositionAdapter);
-
-        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Composition composition = mSearchedCompositionAdapter.getItem(position);
-                onListViewItemClick(Utils.toLowerCaseExceptFirstLetter(composition.getCompositionName()),view);
-            }
-        });
-    }
-
     private void searchMedicineComposition(String textEntered) {
         if (mSearchedCompositionAdapter != null)
             mSearchedCompositionAdapter.cleanup();
 
-        mSearchedCompositionAdapter = new SearchedCompositionsAdapter(SearchActivity.this, Composition.class,
-                R.layout.item_single_selectable, mFirebaseAllMedicineCompositionsRef.orderByChild(Constants.FIREBASE_PROPERTY_COMPOSITION_NAME).startAt(textEntered).endAt(textEntered + "~"), mArrayListSelectedItems);
+        if (searchOrderBy == null || searchOrderBy.length() < 1)
+            searchOrderBy = Constants.FIREBASE_PROPERTY_COMPOSITION_NAME;
+
+        if (textEntered != null && textEntered.trim().length() >1)
+            mSearchedCompositionAdapter = new SearchedCompositionsAdapter(SearchActivity.this, Composition.class,
+                    R.layout.item_single_selectable, mFirebaseAllMedicineCompositionsRef.
+                    orderByChild(searchOrderBy).startAt(textEntered).endAt(textEntered + "~"), mArrayListSelectedItems);
+        else
+            mSearchedCompositionAdapter = new SearchedCompositionsAdapter(SearchActivity.this, Composition.class,
+                    R.layout.item_single_selectable, mFirebaseAllMedicineCompositionsRef.
+                    orderByChild(searchOrderBy), mArrayListSelectedItems);
 
         mListViewSearchResult.setAdapter(mSearchedCompositionAdapter);
 
@@ -327,26 +378,6 @@ public class SearchActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Composition composition = mSearchedCompositionAdapter.getItem(position);
                 onListViewItemClick(Utils.toLowerCaseExceptFirstLetter(composition.getCompositionName()),view);
-            }
-        });
-    }
-
-    private void displayAllDisplayCategories()
-    {
-        if (mSearchedDisplayCategoryAdapter != null)
-            mSearchedDisplayCategoryAdapter.cleanup();
-
-        mSearchedDisplayCategoryAdapter = new SearchedDisplayCategoriesAdapter(SearchActivity.this, DisplayCategory.class,
-                R.layout.item_single_selectable, mFirebaseAllDisplayCategoriesRef.
-                orderByChild(Constants.FIREBASE_PROPERTY_DISPLAY_CATEGORY_NAME), mArrayListSelectedItems);
-
-        mListViewSearchResult.setAdapter(mSearchedDisplayCategoryAdapter);
-
-        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DisplayCategory displayCategory = mSearchedDisplayCategoryAdapter.getItem(position);
-                onListViewItemClick(Utils.toLowerCaseExceptFirstLetter(displayCategory.getDisplayCategoryName()),view);
             }
         });
     }
@@ -356,8 +387,17 @@ public class SearchActivity extends AppCompatActivity {
         if (mSearchedDisplayCategoryAdapter != null)
             mSearchedDisplayCategoryAdapter.cleanup();
 
-        mSearchedDisplayCategoryAdapter = new SearchedDisplayCategoriesAdapter(SearchActivity.this, DisplayCategory.class,
-                R.layout.item_single_selectable, mFirebaseAllDisplayCategoriesRef.orderByChild(Constants.FIREBASE_PROPERTY_DISPLAY_CATEGORY_NAME).startAt(textEntered).endAt(textEntered + "~"), mArrayListSelectedItems);
+        if (searchOrderBy == null || searchOrderBy.length() < 1)
+            searchOrderBy = Constants.FIREBASE_PROPERTY_DISPLAY_CATEGORY_NAME;
+
+        if (textEntered != null && textEntered.trim().length() >1)
+            mSearchedDisplayCategoryAdapter = new SearchedDisplayCategoriesAdapter(SearchActivity.this, DisplayCategory.class,
+                    R.layout.item_single_selectable, mFirebaseAllDisplayCategoriesRef.
+                    orderByChild(searchOrderBy).startAt(textEntered).endAt(textEntered + "~"), mArrayListSelectedItems);
+        else
+            mSearchedDisplayCategoryAdapter = new SearchedDisplayCategoriesAdapter(SearchActivity.this, DisplayCategory.class,
+                    R.layout.item_single_selectable, mFirebaseAllDisplayCategoriesRef.
+                    orderByChild(searchOrderBy), mArrayListSelectedItems);
 
         mListViewSearchResult.setAdapter(mSearchedDisplayCategoryAdapter);
 
@@ -370,35 +410,22 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    private void displayAllPosters()
-    {
-        if (mSearchedPostersAdapter != null)
-            mSearchedPostersAdapter.cleanup();
-
-        mSearchedPostersAdapter = new SearchedPostersAdapter(SearchActivity.this, Poster.class,
-                R.layout.item_single_poster, mFirebaseAllPostersRef.
-                orderByChild(Constants.FIREBASE_PROPERTY_POSTER_NAME));
-
-        mListViewSearchResult.setAdapter(mSearchedPostersAdapter);
-
-        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Poster poster = mSearchedPostersAdapter.getItem(position);
-                Intent intentCreateOrUpdatePoster = new Intent(SearchActivity.this, CreateOrUpdatePoster.class);
-                intentCreateOrUpdatePoster.putExtra("posterId", poster.getPosterId());
-                startActivity(intentCreateOrUpdatePoster);
-            }
-        });
-    }
-
     private void searchPosters(String textEntered)
     {
         if (mSearchedPostersAdapter != null)
             mSearchedPostersAdapter.cleanup();
 
-        mSearchedPostersAdapter = new SearchedPostersAdapter(SearchActivity.this, Poster.class,
-                R.layout.item_single_poster, mFirebaseAllPostersRef.orderByChild(Constants.FIREBASE_PROPERTY_POSTER_NAME).startAt(textEntered).endAt(textEntered + "~"));
+        if (searchOrderBy == null || searchOrderBy.length() < 1)
+            searchOrderBy = Constants.FIREBASE_PROPERTY_POSTER_NAME;
+
+        if (textEntered != null && textEntered.trim().length() >1)
+            mSearchedPostersAdapter = new SearchedPostersAdapter(SearchActivity.this, Poster.class,
+                    R.layout.item_single_poster, mFirebaseAllPostersRef.
+                    orderByChild(searchOrderBy).startAt(textEntered).endAt(textEntered + "~"));
+        else
+            mSearchedPostersAdapter = new SearchedPostersAdapter(SearchActivity.this, Poster.class,
+                    R.layout.item_single_poster, mFirebaseAllPostersRef.
+                    orderByChild(searchOrderBy));
 
         mListViewSearchResult.setAdapter(mSearchedPostersAdapter);
 
@@ -417,8 +444,17 @@ public class SearchActivity extends AppCompatActivity {
         if (mSearchedOrdersAdapter != null)
             mSearchedOrdersAdapter.cleanup();
 
-        mSearchedOrdersAdapter = new SearchedOrdersAdapter(SearchActivity.this, Order.class,
-                R.layout.item_single_order, mFirebaseCurrentUserAllOrdersRef.orderByChild(Constants.FIREBASE_PROPERTY_ORDER_ID).startAt(textEntered).endAt(textEntered + "~"));
+        if (searchOrderBy == null || searchOrderBy.length() < 1)
+            searchOrderBy = Constants.FIREBASE_PROPERTY_ORDER_STATUS;
+
+        if (textEntered != null && textEntered.trim().length() >1)
+            mSearchedOrdersAdapter = new SearchedOrdersAdapter(SearchActivity.this, Order.class,
+                    R.layout.item_single_order, mFirebaseCurrentUserAllOrdersRef.
+                    orderByChild(searchOrderBy).startAt(textEntered).endAt(textEntered + "~"));
+        else
+            mSearchedOrdersAdapter = new SearchedOrdersAdapter(SearchActivity.this, Order.class,
+                    R.layout.item_single_order, mFirebaseCurrentUserAllOrdersRef.
+                    orderByChild(searchOrderBy));
 
         mListViewSearchResult.setAdapter(mSearchedOrdersAdapter);
 
@@ -433,13 +469,105 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    private void displayAllOrders()
+    private void searchQueries() {
+        if (mSearchedQueriesAdapter != null)
+            mSearchedQueriesAdapter.cleanup();
+
+        mSearchedQueriesAdapter = new SearchedQueriesAdapter(SearchActivity.this, Query.class,
+                R.layout.item_single_old_query_ticket, mFirebaseAllQueriesRef.
+                orderByChild("queryPostedBy").equalTo(mCurrentUser.getEmail()));
+
+        mListViewSearchResult.setAdapter(mSearchedQueriesAdapter);
+
+        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Query selectedQuery = mSearchedQueriesAdapter.getItem(position);
+                Intent intentToQueryDetails = new Intent(SearchActivity.this, QueryTicketDetailsActivity.class);
+                intentToQueryDetails.putExtra("currentQueryId", selectedQuery.getQueryId());
+                startActivity(intentToQueryDetails);
+            }
+        });
+    }
+
+    private void searchFaqs(String textEntered) {
+        if (mSearchedFaqsAdapter != null)
+            mSearchedFaqsAdapter.cleanup();
+
+        if (searchOrderBy == null || searchOrderBy.length() < 1)
+            searchOrderBy = Constants.FIREBASE_PROPERTY_FAQ_PRIORITY;
+
+        if (textEntered != null && textEntered.trim().length() >1)
+            mSearchedFaqsAdapter = new SearchedFaqsAdapter(SearchActivity.this, Faq.class,
+                    R.layout.item_single_faq, mFirebaseAllFaqsRef.orderByChild(searchOrderBy).startAt(textEntered).endAt(textEntered + "~"));
+        else
+            mSearchedFaqsAdapter = new SearchedFaqsAdapter(SearchActivity.this, Faq.class,
+                    R.layout.item_single_faq, mFirebaseAllFaqsRef.orderByChild(searchOrderBy));
+
+        mListViewSearchResult.setAdapter(mSearchedFaqsAdapter);
+
+        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Faq selectedFaq = mSearchedFaqsAdapter.getItem(position);
+                if (mCurrentUser.getUserType().equals(Constants.USER_TYPE_END_USER))
+                    openDialogForFaqAnswer(selectedFaq);
+                else
+                {
+                    Intent intentToAddOrUpdateFaqActivity = new Intent(SearchActivity.this, AddOrUpdateFaqActivity.class);
+                    intentToAddOrUpdateFaqActivity.putExtra("FaqId", selectedFaq.getFaqId());
+                    startActivity(intentToAddOrUpdateFaqActivity);
+                }
+            }
+        });
+
+    }
+
+    private void searchQueriesFromAllUsers(String textEntered)
     {
+        if (mSearchedQueriesAdapter != null)
+            mSearchedQueriesAdapter.cleanup();
+
+        if (searchOrderBy == null || searchOrderBy.length() < 1)
+            searchOrderBy = Constants.FIREBASE_PROPERTY_TIMESTAMP_CREATED + "/" + Constants.FIREBASE_PROPERTY_TIMESTAMP;
+
+        if (textEntered != null && textEntered.trim().length() >1)
+            mSearchedQueriesAdapter = new SearchedQueriesAdapter(SearchActivity.this, Query.class,
+                    R.layout.item_single_old_query_ticket, mFirebaseAllQueriesRef.
+                    orderByChild(searchOrderBy).startAt(textEntered).endAt(textEntered + "~").limitToFirst(maximumNoOfQueriesToDisplay));
+        else
+            mSearchedQueriesAdapter = new SearchedQueriesAdapter(SearchActivity.this, Query.class,
+                    R.layout.item_single_old_query_ticket, mFirebaseAllQueriesRef.
+                    orderByChild(searchOrderBy).limitToFirst(maximumNoOfQueriesToDisplay));
+
+        mListViewSearchResult.setAdapter(mSearchedQueriesAdapter);
+
+        mListViewSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Query selectedQuery = mSearchedQueriesAdapter.getItem(position);
+                Intent intentToQueryDetails = new Intent(SearchActivity.this, QueryTicketDetailsActivity.class);
+                intentToQueryDetails.putExtra("currentQueryId", selectedQuery.getQueryId());
+                startActivity(intentToQueryDetails);
+            }
+        });
+    }
+
+    private void searchAndChooseOrder(String textEntered) {
         if (mSearchedOrdersAdapter != null)
             mSearchedOrdersAdapter.cleanup();
 
-        mSearchedOrdersAdapter = new SearchedOrdersAdapter(SearchActivity.this, Order.class,
-                R.layout.item_single_order, mFirebaseCurrentUserAllOrdersRef.orderByChild(Constants.FIREBASE_PROPERTY_TIMESTAMP_CREATED + "/" + Constants.FIREBASE_PROPERTY_TIMESTAMP));
+        if (searchOrderBy == null || searchOrderBy.length() < 1)
+            searchOrderBy = Constants.FIREBASE_PROPERTY_ORDER_STATUS;
+
+        if (textEntered != null && textEntered.trim().length() >1)
+            mSearchedOrdersAdapter = new SearchedOrdersAdapter(SearchActivity.this, Order.class,
+                R.layout.item_single_order, mFirebaseCurrentUserAllOrdersRef.
+                orderByChild(searchOrderBy).startAt(textEntered).endAt(textEntered + "~"));
+        else
+            mSearchedOrdersAdapter = new SearchedOrdersAdapter(SearchActivity.this, Order.class,
+                    R.layout.item_single_order, mFirebaseCurrentUserAllOrdersRef.
+                    orderByChild(searchOrderBy));
 
         mListViewSearchResult.setAdapter(mSearchedOrdersAdapter);
 
@@ -447,35 +575,54 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Order order = mSearchedOrdersAdapter.getItem(position);
-                Intent intentToOrderDetails = new Intent(SearchActivity.this, OrderDetailsActivity.class);
-                intentToOrderDetails.putExtra("currentOrder", order);
-                startActivity(intentToOrderDetails);
+                Intent intentToQueryTicketDetails = new Intent(SearchActivity.this, QueryTicketDetailsActivity.class);
+                intentToQueryTicketDetails.putExtra("returnText", order.getOrderId());
+                setResult(Activity.RESULT_OK, intentToQueryTicketDetails);
+                finish();
             }
         });
     }
+
 
 
 
     private void setItemVisibilityAccordingToRequest() {
         switch (mWhatToSearch) {
             case Constants.SEARCH_MEDICINE:
-                mButtonAddItem.setVisibility(View.GONE);
+                mFabAddItem.setVisibility(View.GONE);
                 mButtonDone.setVisibility(View.GONE);
                 break;
             case Constants.SEARCH_MEDICINE_MANUFACTURER:
-                mButtonAddItem.setVisibility(View.VISIBLE);
+                mFabAddItem.setVisibility(View.VISIBLE);
                 mButtonDone.setVisibility(View.VISIBLE);
                 break;
             case Constants.SEARCH_MEDICINE_COMPOSITION:
-                mButtonAddItem.setVisibility(View.VISIBLE);
+                mFabAddItem.setVisibility(View.VISIBLE);
                 mButtonDone.setVisibility(View.VISIBLE);
                 break;
             case Constants.SEARCH_POSTER:
-                mButtonAddItem.setVisibility(View.VISIBLE);
+                mFabAddItem.setVisibility(View.VISIBLE);
                 mButtonDone.setVisibility(View.GONE);
                 break;
             case Constants.SEARCH_ORDER:
-                mButtonAddItem.setVisibility(View.GONE);
+                mFabAddItem.setVisibility(View.GONE);
+                mButtonDone.setVisibility(View.GONE);
+                break;
+            case Constants.SEARCH_QUERY:
+                mFabAddItem.setVisibility(View.VISIBLE);
+                mButtonDone.setVisibility(View.GONE);
+                mImageViewSort.setVisibility(View.GONE);
+                break;
+            case Constants.SEARCH_FAQ:
+                mFabAddItem.setVisibility(View.VISIBLE);
+                mButtonDone.setVisibility(View.GONE);
+                break;
+            case Constants.SEARCH_ALL_QUERIES_FROM_ALL_USERS:
+                mFabAddItem.setVisibility(View.GONE);
+                mButtonDone.setVisibility(View.GONE);
+                break;
+            case Constants.SEARCH_AND_CHOOSE_ORDER:
+                mFabAddItem.setVisibility(View.GONE);
                 mButtonDone.setVisibility(View.GONE);
                 break;
         }
@@ -518,6 +665,166 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
+    public void openDialogForFaqAnswer(Faq currentFaq)
+    {
+        final Dialog showFaqAnswerDialog = new Dialog(this,android.R.style.Theme_Light_NoTitleBar_Fullscreen);
+        showFaqAnswerDialog.setContentView(R.layout.dialog_faq_answer);
+
+        TextView textViewFaqQuestion = (TextView) showFaqAnswerDialog.findViewById(R.id.text_view_faq_question);
+        TextView textViewExit = (TextView) showFaqAnswerDialog.findViewById(R.id.text_view_exit);
+        LinearLayout mLinearLayoutFaqAnswers = (LinearLayout)  showFaqAnswerDialog.findViewById(R.id.linear_layout_faq_answers);
+
+        textViewFaqQuestion.setText(currentFaq.getFaqQuestion());
+
+        ArrayList<String> sortedKeys =
+                new ArrayList<String>(currentFaq.getFaqAnswers().keySet());
+        Collections.sort(sortedKeys);
+
+
+        for (String x : sortedKeys)
+        {
+            TextView textView = new TextView(this);
+            textView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)); // Pass two args; must be LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, or an integer pixel value.
+
+            int padding = getResources().getDimensionPixelOffset(R.dimen.extra_small_margin);
+            float textSize = getResources().getDimension(R.dimen.triple_extra_small_text_size);
+
+            textView.setPadding(padding,padding,padding,padding);
+
+            textView.setText("√ " + currentFaq.getFaqAnswers().get(x).toString());
+            textView.setTextSize(textSize);
+
+            mLinearLayoutFaqAnswers.addView(textView);
+
+        }
+        /*for (Map.Entry<String, Object> eachAnswer : mCurrentFaq.getFaqAnswers().entrySet()) {
+
+            TextView textView = new TextView(this);
+            textView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)); // Pass two args; must be LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, or an integer pixel value.
+
+            int padding = getResources().getDimensionPixelOffset(R.dimen.extra_small_margin);
+            float textSize = getResources().getDimension(R.dimen.triple_extra_small_text_size);
+
+            textView.setPadding(padding,padding,padding,padding);
+
+            textView.setText("." + eachAnswer.getValue().toString());
+            textView.setTextSize(textSize);
+
+            mLinearLayoutFaqAnswers.addView(textView);
+        }*/
+
+        textViewExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFaqAnswerDialog.dismiss();
+            }
+        });
+
+        showFaqAnswerDialog.show();
+    }
+
+    public void sortListViewAccordingToSearch()
+    {
+        mHashMapSortOptions.clear();
+
+        switch (mWhatToSearch) {
+            case Constants.SEARCH_MEDICINE:
+                mHashMapSortOptions.put("Name",Constants.FIREBASE_PROPERTY_MEDICINE_NAME);
+                mHashMapSortOptions.put("Availability",Constants.FIREBASE_PROPERTY_MEDICINE_AVAILABILITY);
+                mHashMapSortOptions.put("Category (Ex: OTC)",Constants.FIREBASE_PROPERTY_MEDICINE_CATEGORY);
+                mHashMapSortOptions.put("Manufacturer",Constants.FIREBASE_PROPERTY_MEDICINE_MANUFACTURER_NAME);
+                mHashMapSortOptions.put("Type (Ex: Tablet)",Constants.FIREBASE_PROPERTY_MEDICINE_TYPE);
+                openDialogForSort();
+                break;
+            case Constants.SEARCH_MEDICINE_MANUFACTURER:
+                mHashMapSortOptions.put("Name",Constants.FIREBASE_PROPERTY_MANUFACTURER_NAME);
+                mHashMapSortOptions.put("Most Recent",Constants.FIREBASE_PROPERTY_TIMESTAMP_CREATED + "/" + Constants.FIREBASE_PROPERTY_TIMESTAMP);
+                openDialogForSort();
+                break;
+            case Constants.SEARCH_MEDICINE_COMPOSITION:
+                mHashMapSortOptions.put("Name",Constants.FIREBASE_PROPERTY_COMPOSITION_NAME);
+                mHashMapSortOptions.put("Most Recent",Constants.FIREBASE_PROPERTY_TIMESTAMP_CREATED + "/" + Constants.FIREBASE_PROPERTY_TIMESTAMP);
+                openDialogForSort();
+                break;
+            case Constants.SEARCH_DISPLAY_CATEGORY:
+                mHashMapSortOptions.put("Name",Constants.FIREBASE_PROPERTY_CATEGORY_NAME);
+                mHashMapSortOptions.put("Most Recent",Constants.FIREBASE_PROPERTY_TIMESTAMP_CREATED + "/" + Constants.FIREBASE_PROPERTY_TIMESTAMP);
+                openDialogForSort();
+                break;
+            case Constants.SEARCH_POSTER:
+                mHashMapSortOptions.put("Name",Constants.FIREBASE_PROPERTY_POSTER_NAME);
+                mHashMapSortOptions.put("Most Recent",Constants.FIREBASE_PROPERTY_TIMESTAMP_CREATED + "/" + Constants.FIREBASE_PROPERTY_TIMESTAMP);
+                openDialogForSort();
+                break;
+            case Constants.SEARCH_ORDER:
+            case Constants.SEARCH_AND_CHOOSE_ORDER:
+                mHashMapSortOptions.put("Order Status",Constants.FIREBASE_PROPERTY_ORDER_STATUS);
+                mHashMapSortOptions.put("Payment Method",Constants.FIREBASE_PROPERTY_ORDER_PAYMENT_METHOD);
+                mHashMapSortOptions.put("Most Recent",Constants.FIREBASE_PROPERTY_TIMESTAMP_CREATED + "/" + Constants.FIREBASE_PROPERTY_TIMESTAMP);
+                openDialogForSort();
+                break;
+            case Constants.SEARCH_ALL_QUERIES_FROM_ALL_USERS:
+                mHashMapSortOptions.put("Query Status",Constants.FIREBASE_PROPERTY_QUERY_STATUS);
+                mHashMapSortOptions.put("Query Title",Constants.FIREBASE_PROPERTY_QUERY_TITLE);
+                mHashMapSortOptions.put("Most Recent",Constants.FIREBASE_PROPERTY_TIMESTAMP_CREATED + "/" + Constants.FIREBASE_PROPERTY_TIMESTAMP);
+                openDialogForSort();
+                break;
+            case Constants.SEARCH_FAQ:
+                mHashMapSortOptions.put("Most Searched",Constants.FIREBASE_PROPERTY_FAQ_PRIORITY);
+                mHashMapSortOptions.put("Question",Constants.FIREBASE_PROPERTY_FAQ_QUESTION);
+                openDialogForSort();
+                break;
+        }
+    }
+
+    public void openDialogForSort()
+    {
+        final Dialog filterDialog = new Dialog(this,android.R.style.Theme_Light_NoTitleBar_Fullscreen);
+        filterDialog.setContentView(R.layout.dialog_sort_search);
+
+        TextView textViewFilter = (TextView) filterDialog.findViewById(R.id.text_view_sort);
+        TextView textViewExit = (TextView) filterDialog.findViewById(R.id.text_view_exit);
+        final RadioGroup radioGroupFilterOptions = (RadioGroup) filterDialog.findViewById(R.id.radio_group_sort_by_options);
+
+        if (mHashMapSortOptions.size() < 1)
+            return;
+
+        for (Map.Entry<String, String> eachOption : mHashMapSortOptions.entrySet()) {
+            RadioButton radioButton = new RadioButton(this);
+            radioButton.setText(eachOption.getKey());
+            /*
+            if (searchOrderBy.equals(eachEntry))
+                radioButton.setChecked(true);*/
+
+            radioGroupFilterOptions.addView(radioButton);
+        }
+
+        filterDialog.show();
+
+        textViewFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (radioGroupFilterOptions.getCheckedRadioButtonId() != -1) {
+                    String selectedKey = ((RadioButton) filterDialog.findViewById(radioGroupFilterOptions.getCheckedRadioButtonId())).
+                            getText().toString();
+
+                    searchOrderBy = mHashMapSortOptions.get(selectedKey);
+
+                    mEditTextSearch.setText(null);
+                    displayAllData();
+                }
+                filterDialog.dismiss();
+            }
+        });
+
+        textViewExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterDialog.dismiss();
+            }
+        });
+    }
+
     private void addNewItem(final String itemName, final Dialog addNewItemDialog, final TextView textViewErrorMsg) {
 
         if (mWhatToSearch.equals(Constants.SEARCH_MEDICINE_MANUFACTURER))
@@ -529,7 +836,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
 
-    public void onAddClick(View view) {
+    public void onAddClick() {
         switch (mWhatToSearch) {
             case Constants.SEARCH_MEDICINE_MANUFACTURER:
                 openDialog("Add New Manufacturer");
@@ -539,6 +846,14 @@ public class SearchActivity extends AppCompatActivity {
                 break;
             case Constants.SEARCH_DISPLAY_CATEGORY:
                 openDialog("Add New Category");
+                break;
+            case Constants.SEARCH_QUERY:
+                Intent intentToQueryTicketDetailsActivity = new Intent(SearchActivity.this, QueryTicketDetailsActivity.class);
+                startActivity(intentToQueryTicketDetailsActivity);
+                break;
+            case Constants.SEARCH_FAQ:
+                Intent intentToAddOrUpdateFaqActivity = new Intent(SearchActivity.this, AddOrUpdateFaqActivity.class);
+                startActivity(intentToAddOrUpdateFaqActivity);
                 break;
 
         }

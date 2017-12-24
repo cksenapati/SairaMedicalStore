@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.android.sairamedicalstore.ui.customerSupport.CustomerSupportActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_dark"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/tw__solid_white"
+            android:gravity="center_horizontal"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_all_query_tickets_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/extra_small_margin"
+        android:layout_marginLeft="@dimen/extra_small_margin"
+        android:layout_marginRight="@dimen/extra_small_margin"
+        android:background="@color/tw__solid_white"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="@color/primary_text"
+            android:padding="@dimen/extra_small_margin"
+            android:text="Ask Us"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_go_next_24"
+            android:padding="@dimen/extra_small_margin"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_frequently_asked_questions_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/extra_small_margin"
+        android:layout_marginLeft="@dimen/extra_small_margin"
+        android:layout_marginRight="@dimen/extra_small_margin"
+        android:background="@color/tw__solid_white"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="@color/primary_text"
+            android:padding="@dimen/extra_small_margin"
+            android:text="Frequently Asked Questions"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_go_next_24"
+            android:padding="@dimen/extra_small_margin"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_reply_to_query_tickets_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/extra_small_margin"
+        android:layout_marginLeft="@dimen/extra_small_margin"
+        android:layout_marginRight="@dimen/extra_small_margin"
+        android:background="@color/tw__solid_white"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="@color/primary_text"
+            android:padding="@dimen/extra_small_margin"
+            android:text="Reply To Query Tickets"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_go_next_24"
+            android:padding="@dimen/extra_small_margin"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_call_us"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/extra_small_margin"
+        android:layout_marginLeft="@dimen/extra_small_margin"
+        android:layout_marginRight="@dimen/extra_small_margin"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/customer_support_icon"
+            android:padding="@dimen/extra_small_margin"/>
+        <TextView
+            android:id="@+id/text_view_customer_support_no"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="@color/primary_text"
+            android:padding="@dimen/extra_small_margin"
+            android:text="Call Us on : "/>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -25,6 +25,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    dexOptions {
+        jumboMode true
+    }
+
 }
 
 dependencies {
@@ -59,8 +64,8 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.slider:library:1.1.5@aar'
     compile 'com.android.support:recyclerview-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
     compile 'com.msg91.sendotp.library:library:3.1'
+    testCompile 'junit:junit:4.12'
 }
 
 /*For Google-login*/

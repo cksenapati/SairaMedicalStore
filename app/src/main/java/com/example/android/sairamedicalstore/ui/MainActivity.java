@@ -33,6 +33,8 @@ import com.example.android.sairamedicalstore.models.DisplayProduct;
 import com.example.android.sairamedicalstore.models.Poster;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.models.item;
+import com.example.android.sairamedicalstore.ui.customerSupport.CustomerSupportActivity;
+import com.example.android.sairamedicalstore.ui.login.LoginActivity;
 import com.example.android.sairamedicalstore.ui.medicine.AddNewMedicine;
 import com.example.android.sairamedicalstore.ui.offer.CreateOrUpdateOfferActivity;
 import com.example.android.sairamedicalstore.ui.poster.CreateOrUpdatePoster;
@@ -45,6 +47,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.firebase.ui.auth.AuthUI;
 
 import java.util.ArrayList;
 
@@ -186,7 +189,15 @@ public class MainActivity extends AppCompatActivity
             Intent intentToMyProfileActivity = new Intent(MainActivity.this, MyProfileActivity.class);
             startActivity(intentToMyProfileActivity);
         }
-
+        else if (id == R.id.nav_customer_support) {
+            Intent intentToCustomerSupportActivity = new Intent(MainActivity.this, CustomerSupportActivity.class);
+            startActivity(intentToCustomerSupportActivity);
+        }
+        else if (id == R.id.nav_sign_out) {
+            AuthUI.getInstance().signOut(this);
+            Intent intentToLoginActivity = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intentToLoginActivity);
+        }
         /*else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

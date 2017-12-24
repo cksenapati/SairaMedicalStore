@@ -10,8 +10,27 @@ public final class Constants {
     public static final String FIREBASE_PROPERTY_TIMESTAMP_LAST_UPDATE = "timestampLastUpdate";
     public static final String FIREBASE_PROPERTY_TIMESTAMP_CREATED = "timestampCreated";
 
-    public static final String FIREBASE_PROPERTY_DEFAULT_IMAGE_URL = "defaultImageURL";
     public static final String FIREBASE_PROPERTY_MEDICINE_NAME = "medicineName";
+    public static final String FIREBASE_PROPERTY_MEDICINE_TYPE = "medicineType";
+    public static final String FIREBASE_PROPERTY_MEDICINE_MANUFACTURER_NAME = "medicineManufacturerName";
+    public static final String FIREBASE_PROPERTY_MEDICINE_CATEGORY = "medicineCategory";
+    public static final String FIREBASE_PROPERTY_MEDICINE_AVAILABILITY = "medicineAvailability";
+
+    public static final String FIREBASE_PROPERTY_ORDER_ID = "orderId";
+    public static final String FIREBASE_PROPERTY_ORDER_STATUS = "orderStatus";
+    public static final String FIREBASE_PROPERTY_ORDER_PAYMENT_METHOD = "paymentMethod";
+
+    public static final String FIREBASE_PROPERTY_QUERY_ID = "queryId";
+    public static final String FIREBASE_PROPERTY_QUERY_STATUS = "queryStatus";
+    public static final String FIREBASE_PROPERTY_QUERY_TEXT = "queryText";
+    public static final String FIREBASE_PROPERTY_QUERY_TITLE = "queryTitle";
+
+    public static final String FIREBASE_PROPERTY_FAQ_PRIORITY = "faqPriority";
+    public static final String FIREBASE_PROPERTY_FAQ_QUESTION = "faqQuestion";
+
+
+
+    public static final String FIREBASE_PROPERTY_DEFAULT_IMAGE_URL = "defaultImageURL";
     public static final String FIREBASE_PROPERTY_MANUFACTURER_NAME = "manufacturerName";
     public static final String FIREBASE_PROPERTY_COMPOSITION_NAME = "compositionName";
     public static final String FIREBASE_PROPERTY_DISPLAY_CATEGORY_NAME = "displayCategoryName";
@@ -21,7 +40,6 @@ public final class Constants {
     public static final String FIREBASE_PROPERTY_PIC_URL = "picUrl";
     public static final String FIREBASE_PROPERTY_DEFAULT_MEDICINE_PICS = "defaultMedicinePics";
     public static final String FIREBASE_PROPERTY_COMMON_DEFAULT_VALUES = "commonDefaultValues";
-    public static final String FIREBASE_PROPERTY_ORDER_ID = "orderId";
 
 
     public static final String FIREBASE_LOCATION_ALL_USERS = "allUsers";
@@ -40,6 +58,8 @@ public final class Constants {
     public static final String FIREBASE_LOCATION_All_ADDRESSES = "allAddresses";
     public static final String FIREBASE_LOCATION_All_ORDERS = "allOrders";
     public static final String FIREBASE_LOCATION_All_PROFILE_PICS = "allProfilePics";
+    public static final String FIREBASE_LOCATION_All_QUERIES = "allQueries";
+    public static final String FIREBASE_LOCATION_All_FAQS = "allFaqs";
 
 
 
@@ -60,6 +80,8 @@ public final class Constants {
     public static final String FIREBASE_URL_SAIRA_All_PRESCRIPTIONS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_PRESCRIPTIONS;
     public static final String FIREBASE_URL_SAIRA_All_ADDRESSES = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_ADDRESSES;
     public static final String FIREBASE_URL_SAIRA_All_ORDERS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_ORDERS;
+    public static final String FIREBASE_URL_SAIRA_All_QUERIES = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_QUERIES;
+    public static final String FIREBASE_URL_SAIRA_All_FAQS = FIREBASE_URL + "/" + FIREBASE_LOCATION_All_FAQS;
 
 
 
@@ -82,6 +104,10 @@ public final class Constants {
     public static final String SEARCH_DISPLAY_CATEGORY = "searchDisplayCategory";
     public static final String SEARCH_POSTER = "searchPoster";
     public static final String SEARCH_ORDER = "searchOrder";
+    public static final String SEARCH_QUERY = "searchQuery";
+    public static final String SEARCH_ALL_QUERIES_FROM_ALL_USERS = "searchAllQueriesFromAllUsers";
+    public static final String SEARCH_AND_CHOOSE_ORDER = "searchAndChooseOrder";
+    public static final String SEARCH_FAQ = "searchFaq";
 
 
     public static final String UPLOAD_SUCCESSFUL = "Upload successful";
@@ -102,6 +128,11 @@ public final class Constants {
 
     public static final String ACTIVITY_TITLE_PROFILE_PIC = "Profile Pic";
 
+
+    public static final String QUERY_STATUS_POSTED = "Posted";
+    public static final String QUERY_STATUS_REOPENED = "Re-opened";
+    public static final String QUERY_STATUS_UNDER_PROCESS = "Under Process";
+    public static final String QUERY_STATUS_SOLVED = "Solved";
 
 
 }

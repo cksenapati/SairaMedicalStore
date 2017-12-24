@@ -3,24 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
+    android:background="#1A000000"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:gravity="center"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/text_view_dialog_name"
+        android:id="@+id/text_view_sort_by"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Why do you want to return?"
+        android:text="Sort By"
         android:layout_margin="@dimen/extra_small_margin"
         android:textSize="@dimen/small_text_size"
         android:textStyle="bold"/>
-   <Spinner
+
+   <!--<Spinner
        android:id="@+id/spinner_reasons"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -28,18 +28,31 @@
        android:background="@drawable/gradient_spinner"
        android:popupBackground="#DFFFFFFF"
        android:padding="@dimen/extra_small_margin">
-   </Spinner>
+   </Spinner>-->
 
-    <EditText
-        android:id="@+id/edit_text_other_reason"
-        android:layout_width="match_parent"
+    <RadioGroup
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/radio_group_sort_by_options"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rectangle_border"
-        android:layout_margin="@dimen/extra_small_margin"
-        android:paddingBottom="10dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="10dp"/>
+        android:layout_gravity="left"
+        android:padding="@dimen/extra_small_margin"
+        android:backgroundTint="@color/primary"
+        android:orientation="vertical">
+        <!--<RadioButton
+            android:id="@+id/radio_button_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/primary"
+            android:text="Phone"/>
+        <RadioButton
+            android:id="@+id/radio_button_mail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/primary"
+            android:checked="true"
+            android:text="Mail"/>-->
+    </RadioGroup>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,16 +70,16 @@
             android:textColor="@color/warning_message_text_color"
             android:background="@color/warning_message_background_color"/>
         <TextView
-            android:id="@+id/text_view_cancel_order"
+            android:id="@+id/text_view_sort"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel Order"
-            android:textColor="@color/fail_message_text_color"
+            android:text="Sort"
+            android:textColor="@color/success_message_text_color"
             android:textStyle="bold"
             android:gravity="center"
             android:padding="@dimen/extra_small_margin"
-            android:background="@color/fail_message_background_color"/>
+            android:background="@color/success_message_background_color"/>
     </LinearLayout>
 
 

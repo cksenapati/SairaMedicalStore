@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.example.android.sairamedicalstore.ui.customerSupport.QueryTicketDetailsActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_dark"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/tw__solid_white"
+            android:gravity="center_horizontal"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/small_text_size"
+                    android:text="Query"/>
+                <TextView
+                    android:id="@+id/text_view_query_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/extra_small_margin"
+                    android:textSize="@dimen/extra_small_text_size"
+                    android:text="dlscml;lskd;slkds;dkds;l"/>
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:id="@+id/text_view_page_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/extra_small_margin" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/linear_layout_way_of_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/extra_small_margin"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="How would you like us\n to contact you?"/>
+                <RadioGroup
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/radio_group_contact_by"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <RadioButton
+                        android:id="@+id/radio_button_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/primary"
+                        android:layout_marginRight="@dimen/small_margin"
+                        android:text="Phone"/>
+                    <RadioButton
+                        android:id="@+id/radio_button_mail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/primary"
+                        android:checked="true"
+                        android:text="Mail"/>
+                </RadioGroup>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/text_view_tagged_order_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/extra_small_text_size"
+                android:textColor="@color/primary"
+                android:text="Click to tag your order"
+                android:layout_margin="@dimen/extra_small_margin"/>
+
+            <TextView
+                android:id="@+id/text_view_query_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/small_text_size"
+                android:textColor="@color/primary_text"
+                android:text="Query Title : "
+                android:layout_margin="@dimen/extra_small_margin"/>
+
+
+
+            <Spinner
+                android:id="@+id/spinner_query_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/extra_small_margin"
+                android:background="@drawable/gradient_spinner"
+                android:popupBackground="#B3BBCC"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/extra_small_margin">
+            </Spinner>
+
+            <TextView
+                android:id="@+id/text_view_query_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:textSize="@dimen/small_text_size"
+                android:textColor="@color/primary_text"
+                android:text="Query Text : "
+                android:layout_margin="@dimen/extra_small_margin"/>
+
+            <EditText
+                android:id="@+id/edit_text_query_text"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/rectangle_border"
+                android:layout_margin="@dimen/extra_small_margin"
+                android:gravity="top"
+                android:hint="Query Text"
+                android:maxLength="200"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/text_view_resolver_response"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:textSize="@dimen/extra_small_text_size"
+                android:textColor="@color/primary_text"
+                android:text="Resolver Response : "
+                android:layout_margin="@dimen/extra_small_margin"/>
+
+            <EditText
+                android:id="@+id/edit_text_resolver_response"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:background="@drawable/rectangle_border"
+                android:layout_margin="@dimen/extra_small_margin"
+                android:gravity="top"
+                android:hint="Response Text"
+                android:maxLength="200"
+                android:padding="10dp" />
+
+
+            <TextView
+                android:id="@+id/text_view_query_posted_by"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:gravity="left"
+                android:textSize="@dimen/small_text_size"
+                android:padding="@dimen/extra_small_margin"
+                android:text="Posted by : "/>
+
+            <TextView
+                android:id="@+id/text_view_query_posted_on"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:visibility="gone"
+                android:textSize="@dimen/small_text_size"
+                android:padding="@dimen/extra_small_margin"
+                android:text="Posted on : "/>
+
+
+
+            <TextView
+                android:id="@+id/text_view_query_closed_by"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:gravity="left"
+                android:textSize="@dimen/small_text_size"
+                android:padding="@dimen/extra_small_margin"
+                android:text="Closed by : "/>
+
+            <TextView
+                android:id="@+id/text_view_query_closed_on"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:visibility="gone"
+                android:textSize="@dimen/small_text_size"
+                android:padding="@dimen/extra_small_margin"
+                android:text="Closed on : "/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/text_view_under_process"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:text="Under Process"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="@color/under_process_message_text_color"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="@dimen/extra_small_margin"
+            android:background="@color/under_process_message_background_color"/>
+        <TextView
+            android:id="@+id/text_view_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Post"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="@color/tw__solid_white"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="@dimen/extra_small_margin"
+            android:background="@color/primary"/>
+    </LinearLayout>
+
+
+</LinearLayout>

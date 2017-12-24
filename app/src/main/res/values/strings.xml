@@ -96,5 +96,17 @@
         <item>+92</item>
     </string-array>
 
+    <!-- Spinner value for return order reason -->
+    <string-array name="query_title_options">
+        <item>Select Reason</item>
+        <item>Damaged Products</item>
+        <item>Incomplete Order</item>
+        <item>Order Not Received</item>
+        <item>Payment Issues</item>
+        <item>Upload Prescription Issues</item>
+        <item>Wrong Product Received</item>
+        <item>Other</item>
+    </string-array>
+
 
 </resources>

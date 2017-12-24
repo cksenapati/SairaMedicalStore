@@ -13,18 +13,19 @@ import static android.R.attr.y;
 @SuppressWarnings("serial")
 public class User {
 
-    private String name,email,phoneNo,photoURL;
+    private String name,email,phoneNo,photoURL,userType;
     private HashMap<String, Object> timestampJoined;
 
     public User() {
     }
 
-    public User(String name, String email, String phoneNo,String photoURL, HashMap<String, Object> timestampJoined) {
+    public User(String name, String email, String phoneNo,String photoURL, HashMap<String, Object> timestampJoined,String userType) {
         this.name = name;
         this.email = email;
         this.phoneNo = phoneNo;
         this.timestampJoined = timestampJoined;
         this.photoURL = photoURL;
+        this.userType = userType;
     }
 
     public String getName() {
@@ -71,5 +72,13 @@ public class User {
 
     public void setTimestampJoined(HashMap<String, Object> timestampJoined) {
         this.timestampJoined = timestampJoined;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }
