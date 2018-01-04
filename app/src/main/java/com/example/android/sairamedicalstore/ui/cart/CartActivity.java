@@ -16,8 +16,10 @@ import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Cart;
 import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.Order;
+import com.example.android.sairamedicalstore.models.Prescription;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.ui.address.DeliveryAddressActivity;
+import com.example.android.sairamedicalstore.ui.prescription.MyPrescriptionsActivity;
 import com.example.android.sairamedicalstore.ui.prescription.PrescriptionsActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
@@ -37,7 +39,7 @@ public class CartActivity extends AppCompatActivity {
 
 
     ArrayList<Medicine> mArrayListCartProducts;
-    ArrayList<String> mArrayListSelectedPrescriptionIds;
+    ArrayList<Prescription> mArrayListSelectedPrescriptions;
     HashMap<String,Double> mHashMapOrderPricingDetails;
 
     int productCounter;
@@ -56,7 +58,7 @@ public class CartActivity extends AppCompatActivity {
             mTextViewProceedToDeliveryAddress,mTextViewEmptyCart,mTextViewGoNext,mTextViewPrescriptionUploaded;
     public static TextView mTextViewSubtotal,mTextViewShippingCharges,mTextViewOrderTotal ;
 
-    ImageView mImageViewCloseOffer;
+    ImageView mImageViewCloseOffer,mListViewGoBack;
     ListView mListViewCartProducts;
 
     @Override
@@ -72,9 +74,15 @@ public class CartActivity extends AppCompatActivity {
         mLinearLayoutUploadPrescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent prescriptionActivityIntent = new Intent(CartActivity.this,PrescriptionsActivity.class);
+                /*Intent prescriptionActivityIntent = new Intent(CartActivity.this,PrescriptionsActivity.class);
                 prescriptionActivityIntent.putExtra("arrayListSelectedPrescriptionIds",mArrayListSelectedPrescriptionIds);
-                startActivityForResult(Intent.createChooser(prescriptionActivityIntent, "Complete action using"), RC_PRISCRIPTIONS_PICKER);
+                startActivityForResult(Intent.createChooser(prescriptionActivityIntent, "Complete action using"), RC_PRISCRIPTIONS_PICKER);*/
+
+                Intent myPrescriptionsActivityIntent = new Intent(CartActivity.this,MyPrescriptionsActivity.class);
+                myPrescriptionsActivityIntent.putExtra("arrayListSelectedPrescriptions",mArrayListSelectedPrescriptions);
+                myPrescriptionsActivityIntent.putExtra("activityVisitPurpose",Constants.ACTIVITY_VISIT_PURPOSE_SELECT);
+                startActivityForResult(Intent.createChooser(myPrescriptionsActivityIntent, "Complete action using"), RC_PRISCRIPTIONS_PICKER);
+
             }
         });
 
@@ -89,7 +97,11 @@ public class CartActivity extends AppCompatActivity {
                         mHashMapOrderPricingDetails.put("Shipping Charges",shippingPrice);
                         mHashMapOrderPricingDetails.put("COD Charges",0.0);
 
-                        mCurrentOrder = new Order(null,null,null,null,mCurrentUser.getEmail(),mCurrentCart,null,mArrayListSelectedPrescriptionIds,null,null,null,mHashMapOrderPricingDetails,null,null,null);
+                        HashMap<String,Prescription> hashMapSelectedPrescriptions = new HashMap<String, Prescription>();
+                        for (int count = 0; count<mArrayListSelectedPrescriptions.size(); count++)
+                            hashMapSelectedPrescriptions.put("prescription"+(count+1),mArrayListSelectedPrescriptions.get(count));
+
+                        mCurrentOrder = new Order(null,null,null,null,mCurrentUser.getEmail(),mCurrentCart,null,hashMapSelectedPrescriptions,null,null,null,mHashMapOrderPricingDetails,null,null,null);
                         Intent intentToDeliveryAddress = new Intent(CartActivity.this, DeliveryAddressActivity.class);
                         intentToDeliveryAddress.putExtra("currentOrder",mCurrentOrder);
                         startActivity(intentToDeliveryAddress);
@@ -103,6 +115,13 @@ public class CartActivity extends AppCompatActivity {
 
             }
         });
+
+        mListViewGoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -111,8 +130,8 @@ public class CartActivity extends AppCompatActivity {
 
         if (requestCode == RC_PRISCRIPTIONS_PICKER) {
             if (resultCode == RESULT_OK) {
-                mArrayListSelectedPrescriptionIds = data.getStringArrayListExtra("arrayListSelectedPrescriptionIds");
-                if (mArrayListSelectedPrescriptionIds != null && mArrayListSelectedPrescriptionIds.size() > 0) {
+                mArrayListSelectedPrescriptions = (ArrayList<Prescription>) data.getSerializableExtra("arrayListSelectedPrescriptions");
+                if (mArrayListSelectedPrescriptions != null && mArrayListSelectedPrescriptions.size() > 0) {
                     isPrescriptionsAdded = true;
                     mTextViewGoNext.setVisibility(View.GONE);
                     mTextViewPrescriptionUploaded.setVisibility(View.VISIBLE);
@@ -160,6 +179,7 @@ public class CartActivity extends AppCompatActivity {
         mTextViewPrescriptionUploaded = (TextView) footer.findViewById(R.id.text_view_prescription_uploaded);
 
         mImageViewCloseOffer = (ImageView) findViewById(R.id.image_view_close_offer);
+        mListViewGoBack = (ImageView) findViewById(R.id.image_view_go_back);
 
         mFirebaseCurrentCartRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_CARTS).child(Utils.encodeEmail(mCurrentUser.getEmail()));
         mFirebaseAllMedicinesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_ALL_MEDICINES);

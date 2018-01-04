@@ -13,7 +13,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.util.Util;
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Query;
@@ -243,10 +242,10 @@ public class QueryTicketDetailsActivity extends AppCompatActivity {
         mTextViewQueryClosedBy.setVisibility(View.GONE);
 
         mTextViewQueryText.setVisibility(View.VISIBLE);
-        mTextViewQueryText.setText(mTextViewQueryText.getText() + mCurrentQuery.getQueryText());
+        mTextViewQueryText.setText("Query Text : " + mCurrentQuery.getQueryText());
 
         mTextViewQueryTitle.setVisibility(View.VISIBLE);
-        mTextViewQueryTitle.setText(mTextViewQueryTitle.getText() + mCurrentQuery.getQueryTitle());
+        mTextViewQueryTitle.setText("Query Title : " + mCurrentQuery.getQueryTitle());
 
         mSpinnerQueryTitle.setVisibility(View.GONE);
 
@@ -286,7 +285,7 @@ public class QueryTicketDetailsActivity extends AppCompatActivity {
             if (mCurrentQuery.getQueryResolverReply() != null)
             {
                 mTextViewResolverResponse.setVisibility(View.VISIBLE);
-                mTextViewResolverResponse.setText(mTextViewResolverResponse.getText() +  mCurrentQuery.getQueryResolverReply());
+                mTextViewResolverResponse.setText("Resolver Response : " +  mCurrentQuery.getQueryResolverReply());
             }
             else
                 mTextViewResolverResponse.setVisibility(View.GONE);
@@ -326,7 +325,7 @@ public class QueryTicketDetailsActivity extends AppCompatActivity {
             }
 
             mTextViewQueryPostedBy.setVisibility(View.VISIBLE);
-            mTextViewQueryPostedBy.setText(mTextViewQueryPostedBy.getText() + mCurrentQuery.getQueryPostedBy());
+            mTextViewQueryPostedBy.setText("Posted by : " + mCurrentQuery.getQueryPostedBy());
 
         }
 
@@ -403,7 +402,7 @@ public class QueryTicketDetailsActivity extends AppCompatActivity {
     {
         QueryOperations operationObject = new QueryOperations(this);
 
-        mCurrentQuery.setQueryStatus(Constants.QUERY_STATUS_UNDER_PROCESS);
+        mCurrentQuery.setQueryStatus(Constants.QUERY_STATUS_RUNNING);
         operationObject.updateQuery(mCurrentQuery);
         getCurrentQuery();
     }
@@ -412,7 +411,7 @@ public class QueryTicketDetailsActivity extends AppCompatActivity {
     {
         int textColorCode,backgroundColorCode;
 
-        if(mCurrentQuery.getQueryStatus().equals(Constants.QUERY_STATUS_UNDER_PROCESS))
+        if(mCurrentQuery.getQueryStatus().equals(Constants.QUERY_STATUS_RUNNING))
         {
             textColorCode = QueryTicketDetailsActivity.this.getResources().getColor(R.color.under_process_message_text_color);
             backgroundColorCode = R.color.under_process_message_background_color;
@@ -440,7 +439,7 @@ public class QueryTicketDetailsActivity extends AppCompatActivity {
                     new Date(mCurrentQuery.getTimestampQueryClosedLong())));
 
             mTextViewQueryClosedBy.setVisibility(View.VISIBLE);
-            mTextViewQueryClosedBy.setText(mTextViewQueryClosedBy.getText() + mCurrentQuery.getQueryResolvedBy() );
+            mTextViewQueryClosedBy.setText("Closed by : " + mCurrentQuery.getQueryResolvedBy() );
 
             mTextViewResolverResponse.setVisibility(View.VISIBLE);
             mTextViewResolverResponse.setText(mTextViewResolverResponse.getText() +  mCurrentQuery.getQueryResolverReply());

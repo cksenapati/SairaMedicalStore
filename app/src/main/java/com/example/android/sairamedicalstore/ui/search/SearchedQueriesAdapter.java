@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.util.Util;
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
@@ -35,7 +36,7 @@ public class SearchedQueriesAdapter extends FirebaseListAdapter<com.example.andr
                 new Date(query.getTimestampCreatedLong())));
 
         TextView textViewQueryStatus = (TextView) view.findViewById(R.id.text_view_query_status);
-        textViewQueryStatus.setText(query.getQueryStatus());
+        textViewQueryStatus.setText(Utils.toLowerCaseExceptFirstLetter(query.getQueryStatus()));
         textViewQueryStatus.setTextColor(setQueryStatusColor(query.getQueryStatus()));
     }
 
@@ -43,7 +44,7 @@ public class SearchedQueriesAdapter extends FirebaseListAdapter<com.example.andr
     {
         int textColorCode;
 
-        if(status.equals(Constants.QUERY_STATUS_UNDER_PROCESS))
+        if(status.equals(Constants.QUERY_STATUS_RUNNING))
         {
             textColorCode = mActivity.getResources().getColor(R.color.under_process_message_text_color);
         }

@@ -1,10 +1,8 @@
 package com.example.android.sairamedicalstore.operations;
 
 import android.app.Activity;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Prescription;
 import com.example.android.sairamedicalstore.models.User;
@@ -18,7 +16,15 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.HashMap;
 
+/*
 import static com.example.android.sairamedicalstore.ui.prescription.AddNewPrescriptionActivity.saveDataDialog;
+*/
+import static com.example.android.sairamedicalstore.ui.prescription.MyPrescriptionsActivity.mActivePrescription;
+import static com.example.android.sairamedicalstore.ui.prescription.MyPrescriptionsActivity.mActivePrescriptionIdForNewPrescription;
+import static com.example.android.sairamedicalstore.ui.prescription.MyPrescriptionsActivity.mArrayListAllPagesOfActivePrescription;
+import static com.example.android.sairamedicalstore.ui.prescription.MyPrescriptionsActivity.mRecyclerViewActivePrescriptionAllPages;
+import static com.example.android.sairamedicalstore.ui.prescription.MyPrescriptionsActivity.mTextViewNewOrUpdatePrescription;
+import static com.example.android.sairamedicalstore.ui.prescription.MyPrescriptionsActivity.mTextViewSaveOrUpdatePrescription;
 
 /**
  * Created by chandan on 17-10-2017.
@@ -41,7 +47,9 @@ public class PrescriptionOperations {
         HashMap<String, Object> timestampUploaded = new HashMap<String, Object>();
         timestampUploaded.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
 
+/*
         final TextView textViewErrorMsg = (TextView) saveDataDialog.findViewById(R.id.text_view_error_message);
+*/
 
         final Prescription newPrescription = new Prescription(prescriptionId,hashMapPrescriptionPages,prescriptionName,timestampUploaded);
 
@@ -55,7 +63,10 @@ public class PrescriptionOperations {
                         Prescription eachPrescription = snapshot.getValue(Prescription.class);
                         if(eachPrescription != null && eachPrescription.getPrescriptionName().equals(prescriptionName))
                         {
+/*
                             textViewErrorMsg.setText(Constants.ITEM_ALREADY_EXISTS);
+*/
+                            Toast.makeText(mActivity, Constants.ITEM_ALREADY_EXISTS, Toast.LENGTH_SHORT).show();
                             isExist = true;
                             break;
                         }
@@ -63,9 +74,10 @@ public class PrescriptionOperations {
                     if(!isExist) {
                         try {
                             mFirebaseCurrentUserPrescriptionsRef.child(prescriptionId).setValue(newPrescription);
-                            saveDataDialog.dismiss();
                             Toast.makeText(mActivity, Constants.UPLOAD_SUCCESSFUL, Toast.LENGTH_SHORT).show();
-                            mActivity.finish();
+                            mRecyclerViewActivePrescriptionAllPages.setAdapter(null);
+                            mArrayListAllPagesOfActivePrescription.clear();
+                            mActivePrescriptionIdForNewPrescription = mFirebaseCurrentUserPrescriptionsRef.push().getKey();
                         } catch (Exception ex) {
                         }
                     }
@@ -74,9 +86,10 @@ public class PrescriptionOperations {
                 {
                     try {
                         mFirebaseCurrentUserPrescriptionsRef.child(prescriptionId).setValue(newPrescription);
-                        saveDataDialog.dismiss();
                         Toast.makeText(mActivity, Constants.UPLOAD_SUCCESSFUL, Toast.LENGTH_SHORT).show();
-                        mActivity.finish();
+                        mRecyclerViewActivePrescriptionAllPages.setAdapter(null);
+                        mArrayListAllPagesOfActivePrescription.clear();
+                        mActivePrescriptionIdForNewPrescription = mFirebaseCurrentUserPrescriptionsRef.push().getKey();
                     } catch (Exception ex) {
                     }
                 }
@@ -89,5 +102,45 @@ public class PrescriptionOperations {
 
     }
 
+    public void updateSavedPrescription(final String prescriptionIdToBeUpdated,final HashMap<String,String> mHashMapUpdatedPrescriptionPages)
+    {
+        mFirebaseCurrentUserPrescriptionsRef.child(prescriptionIdToBeUpdated).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())
+                {
+                    Prescription prescriptionToBeUpdated = dataSnapshot.getValue(Prescription.class);
+                    if (prescriptionToBeUpdated == null) {
+                        Toast.makeText(mActivity, Constants.UPDATE_FAIL, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    try {
+                        prescriptionToBeUpdated.setPrescriptionPages(mHashMapUpdatedPrescriptionPages);
+                        mFirebaseCurrentUserPrescriptionsRef.child(prescriptionIdToBeUpdated).
+                                setValue(prescriptionToBeUpdated);
+
+                        mTextViewSaveOrUpdatePrescription.setText("Save");
+                        mTextViewNewOrUpdatePrescription.setText("New Prescription");
+                        mRecyclerViewActivePrescriptionAllPages.setAdapter(null);
+                        mArrayListAllPagesOfActivePrescription.clear();
+                        mActivePrescription = null;
+
+                        Toast.makeText(mActivity, Constants.UPLOAD_SUCCESSFUL, Toast.LENGTH_SHORT).show();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Toast.makeText(mActivity, Constants.UPDATE_FAIL, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mActivity, Constants.UPDATE_FAIL, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }

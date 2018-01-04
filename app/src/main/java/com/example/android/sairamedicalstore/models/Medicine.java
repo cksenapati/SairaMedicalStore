@@ -13,10 +13,11 @@ import java.util.HashMap;
 public class Medicine implements Serializable {
     //medicineCategory -> otc or prescription
     //medicineType -> tablet,syrup or cream
-    private String medicineId,medicineName, medicineManufacturerName, medicineComposition,medicineCategory,medicineType,medicineImageUrl,updaterStack,displayCategory;
+    private String medicineId,medicineName, medicineManufacturerName, medicineComposition,medicineCategory,medicineType,medicineImageUrl,displayCategory;
     private int noOfItemsInOnePack;
-    private double pricePerPack,priceStack;
+    private double pricePerPack;
     private boolean medicineAvailability,isLooseAvailable;
+    private HashMap<String, String> priceStack,updaterStack;
     private HashMap<String, Object> timestampCreated,timestampLastUpdate;
 
 
@@ -24,8 +25,8 @@ public class Medicine implements Serializable {
     }
 
         public Medicine(String medicineId,String medicineName, String medicineManufacturerName, String medicineComposition, String medicineCategory,
-                        String medicineType, String medicineImageUrl, String updaterStack,String displayCategory ,int noOfItemsInOnePack,
-                        double pricePerPack, double priceStack, boolean medicineAvailability, boolean isLooseAvailable,
+                        String medicineType, String medicineImageUrl, HashMap<String, String> updaterStack,String displayCategory ,int noOfItemsInOnePack,
+                        double pricePerPack, HashMap<String, String> priceStack, boolean medicineAvailability, boolean isLooseAvailable,
                         HashMap<String, Object> timestampCreated, HashMap<String, Object> timestampLastUpdate) {
             this.medicineId = medicineId;
         this.medicineName = medicineName;
@@ -76,7 +77,7 @@ public class Medicine implements Serializable {
         this.medicineImageUrl = medicineImageUrl;
     }
 
-    public void setUpdaterStack(String updaterStack) {
+    public void setUpdaterStack(HashMap<String, String> updaterStack) {
         this.updaterStack = updaterStack;
     }
 
@@ -92,8 +93,8 @@ public class Medicine implements Serializable {
         this.pricePerPack = pricePerPack;
     }
 
-    public void setPriceStack(double priceStack) {
-        this.priceStack = priceStack;
+    public void setPriceStack(HashMap<String, String> pricePerSmallestSingleUnitStack) {
+        this.priceStack = pricePerSmallestSingleUnitStack;
     }
 
     public void setMedicineAvailability(boolean medicineAvailability) {
@@ -143,7 +144,7 @@ public class Medicine implements Serializable {
         return medicineImageUrl;
     }
 
-    public String getUpdaterStack() {
+    public HashMap<String, String> getUpdaterStack() {
         return updaterStack;
     }
 
@@ -159,7 +160,7 @@ public class Medicine implements Serializable {
         return pricePerPack;
     }
 
-    public double getPriceStack() {
+    public HashMap<String, String> getPriceStack() {
         return priceStack;
     }
 

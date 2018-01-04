@@ -90,8 +90,8 @@ public final class Constants {
     public static final String USER_TYPE_EMPLOYEE = "employee";
     public static final String USER_TYPE_OWNER = "owner";
 
-    public static final String MEDICINE_CATEGORY_PRESCRIPTION = "Prescription";
-    public static final String MEDICINE_CATEGORY_OTC = "Over the counter";
+    public static final String MEDICINE_CATEGORY_PRESCRIPTION = "PRESCRIPTION";
+    public static final String MEDICINE_CATEGORY_OTC = "OTC";
 
     public static final String MEDICINE_TYPE_CAPSULE = "Capsule";
     public static final String MEDICINE_TYPE_TABLET = "Tablet";
@@ -117,22 +117,25 @@ public final class Constants {
     public static final String ITEM_ALREADY_EXISTS = "Item already exists..Upload failed";
 
 
+    public static final String ACTIVITY_VISIT_PURPOSE_VISIT= "visit";
+    public static final String ACTIVITY_VISIT_PURPOSE_SELECT= "select";
 
-    public static final String ORDER_STATUS_PLACED = "Order Placed";
-    public static final String ORDER_STATUS_DELIVERED = "Delivered";
-    public static final String ORDER_STATUS_CANCELED = "Canceled";
-    public static final String ORDER_STATUS_UNDER_PROCESS = "Under Process";
-    public static final String ORDER_STATUS_REQUESTED_FOR_RETURN = "Requested For Return";
-    public static final String ORDER_STATUS_DISPATCHED = "Dispatched";
-    public static final String ORDER_STATUS_RETURNED = "Returned";
+
+    public static final String ORDER_STATUS_PLACED = "ORDER PLACED";
+    public static final String ORDER_STATUS_DELIVERED = "DELIVERED";
+    public static final String ORDER_STATUS_CANCELED = "CANCELED";
+    public static final String ORDER_STATUS_UNDER_PROCESS = "UNDER PROCESS";
+    public static final String ORDER_STATUS_REQUESTED_FOR_RETURN = "REQUESTED FOR RETURN";
+    public static final String ORDER_STATUS_DISPATCHED = "DISPATCHED";
+    public static final String ORDER_STATUS_RETURNED = "RETURNED";
 
     public static final String ACTIVITY_TITLE_PROFILE_PIC = "Profile Pic";
 
 
-    public static final String QUERY_STATUS_POSTED = "Posted";
-    public static final String QUERY_STATUS_REOPENED = "Re-opened";
-    public static final String QUERY_STATUS_UNDER_PROCESS = "Under Process";
-    public static final String QUERY_STATUS_SOLVED = "Solved";
+    public static final String QUERY_STATUS_POSTED = "POSTED";
+    public static final String QUERY_STATUS_REOPENED = "RE-OPENED";
+    public static final String QUERY_STATUS_RUNNING = "RUNNING";
+    public static final String QUERY_STATUS_SOLVED = "SOLVED";
 
 
 }

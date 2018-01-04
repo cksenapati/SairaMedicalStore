@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="com.example.android.sairamedicalstore.ui.medicine.AddNewMedicine"
+    tools:context="com.example.android.sairamedicalstore.ui.medicine.AddOrUpdateMedicineActivity"
     tools:layout_editor_absoluteX="8dp"
     tools:layout_editor_absoluteY="8dp">
 
@@ -26,13 +26,24 @@
             android:background="?attr/colorPrimary"
             android:gravity="center_horizontal"
             app:popupTheme="@style/AppTheme.PopupOverlay">
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_activity_add_new_medicine"
-                android:textColor="@color/tw__solid_white"
-                android:textSize="@dimen/regular_text_size"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/image_view_go_back"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_back_arrow_white_48"/>
+                <TextView
+                    android:id="@+id/text_view_activity_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/extra_small_margin"
+                    android:text="@string/title_activity_add_new_medicine"
+                    android:textColor="@color/tw__solid_white"
+                    android:textSize="@dimen/small_text_size" />
+            </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
 
@@ -58,7 +69,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="@dimen/corner_radius_medicine_pic"
                 android:layout_marginBottom="@dimen/small_margin"
-                android:layout_marginTop="@dimen/regular_margin"
+                android:layout_marginTop="@dimen/small_margin"
                 android:elevation="12dp"
                 android:innerRadius="0dp"
                 android:shape="ring"
@@ -72,13 +83,14 @@
 
             </android.support.v7.widget.CardView>
 
-            <Button
-                android:id="@+id/button_upload_medicine_image"
+            <TextView
+                android:id="@+id/text_view_upload_medicine_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@color/primary"
-                android:textColor="@color/tw__solid_white"
+                android:background="@drawable/rectangle_border"
+                android:padding="@dimen/extra_small_margin"
+                android:textColor="@color/primary_text"
                 android:text="@string/button_text_upload_medicine_image"/>
 
             <EditText
@@ -231,10 +243,13 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/button_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onSaveClick"
-                android:text="@string/save_medicine"/>
+                android:background="@color/primary"
+                android:textColor="@color/tw__solid_white"
+                android:onClick="onActionClick"
+                android:text="@string/create_medicine"/>
 
         </LinearLayout>
 

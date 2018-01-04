@@ -1,9 +1,11 @@
 package com.example.android.sairamedicalstore.operations;
 
 import android.app.Activity;
+import android.net.Uri;
 
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Order;
+import com.example.android.sairamedicalstore.models.Prescription;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
@@ -12,8 +14,13 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ServerValue;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.android.sairamedicalstore.ui.order.OrderDetailsActivity.reasonOfReturnOrCancelDialog;
 
@@ -47,6 +54,11 @@ public class OrderOperations {
 
         try {
             firebaseCurrentUserAllOrdersRef.child(orderToBePlaced.getOrderId()).setValue(orderToBePlaced);
+            /*for (Map.Entry<String,Prescription> eachPrescription :orderToBePlaced.getOrderPrescriptions().entrySet()) {
+                for (Map.Entry<String,String> eachPage :eachPrescription.getValue().getPrescriptionPages().entrySet()) {
+                    uploadImageInStorage(null,orderToBePlaced.getOrderId(),eachPrescription.getKey(),eachPage.getKey());
+                }
+            }*/
             clearCartAfterOrderPlaced();
             return orderToBePlaced;
         }
@@ -82,6 +94,25 @@ public class OrderOperations {
     {
         Firebase firebaseCurrentUserCartRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_CARTS).child(Utils.encodeEmail(mCurrentUser.getEmail()));
         firebaseCurrentUserCartRef.setValue(null);
+    }
+
+    private void uploadImageInStorage(Uri posterImageURI, final String orderId,final String prescriptionCount,final String pageCount)
+    {
+        FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
+        StorageReference mFirebaseAfterOrderPrescriptionStorageReference = mFirebaseStorage.getReference().child("allOrders").child(orderId).child(prescriptionCount);
+
+
+        StorageReference selectedPhotoRef = mFirebaseAfterOrderPrescriptionStorageReference.child(posterImageURI.getLastPathSegment());
+        UploadTask uploadTask = selectedPhotoRef.putFile(posterImageURI);
+        uploadTask.addOnSuccessListener(mActivity, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                try{
+                    firebaseCurrentUserAllOrdersRef.child(orderId).child("orderPrescriptions").child(prescriptionCount).child("prescriptionPages")
+                            .child(pageCount).setValue(downloadUrl.toString());
+                }catch (Exception ex){}
+            }
+        });
     }
 
 }

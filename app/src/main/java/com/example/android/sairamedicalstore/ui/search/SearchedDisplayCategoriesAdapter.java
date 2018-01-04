@@ -42,7 +42,7 @@ public class SearchedDisplayCategoriesAdapter extends FirebaseListAdapter<Displa
         if (mArrayListSelectedItems.size() > 0) {
             for (int i = 0;i<mArrayListSelectedItems.size();i++)
             {
-                if (mArrayListSelectedItems.get(i).getItemName().equals(displayableName)) {
+                if (mArrayListSelectedItems.get(i).getItemName().toUpperCase().equals(displayCategory.getDisplayCategoryName())) {
                     imageView.setVisibility(View.VISIBLE);
                     break;
                 }

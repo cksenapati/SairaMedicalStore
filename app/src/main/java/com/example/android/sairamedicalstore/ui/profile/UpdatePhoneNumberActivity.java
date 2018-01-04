@@ -60,26 +60,7 @@ public class UpdatePhoneNumberActivity extends AppCompatActivity implements Veri
             @Override
             public void onClick(View v) {
                 if(mEditTextNewPhoneNumber.getText().toString().trim().length() == 10)
-                {
-                    if (mEditTextNewPhoneNumber.getText().toString().trim().equals(mCurrentUser.getPhoneNo())) {
-                        Toast.makeText(UpdatePhoneNumberActivity.this, "Number already exists", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (mTextViewNext.getText().equals("Send Otp"))
-                    {
-                        mVerification = SendOtpVerification.createSmsVerification
-                                (SendOtpVerification
-                                        .config(mSpinnerCountryCodes.getSelectedItem().toString() + mEditTextNewPhoneNumber.getText().toString().trim())
-                                        .context(UpdatePhoneNumberActivity.this)
-                                        .autoVerification(true)
-                                        .build(), UpdatePhoneNumberActivity.this);
-
-                        mVerification.initiate();
-                    }
-                    else if(mTextViewNext.getText().equals("Resend Otp"))
-                        mVerification.resend("text");
-                }
+                    checkAndSendOtp();
                 else
                     Toast.makeText(UpdatePhoneNumberActivity.this,"Incorrect Phone Number",Toast.LENGTH_SHORT).show();
             }
@@ -224,6 +205,53 @@ public class UpdatePhoneNumberActivity extends AppCompatActivity implements Veri
         reasonAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerCountryCodes.setAdapter(reasonAdapter);
         mSpinnerCountryCodes.setSelection(0);
+    }
+
+    private void checkAndSendOtp()
+    {
+        Firebase firebaseAllUsersRef = new Firebase(Constants.FIREBASE_URL_SAIRA_ALL_USERS);
+        firebaseAllUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists())
+                    return;
+
+                for (DataSnapshot snapshot:dataSnapshot.getChildren()) {
+                    User eachUser = snapshot.getValue(User.class);
+                    if (eachUser == null)
+                        continue;
+
+                    if (mEditTextNewPhoneNumber.getText().toString().trim().equals(eachUser.getPhoneNo())) {
+                        if (eachUser.getEmail().equals(mCurrentUser.getEmail()))
+                            Toast.makeText(UpdatePhoneNumberActivity.this, "Number already verified", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(UpdatePhoneNumberActivity.this, "Number being used by other person.", Toast.LENGTH_SHORT).show();
+
+                        return;
+                    }
+                }
+
+                if (mTextViewNext.getText().equals("Send Otp"))
+                {
+                    mVerification = SendOtpVerification.createSmsVerification
+                            (SendOtpVerification
+                                    .config(mSpinnerCountryCodes.getSelectedItem().toString() + mEditTextNewPhoneNumber.getText().toString().trim())
+                                    .context(UpdatePhoneNumberActivity.this)
+                                    .autoVerification(true)
+                                    .build(), UpdatePhoneNumberActivity.this);
+
+                    mVerification.initiate();
+                }
+                else if(mTextViewNext.getText().equals("Resend Otp"))
+                    mVerification.resend("text");
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
 

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,8 +14,7 @@ import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.DisplayProduct;
 import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
-import com.example.android.sairamedicalstore.models.Medicine;
-import com.example.android.sairamedicalstore.ui.search.SearchActivity;
+import com.example.android.sairamedicalstore.ui.medicine.ProductDetailsActivity;
 
 import java.util.ArrayList;
 

@@ -3,6 +3,7 @@ package com.example.android.sairamedicalstore.operations;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.net.Uri;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,6 +27,10 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ServerValue;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,11 +59,21 @@ public class MedicineOperations {
                                final String displayCategoryNames, final String medicineType, final String medicineImageUrl, int noOfItemsInOnePack,
                                final double pricePerPack, boolean medicineAvailability, boolean isLooseAvailable) {
         final String medicineId = mFirebaseAllMedicinesReference.push().getKey();
-        double priceStack = pricePerPack;
-        String updaterStack = mCurrentUser.getEmail();
+        //double priceStack = pricePerPack;
+        //String updaterStack = mCurrentUser.getEmail();
+        Object timestamp = ServerValue.TIMESTAMP;
+
         HashMap<String, Object> timestampCreated = new HashMap<String, Object>();
-        timestampCreated.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
+        timestampCreated.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, timestamp);
         HashMap<String, Object> timestampLastUpdate = timestampCreated;
+
+
+        HashMap<String, String>  updaterStack = new HashMap<>();
+        updaterStack.put(timestamp.toString(), mCurrentUser.getEmail());
+
+        HashMap<String, String>  priceStack = new HashMap<>();
+        priceStack.put(timestamp.toString(), String.valueOf(pricePerPack));
+
 
         final Medicine newMedicine = new Medicine(medicineId,medicineName, medicineManufacturerName, medicineComposition, medicineCategory, medicineType, medicineImageUrl,
                 updaterStack,displayCategoryNames, noOfItemsInOnePack, pricePerPack, priceStack, medicineAvailability, isLooseAvailable, timestampCreated, timestampLastUpdate);
@@ -84,7 +99,8 @@ public class MedicineOperations {
                             String[] stringOfDisplaycategoryNames = displayCategoryNames.split(",");
                             for(int i =0 ; i<stringOfDisplaycategoryNames.length;i++)
                             {
-                                AddNewProductToDisplay(stringOfDisplaycategoryNames[i].toUpperCase(),medicineId,medicineName,medicineImageUrl,medicineType,pricePerPack);
+                                //AddNewProductToDisplay(stringOfDisplaycategoryNames[i].toUpperCase(),medicineId,medicineName,medicineImageUrl,medicineType,pricePerPack);
+                                AddMedicinesToDisplay(newMedicine,stringOfDisplaycategoryNames[i].toUpperCase());
                             }
                         }
                         Toast.makeText(mActivity, Constants.UPLOAD_SUCCESSFUL, Toast.LENGTH_SHORT).show();
@@ -102,42 +118,141 @@ public class MedicineOperations {
         });
     }
 
-    private void AddNewProductToDisplay(String displayCategoryName,final String productId, String productName,
-                                        String productImageUrl, String productType, double pricePerPack)
+    public void UpdateMedicine(final Medicine medicineToBeUpdated,final Uri currentMedicineImageURI)
     {
-        final DisplayProduct currentDisplayProduct = new DisplayProduct(productId,productName,productImageUrl,productType,pricePerPack);
-
-        Firebase firebaseAllDisplayRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_DISPLAY);
-        final Firebase firebaseCurrentDisplayRef = firebaseAllDisplayRef.child(displayCategoryName);
-        firebaseCurrentDisplayRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        mFirebaseAllMedicinesReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    Boolean isProductExist = false;
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        DisplayProduct eachDisplayProduct = snapshot.getValue(DisplayProduct.class);
-                        if (eachDisplayProduct.getProductId().equals(productId)) {
-                            isProductExist = true;
-                            break;
-                        }
+                Boolean isExist = false;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Medicine eachMedicine = snapshot.getValue(Medicine.class);
+                    if (eachMedicine.getMedicineName().equals(medicineToBeUpdated.getMedicineName()) && eachMedicine.getMedicineType().equals(medicineToBeUpdated.getMedicineType())
+                            && !eachMedicine.getMedicineId().equals(medicineToBeUpdated.getMedicineId()) ) {
+                        Toast.makeText(mActivity, Constants.ITEM_ALREADY_EXISTS, Toast.LENGTH_SHORT).show();
+                        isExist = true;
+                        break;
                     }
-                    if(!isProductExist) {
-                        try {
-                            firebaseCurrentDisplayRef.child(productId).setValue(currentDisplayProduct);
-                        } catch (Exception ex) {
-                        }
-                    }
+                }
+                if(!isExist) {
+                    try {
+                        mFirebaseAllMedicinesReference.child(medicineToBeUpdated.getMedicineId()).setValue(medicineToBeUpdated);
 
+                        if (currentMedicineImageURI == null ){
+                            if(medicineToBeUpdated.getDisplayCategory() != null && medicineToBeUpdated.getDisplayCategory().trim().length() > 0)
+                                RemoveAndAddMedicinesFromDisplay(medicineToBeUpdated);
+                            else
+                            {
+                                Toast.makeText(mActivity, Constants.UPDATE_SUCCESSFUL, Toast.LENGTH_SHORT).show();
+                                mActivity.finish();
+                            }
+                        }
+                        else
+                            uploadImageInStorage(currentMedicineImageURI,medicineToBeUpdated);
+
+                    } catch (Exception ex) {
+                        Toast.makeText(mActivity, Constants.UPDATE_FAIL, Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(mActivity, Constants.UPLOAD_FAIL, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, Constants.UPDATE_FAIL, Toast.LENGTH_SHORT).show();
             }
+        });
+    }
 
+    private void uploadImageInStorage(Uri currentMedicineImageURI,final Medicine medicineToBeUpdated)
+    {
+        FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
+        StorageReference mFirebaseAllMedicinesStorageReference = mFirebaseStorage.getReference().child(Constants.FIREBASE_LOCATION_All_MEDICINES);
+
+
+        StorageReference selectedPhotoRef = mFirebaseAllMedicinesStorageReference.child(medicineToBeUpdated.getMedicineId()).child(currentMedicineImageURI.getLastPathSegment());
+        UploadTask uploadTask = selectedPhotoRef.putFile(currentMedicineImageURI);
+        uploadTask.addOnSuccessListener(mActivity, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                try{
+                    mFirebaseAllMedicinesReference.child(medicineToBeUpdated.getMedicineId()).child("medicineImageUrl").setValue(downloadUrl.toString());
+                    RemoveOldDownloadPath(medicineToBeUpdated.getMedicineImageUrl());
+
+                    medicineToBeUpdated.setMedicineImageUrl(downloadUrl.toString());
+                    if(medicineToBeUpdated.getDisplayCategory() != null && medicineToBeUpdated.getDisplayCategory().trim().length() > 0)
+                        RemoveAndAddMedicinesFromDisplay(medicineToBeUpdated);
+                    else
+                    {
+                        Toast.makeText(mActivity, Constants.UPDATE_SUCCESSFUL, Toast.LENGTH_SHORT).show();
+                        mActivity.finish();
+                    }
+
+                }catch (Exception ex){}
+            }
         });
 
     }
+
+    private void RemoveOldDownloadPath(String medicineImageDownloadUrl)
+    {
+        FirebaseStorage  mFirebaseStorage = FirebaseStorage.getInstance();
+        StorageReference photoRef = mFirebaseStorage.getReferenceFromUrl(medicineImageDownloadUrl);
+
+        try{
+            photoRef.delete();
+        }catch (Exception ex){}
+    }
+
+    public void RemoveAndAddMedicinesFromDisplay(final Medicine medicineToBeRemoved)
+    {
+        final Firebase firebaseAllDisplayRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_DISPLAY);
+        Firebase firebaseAllDisplayCategoriesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_DISPLAY_CATEGORIES);
+
+        firebaseAllDisplayCategoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())
+                {
+                    for (DataSnapshot snapshot:dataSnapshot.getChildren()) {
+                        DisplayCategory displayCategory = snapshot.getValue(DisplayCategory.class);
+                        if (displayCategory != null)
+                        {
+                            try {
+                                firebaseAllDisplayRef.child(displayCategory.getDisplayCategoryName()).child(medicineToBeRemoved.getMedicineId()).setValue(null);
+                                String[] stringOfDisplaycategoryNames = medicineToBeRemoved.getDisplayCategory().split(",");
+                                for(int i =0 ; i<stringOfDisplaycategoryNames.length;i++)
+                                    AddMedicinesToDisplay(medicineToBeRemoved,stringOfDisplaycategoryNames[i].toUpperCase());
+
+                                mActivity.finish();
+
+                            }
+                            catch (Exception ex){}
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    public void AddMedicinesToDisplay(final Medicine medicineToBeAdded,String displayCategoryName)
+    {
+        DisplayProduct currentDisplayProduct = new DisplayProduct(medicineToBeAdded.getMedicineId(),
+                medicineToBeAdded.getMedicineName(),medicineToBeAdded.getMedicineImageUrl(),medicineToBeAdded.getMedicineType()
+                ,medicineToBeAdded.getPricePerPack());
+
+        Firebase firebaseCurrentDisplayRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_DISPLAY).child(displayCategoryName);
+
+        try{
+            firebaseCurrentDisplayRef.child(medicineToBeAdded.getMedicineId()).setValue(currentDisplayProduct);
+        }catch (Exception ex){}
+
+    }
+
+
 
     public void addNewManufacturer(final String manufacturerName,final Dialog addNewItemDialog, final TextView textViewErrorMsg) {
         HashMap<String, Object> timestampCreated = new HashMap<String, Object>();

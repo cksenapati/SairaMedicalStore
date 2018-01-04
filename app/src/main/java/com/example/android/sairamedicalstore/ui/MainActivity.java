@@ -2,10 +2,9 @@ package com.example.android.sairamedicalstore.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,15 +28,18 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.DisplayProduct;
+import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.Poster;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.models.item;
+import com.example.android.sairamedicalstore.ui.cart.CartActivity;
 import com.example.android.sairamedicalstore.ui.customerSupport.CustomerSupportActivity;
 import com.example.android.sairamedicalstore.ui.login.LoginActivity;
-import com.example.android.sairamedicalstore.ui.medicine.AddNewMedicine;
+import com.example.android.sairamedicalstore.ui.medicine.AddOrUpdateMedicineActivity;
 import com.example.android.sairamedicalstore.ui.offer.CreateOrUpdateOfferActivity;
 import com.example.android.sairamedicalstore.ui.poster.CreateOrUpdatePoster;
 import com.example.android.sairamedicalstore.ui.poster.PosterDetailsActivity;
+import com.example.android.sairamedicalstore.ui.prescription.MyPrescriptionsActivity;
 import com.example.android.sairamedicalstore.ui.profile.MyProfileActivity;
 import com.example.android.sairamedicalstore.ui.search.SearchActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
@@ -54,17 +55,16 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,BaseSliderView.OnSliderClickListener {
 
-    FloatingActionButton fab;
-    DrawerLayout drawer;
+    DrawerLayout mDrawer;
     NavigationView navigationView;
     Toolbar toolbar;
 
-    ImageView mImageviewProfilePic;
-    TextView mTextViewUserNickName;
+    ImageView mImageviewProfilePic,mImageViewCart;
+    TextView mTextViewUserNickName,mTextViewOptionalMessage;
     LinearLayout mLinearLayoutForRecyclerView;
-    Button mButtonAddNewMedicine;
     EditText mEditTextSearchMedicine;
     private SliderLayout mDemoSlider;
+    MenuItem menuItemOffer,menuItemPoster;
 
     User mCurrentUser;
 
@@ -104,8 +104,8 @@ public class MainActivity extends AppCompatActivity
         });
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(toggle);
         toggle.syncState();
 
         setPosterSliders();
@@ -127,6 +127,28 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intentToMyProfileActivity);
             }
         });
+
+
+        if (mCurrentUser.getUserType().equals(Constants.USER_TYPE_END_USER)) {
+            menuItemOffer.setVisible(false);
+            menuItemPoster.setVisible(false);
+            mTextViewOptionalMessage.setVisibility(View.GONE);
+            mImageViewCart.setVisibility(View.VISIBLE);
+            mImageViewCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent cartIntent = new Intent(MainActivity.this,CartActivity.class);
+                    startActivity(cartIntent);
+                }
+            });
+        }
+        else {
+            menuItemOffer.setVisible(true);
+            menuItemPoster.setVisible(true);
+            mTextViewOptionalMessage.setVisibility(View.VISIBLE);
+            mTextViewOptionalMessage.setText(mCurrentUser.getUserType());
+            mImageViewCart.setVisibility(View.GONE);
+        }
 
     }
 
@@ -152,12 +174,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -198,6 +220,33 @@ public class MainActivity extends AppCompatActivity
             Intent intentToLoginActivity = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intentToLoginActivity);
         }
+        else if (id == R.id.nav_prescription_medicine) {
+            Intent searchActivity = new Intent(MainActivity.this, SearchActivity.class);
+            searchActivity.putExtra("whatToSearch",Constants.SEARCH_MEDICINE);
+            searchActivity.putExtra("searchOrderBy",Constants.FIREBASE_PROPERTY_MEDICINE_CATEGORY);
+            searchActivity.putExtra("specialSearch",Constants.MEDICINE_CATEGORY_PRESCRIPTION);
+            startActivity(searchActivity);
+        }
+        else if (id == R.id.nav_over_the_counter_medicine) {
+            Intent searchActivity = new Intent(MainActivity.this, SearchActivity.class);
+            searchActivity.putExtra("whatToSearch",Constants.SEARCH_MEDICINE);
+            searchActivity.putExtra("searchOrderBy",Constants.FIREBASE_PROPERTY_MEDICINE_CATEGORY);
+            searchActivity.putExtra("specialSearch",Constants.MEDICINE_CATEGORY_OTC);
+            startActivity(searchActivity);
+        }
+        else if (id == R.id.nav_my_prescriptions) {
+            Intent myPrescriptionsActivityIntent = new Intent(MainActivity.this,MyPrescriptionsActivity.class);
+            myPrescriptionsActivityIntent.putExtra("activityVisitPurpose",Constants.ACTIVITY_VISIT_PURPOSE_VISIT);
+            startActivity(myPrescriptionsActivityIntent);
+        }
+        else if (id == R.id.nav_my_posters) {
+            Intent searchActivity = new Intent(MainActivity.this, SearchActivity.class);
+            searchActivity.putExtra("whatToSearch",Constants.SEARCH_POSTER);
+            startActivity(searchActivity);
+        }
+        else if (id == R.id.nav_my_offers) {
+
+        }
         /*else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -208,8 +257,9 @@ public class MainActivity extends AppCompatActivity
 
         }*/
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+
+        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -220,19 +270,11 @@ public class MainActivity extends AppCompatActivity
 
         mEditTextSearchMedicine = (EditText) findViewById(R.id.edit_text_search);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
         View headerView =  navigationView.getHeaderView(0);
         mImageviewProfilePic = (ImageView) headerView.findViewById(R.id.image_view_profile_pic);
@@ -240,14 +282,30 @@ public class MainActivity extends AppCompatActivity
         mTextViewUserNickName = (TextView)headerView.findViewById(R.id.text_view_user_nickname);
         mTextViewUserNickName.setText("Hi, "+Utils.getFirstName(mCurrentUser.getName())+"!");
 
+        mImageViewCart = (ImageView) findViewById(R.id.image_view_cart);
+
+        mTextViewOptionalMessage = (TextView)headerView.findViewById(R.id.text_view_optional_message);
+
         mDemoSlider = (SliderLayout)findViewById(R.id.slider);
 
-        mButtonAddNewMedicine = (Button) headerView.findViewById(R.id.button_add_new_medicine);
         mLinearLayoutForRecyclerView = (LinearLayout) findViewById(R.id.linear_layout_for_recycler_view);
         mArrayListDisplayProduct = new ArrayList<DisplayProduct>();
 
         mFirebaseAllPostersRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_POSTERS);
         mFirebaseCurrentUserRef = new Firebase(Constants.FIREBASE_URL_SAIRA_ALL_USERS).child(Utils.encodeEmail(mCurrentUser.getEmail()));
+
+        Menu menu = navigationView.getMenu();
+        MenuItem Item= menu.getItem(1);
+
+        SubMenu subMenuPersonalInfo = Item.getSubMenu();
+        for (int menuItemIndex = 0; menuItemIndex < subMenuPersonalInfo.size(); menuItemIndex++) {
+            MenuItem menuItem = subMenuPersonalInfo.getItem(menuItemIndex);
+            if(menuItem.getItemId() == R.id.nav_my_offers)
+                menuItemOffer = menuItem;
+            else if(menuItem.getItemId() == R.id.nav_my_posters)
+                menuItemPoster = menuItem;
+        }
+
 
     }
 
@@ -260,7 +318,7 @@ public class MainActivity extends AppCompatActivity
 
     public void onClick(View v)
     {
-        Intent intentAddNewMedicine = new Intent(MainActivity.this, AddNewMedicine.class);
+        Intent intentAddNewMedicine = new Intent(MainActivity.this, AddOrUpdateMedicineActivity.class);
         startActivity(intentAddNewMedicine);
     }
 
@@ -287,11 +345,13 @@ public class MainActivity extends AppCompatActivity
     public void setDisplayCategories()
     {
         Firebase firebaseAllDisplayRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_DISPLAY);
-        firebaseAllDisplayRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseAllDisplayRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists())
                 {
+                    mLinearLayoutForRecyclerView.removeAllViews();
+
                     for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                         RecyclerView recyclerView = new RecyclerView(MainActivity.this);
                         recyclerView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -326,18 +386,16 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void setPosterSliders()
-    {
+
+    public void setPosterSliders() {
         mFirebaseAllPostersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                {
-                    int count =0;
-                    for (DataSnapshot snapshot:dataSnapshot.getChildren()) {
+                if (dataSnapshot.exists()) {
+                    int count = 0;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         final Poster eachPoster = snapshot.getValue(Poster.class);
-                        if(eachPoster != null)
-                        {
+                        if (eachPoster != null) {
                             count++;
                             TextSliderView textSliderView = new TextSliderView(MainActivity.this);
                             // initialize a SliderLayout
@@ -351,7 +409,7 @@ public class MainActivity extends AppCompatActivity
                                 @Override
                                 public void onSliderClick(BaseSliderView slider) {
                                     Intent searchActivity = new Intent(MainActivity.this, PosterDetailsActivity.class);
-                                    searchActivity.putExtra("posterId",eachPoster.getPosterId());
+                                    searchActivity.putExtra("posterId", eachPoster.getPosterId());
                                     startActivity(searchActivity);
                                 }
                             });
@@ -363,12 +421,11 @@ public class MainActivity extends AppCompatActivity
                             mDemoSlider.addSlider(textSliderView);
                         }
                     }
-                    if(count <= 0)
+                    if (count <= 0)
                         mDemoSlider.setVisibility(View.GONE);
                     else
                         mDemoSlider.setVisibility(View.VISIBLE);
-                }
-                else
+                } else
                     mDemoSlider.setVisibility(View.GONE);
 
             }
@@ -378,38 +435,5 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
-
-
-        /*HashMap<String,String> url_maps = new HashMap<String, String>();
-        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
-        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
-
-        *//*HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
-        file_maps.put("Hannibal",R.drawable.hannibal);
-        file_maps.put("Big Bang Theory",R.drawable.bigbang);
-        file_maps.put("House of Cards",R.drawable.house);
-        file_maps.put("Game of Thrones", R.drawable.game_of_thrones);*//*
-
-        for(String name : url_maps.keySet()) {
-            TextSliderView textSliderView = new TextSliderView(this);
-            // initialize a SliderLayout
-            textSliderView
-                    .description(name)
-                    .image(url_maps.get(name))
-                    .setScaleType(BaseSliderView.ScaleType.Fit);
-            //.setOnSliderClickListener(this);
-
-            //add your extra information
-            textSliderView.bundle(new Bundle());
-            textSliderView.getBundle()
-                    .putString("extra", name);
-
-            mDemoSlider.addSlider(textSliderView);
-        }
-*/
     }
-
 }

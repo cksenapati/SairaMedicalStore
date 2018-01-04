@@ -43,6 +43,14 @@
             android:icon="@drawable/rate_us_icon"
             android:title="Rate Saira" />
         <item
+            android:id="@+id/nav_my_offers"
+            android:icon="@drawable/ic_offer_24"
+            android:title="All Offers" />
+        <item
+            android:id="@+id/nav_my_posters"
+            android:icon="@drawable/ic_poster_24"
+            android:title="All Posters" />
+        <item
             android:id="@+id/nav_customer_support"
             android:icon="@drawable/customer_support_icon"
             android:title="Customer Support" />

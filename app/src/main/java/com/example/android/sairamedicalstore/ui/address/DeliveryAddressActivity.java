@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class DeliveryAddressActivity extends AppCompatActivity {
 
     TextView mTextViewAddNewAddress,mTextViewNoSavedAddress;
     ListView mListViewSavedDeliveryAddresses;
+    ImageView mImageViewGoBack;
 
     User mCurrentUser;
     private AllSavedAddressesAdapter mAllSavedAddressesAdapter;
@@ -80,10 +82,19 @@ public class DeliveryAddressActivity extends AppCompatActivity {
             }
         });
 
+        mImageViewGoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     public void initialization()
     {
+        mImageViewGoBack = (ImageView) findViewById(R.id.image_view_go_back);
+
         mTextViewAddNewAddress = (TextView) findViewById(R.id.text_view_add_new_address);
         mTextViewNoSavedAddress = (TextView) findViewById(R.id.text_view_no_saved_address);
 

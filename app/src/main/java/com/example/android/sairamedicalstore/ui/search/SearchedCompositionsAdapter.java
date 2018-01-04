@@ -43,7 +43,7 @@ public class SearchedCompositionsAdapter extends FirebaseListAdapter<Composition
         if (mArrayListSelectedItems.size() > 0) {
             for (int i = 0;i<mArrayListSelectedItems.size();i++)
             {
-                if (mArrayListSelectedItems.get(i).getItemName().equals(displayableName)) {
+                if (mArrayListSelectedItems.get(i).getItemName().toUpperCase().equals(composition.getCompositionName())) {
                     imageView.setVisibility(View.VISIBLE);
                     break;
                 }

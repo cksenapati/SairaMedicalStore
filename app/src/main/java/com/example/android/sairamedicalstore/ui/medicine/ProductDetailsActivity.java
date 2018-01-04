@@ -1,4 +1,4 @@
-package com.example.android.sairamedicalstore.ui;
+package com.example.android.sairamedicalstore.ui.medicine;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +20,9 @@ import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.operations.CartOperations;
+import com.example.android.sairamedicalstore.ui.MainActivity;
 import com.example.android.sairamedicalstore.ui.cart.CartActivity;
+import com.example.android.sairamedicalstore.ui.medicine.AddOrUpdateMedicineActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.DataSnapshot;
@@ -47,11 +49,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
     double priceForSelectedNoOfItems;
 
 
-    ImageView mImageViewSearch,mImageViewCart,mImageViewCloseOffers,mImageViewProduct;
+    ImageView mImageViewCart,mImageViewCloseOffers,mImageViewProduct,mImageViewPrescriptionRequired,mImageViewGoBack;
     LinearLayout mLinearLayoutOffers,mLinearLayoutPricing,mLinearLayoutProductDetails,mLinearLayoutProductInfo;
     TextView mTextViewOffers,mTextViewProductName,mTextViewProductManufacturer,mTextViewProductComposition,mTextViewProductPricePerUnit,
              mTextViewAvailability,mTextViewPriceForSelectedQuantity,mTextViewSubstitute;
-    public static TextView mTextViewAddToCart;
+    public static TextView mTextViewAction;
     Spinner mSpinnerQuantity;
     ProgressBar mProgressBarFetchingData;
 
@@ -70,12 +72,35 @@ public class ProductDetailsActivity extends AppCompatActivity {
         mArrayListDefaultMedicinePics = ((SairaMedicalStoreApplication) this.getApplication()).getArrayListDefaultMedicinePics();
 
         getProduct();
+
+        if (mCurrentUser.getUserType().equals(Constants.USER_TYPE_END_USER))
+        {
+            mImageViewCart.setVisibility(View.VISIBLE);
+            mImageViewCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent cartIntent = new Intent(ProductDetailsActivity.this,CartActivity.class);
+                    startActivity(cartIntent);
+                }
+            });
+        }
+        else
+            mImageViewCart.setVisibility(View.GONE);
+
+        mImageViewGoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     private void initializeScreen()
     {
-        mImageViewSearch = (ImageView) findViewById(R.id.image_view_search);
+        mImageViewGoBack = (ImageView) findViewById(R.id.image_view_go_back);
         mImageViewCart = (ImageView) findViewById(R.id.image_view_cart);
+        mImageViewPrescriptionRequired = (ImageView) findViewById(R.id.image_view_prescription_required);
 
         mLinearLayoutOffers = (LinearLayout) findViewById(R.id.linear_layout_offers);
         mTextViewOffers = (TextView) findViewById(R.id.text_view_offers);
@@ -96,7 +121,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         mTextViewPriceForSelectedQuantity = (TextView) findViewById(R.id.text_view_price_for_selected_quantity);
 
         mTextViewSubstitute = (TextView) findViewById(R.id.text_view_substitutes);
-        mTextViewAddToCart = (TextView) findViewById(R.id.text_view_add_to_cart);
+        mTextViewAction = (TextView) findViewById(R.id.text_view_add_to_cart);
 
         mProgressBarFetchingData = (ProgressBar) findViewById(R.id.progress_bar_fetching_data);
 
@@ -132,7 +157,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         });
     }
 
-    public void setAddToCartText()
+    public void setActionTextViewText()
     {
         String encodedEmail = Utils.encodeEmail(mCurrentUser.getEmail());
 
@@ -143,14 +168,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 if(dataSnapshot.exists())
                 {
                     mCurrentCart = dataSnapshot.getValue(Cart.class);
-                    mTextViewAddToCart.setText("Add to cart");
+                    mTextViewAction.setText("Add to cart");
 
                     if(mCurrentCart != null && mCurrentCart.getProductIdAndItemCount() != null)
                     {
                         for (Map.Entry<String, Integer> eachProduct : mCurrentCart.getProductIdAndItemCount().entrySet())
                         {
                             if(eachProduct.getKey().equals(mCurrentMedicine.getMedicineId())) {
-                                mTextViewAddToCart.setText("Go to cart");
+                                mTextViewAction.setText("Go to cart");
                                 break;
                             }
                         }
@@ -158,13 +183,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    mTextViewAddToCart.setText("Add to cart");
+                    mTextViewAction.setText("Add to cart");
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                mTextViewAddToCart.setText("Add to cart");
+                mTextViewAction.setText("Add to cart");
             }
         });
     }
@@ -174,13 +199,25 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         displayProductPic();
         mTextViewProductName.setText(mCurrentMedicine.getMedicineName());
-        mTextViewProductManufacturer.setText(mCurrentMedicine.getMedicineManufacturerName());
-        mTextViewProductComposition.setText(mCurrentMedicine.getMedicineComposition());
+        mTextViewProductManufacturer.setText("Comp: "+Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getMedicineManufacturerName()));
+        mTextViewProductComposition.setText("Manu:" + Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getMedicineComposition()));
         mTextViewProductPricePerUnit.setText("RS "+ Double.toString(mCurrentMedicine.getPricePerPack()) + " /"+
                 Integer.toString(mCurrentMedicine.getNoOfItemsInOnePack()) +" "+ mCurrentMedicine.getMedicineType() +"(s)");
 
+        if (mCurrentMedicine.getMedicineCategory().equals(Constants.MEDICINE_CATEGORY_PRESCRIPTION))
+            mImageViewPrescriptionRequired.setVisibility(View.VISIBLE);
+        else
+            mImageViewPrescriptionRequired.setVisibility(View.GONE);
+
         setAvailability();
-        setAddToCartText();
+
+        if (mCurrentUser.getUserType().equals(Constants.USER_TYPE_END_USER))
+        setActionTextViewText();
+        else {
+            mTextViewAction.setVisibility(View.VISIBLE);
+            mTextViewAction.setText("Modify");
+            mTextViewAction.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
     }
 
 
@@ -190,14 +227,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
         {
             mTextViewAvailability.setVisibility(View.GONE);
             mLinearLayoutPricing.setVisibility(View.VISIBLE);
-            mTextViewAddToCart.setEnabled(true);
+            mTextViewAction.setEnabled(true);
             setPricing();
         }
         else
         {
             mTextViewAvailability.setVisibility(View.VISIBLE);
             mLinearLayoutPricing.setVisibility(View.GONE);
-            mTextViewAddToCart.setEnabled(false);
+            mTextViewAction.setEnabled(false);
         }
     }
 
@@ -270,17 +307,25 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     public void onAddToCartClick(View view)
     {
-        if(mTextViewAddToCart.getText().equals("Add to cart"))
-        {
-            CartOperations obj = new CartOperations(this);
-            obj.AddNewProductToCart(mCurrentMedicine.getMedicineId(),noOfItemsSelected);
+        if (mCurrentUser.getUserType().equals(Constants.USER_TYPE_END_USER)){
+            if(mTextViewAction.getText().equals("Add to cart"))
+            {
+                CartOperations obj = new CartOperations(this);
+                obj.AddNewProductToCart(mCurrentMedicine.getMedicineId(),noOfItemsSelected);
+            }
+            else
+            {
+                Intent cartIntent = new Intent(this,CartActivity.class);
+                startActivity(cartIntent);
+            }
         }
         else
         {
-            Intent cartIntent = new Intent(this,CartActivity.class);
-            startActivity(cartIntent);
-
+            Intent intentToAddOrUpdateMedicine = new Intent(this,AddOrUpdateMedicineActivity.class);
+            intentToAddOrUpdateMedicine.putExtra("currentMedicine",mCurrentMedicine);
+            startActivity(intentToAddOrUpdateMedicine);
         }
+
     }
 
 }

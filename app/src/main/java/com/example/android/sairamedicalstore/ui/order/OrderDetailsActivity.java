@@ -54,7 +54,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     TextView mTextViewToolbar, mTextViewAction,mTextViewPriceDetailsMessage,mTextViewPaymentMethodMessage,mTextViewCancelOrReturnDetailsMessage,mTextViewPageMessage, mTextViewAddressDetails,mTextViewEditAddress;
     TextView mTextViewSubtotal,mTextViewCodCharges,mTextViewShippingCharges,mTextViewOrderTotal,mTextViewCancelOrReturnActionBar;
 
-    ImageView mImageViewShowOrHideCartProducts, mImageViewShowOrHidePriceDetails, mImageViewShowOrHideDeliveryAddress,mImageViewShowOrHidePrescriptionDetails,
+    ImageView mImageViewGoBack,mImageViewShowOrHideCartProducts, mImageViewShowOrHidePriceDetails, mImageViewShowOrHideDeliveryAddress,mImageViewShowOrHidePrescriptionDetails,
             mImageViewShowOrHidePaymentMethods,mImageViewShowOrHideCancelOrReturnDetails, mImageViewSelectOrDeselectPrepaid, mImageViewSelectOrDeselectCod;
 
     LinearLayout mLinearLayoutProductDetailsActonBar,mLinearLayoutPriceDetailsActonBar,mLinearLayoutDeliveryAddressActonBar,
@@ -74,7 +74,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     Address mCurrentDeliveryAddress;
     User mCurrentUser;
     ArrayList<Medicine> mArrayListCartProducts;
-    ArrayList<Prescription> mArrayListSelectedPrescriptions;
+    //ArrayList<Prescription> mArrayListSelectedPrescriptions;
     public static HashMap<String,Double> mHashMapIndividualProductPricing;
     public static Dialog reasonOfReturnOrCancelDialog;
     int selectedItemPositionOfSpinner;
@@ -101,6 +101,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
             }
         });
 
+        mImageViewGoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     public void initialization()
@@ -119,6 +126,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         mTextViewPageMessage = (TextView) findViewById(R.id.text_view_page_message);
         mTextViewCodCharges = (TextView) findViewById(R.id.text_view_cod_charges);
 
+        mImageViewGoBack = (ImageView) findViewById(R.id.image_view_go_back);
         mImageViewSelectOrDeselectPrepaid = (ImageView) findViewById(R.id.image_view_select_or_deselect_prepaid);
         mImageViewSelectOrDeselectCod = (ImageView) findViewById(R.id.image_view_select_or_deselect_cod);
         mImageViewShowOrHideCartProducts = (ImageView) findViewById(R.id.image_view_show_or_hide_cart_products);
@@ -153,7 +161,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         mFirebaseAllMedicinesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_ALL_MEDICINES);
 
         mArrayListCartProducts = new ArrayList<>();
-        mArrayListSelectedPrescriptions = new ArrayList<>();
+        /*mArrayListSelectedPrescriptions = new ArrayList<>();*/
         mHashMapIndividualProductPricing = new HashMap<>();
 
         CodCharges = 0;
@@ -526,16 +534,16 @@ public class OrderDetailsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists())
                 {
-                    if(mArrayListSelectedPrescriptions != null)
+                   /* if(mArrayListSelectedPrescriptions != null)
                         mArrayListSelectedPrescriptions.clear();
 
                     for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                         Prescription eachPrescription = snapshot.getValue(Prescription.class);
-                        if(eachPrescription != null && mCurrentOrder.getOrderPrescriptionIds().contains(eachPrescription.getPrescriptionId()))
+                        if(eachPrescription != null && mCurrentOrder.getOrderPrescriptions().contains(eachPrescription.getPrescriptionId()))
                             mArrayListSelectedPrescriptions.add(eachPrescription);
-                    }
+                    }*/
 
-                    if(mArrayListSelectedPrescriptions != null)
+                    if(mCurrentOrder.getOrderPrescriptions() != null)
                     {
                         recyclerView = new RecyclerView(OrderDetailsActivity.this);
                         recyclerView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -545,7 +553,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
                         RecyclerView.LayoutManager layoutManager  = new LinearLayoutManager(OrderDetailsActivity.this,LinearLayoutManager.HORIZONTAL,false);
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setLayoutManager(layoutManager);
-                        recyclerViewAdapter = new PrescriptionDetailsAdapter(mArrayListSelectedPrescriptions,OrderDetailsActivity.this);
+
+                        ArrayList<Prescription> arrayListPrescriptions = new ArrayList<>();
+                        for (Map.Entry<String,Prescription> eachPage:mCurrentOrder.getOrderPrescriptions().entrySet()) {
+                            arrayListPrescriptions.add(eachPage.getValue());
+                        }
+
+                        recyclerViewAdapter = new PrescriptionDetailsAdapter(arrayListPrescriptions,OrderDetailsActivity.this);
 
                         recyclerView.setAdapter(recyclerViewAdapter);
 

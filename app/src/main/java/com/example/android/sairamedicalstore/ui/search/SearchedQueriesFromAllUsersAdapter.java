@@ -57,7 +57,7 @@ public class SearchedQueriesFromAllUsersAdapter extends ArrayAdapter<Query> {
     {
         int textColorCode;
 
-        if(status.equals(Constants.QUERY_STATUS_UNDER_PROCESS))
+        if(status.equals(Constants.QUERY_STATUS_RUNNING))
             textColorCode = mActivity.getResources().getColor(R.color.under_process_message_text_color);
         else if(status.equals(Constants.QUERY_STATUS_SOLVED))
             textColorCode = mActivity.getResources().getColor(R.color.success_message_text_color);

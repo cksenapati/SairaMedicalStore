@@ -17,8 +17,8 @@
     <!-- Strings related to MainActivity -->
     <string name="hint_search">Search</string>
 
-    <!-- Strings related to AddNewMedicine -->
-    <string name="title_activity_add_new_medicine">Add Medicine</string>
+    <!-- Strings related to AddOrUpdateMedicineActivity -->
+    <string name="title_activity_add_new_medicine">Create Medicine</string>
     <string name="button_text_upload_medicine_image">Upload Image</string>
     <string name="hint_medicine_name">Medicine Name</string>
     <string name="hint_medicine_manufacturer_name">Manufacturer Name</string>
@@ -30,7 +30,8 @@
     <string name="hint_price_per_pack">Price per Pack</string>
     <string name="hint_is_medicine_availability">Availability</string>
     <string name="hint_is_loose_medicine_available">Loose medicine availability</string>
-    <string name="save_medicine">Save Medicine</string>
+    <string name="create_medicine">Create Medicine</string>
+    <string name="update_medicine">Update Medicine</string>
     <string-array name="availability_options">
         <item>Yes</item>
         <item>No</item>

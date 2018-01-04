@@ -38,7 +38,7 @@
     <dimen name="extra_large_text_size">50sp</dimen>
     <dimen name="double_extra_large_text_size">60sp</dimen>
 
-    <!-- AddNewMedicine  -->
+    <!-- AddOrUpdateMedicineActivity  -->
     <dimen name="medicine_pic_image_width">100dp</dimen>
     <dimen name="medicine_pic_image_height">100dp</dimen>
     <dimen name="corner_radius_medicine_pic">50dp</dimen>

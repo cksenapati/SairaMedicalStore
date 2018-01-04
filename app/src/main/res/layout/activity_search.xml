@@ -63,7 +63,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-
             android:layout_marginBottom="@dimen/extra_small_margin"
             android:layout_marginLeft="@dimen/extra_small_margin"
             android:layout_marginRight="@dimen/extra_small_margin">
@@ -78,6 +77,7 @@
                 android:focusableInTouchMode="true"
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textEmailAddress"
+                android:textColorHint="@color/secondary_text"
                 android:padding="@dimen/double_extra_small_margin"
                 android:textColor="@color/secondary_text"
                 android:visibility="visible" />
@@ -85,7 +85,7 @@
 
 
     </android.support.design.widget.AppBarLayout>
-    <Button
+    <!--<Button
         android:id="@+id/button_add_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -95,16 +95,39 @@
         android:onClick="onAddClick"
         android:visibility="gone"
         android:layout_below="@id/app_bar_layout"
-        />
-    <LinearLayout
+        />-->
+
+    <TextView
+        android:id="@+id/text_view_selected_items"
+        android:layout_below="@id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/double_extra_small_margin"
+        android:padding="@dimen/double_extra_small_margin"
+        android:visibility="invisible"
+        android:textColor="@color/tw__solid_white"
+        android:background="@color/light_black"/>
+
+    <Button
+        android:id="@+id/button_done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:layout_below="@id/text_view_selected_items"
+        android:background="@drawable/rectangle_border"
+        android:layout_marginLeft="@dimen/extra_small_margin"
+        android:layout_marginRight="@dimen/extra_small_margin"
+        android:onClick="onDoneClick"/>
+
+    <!--<LinearLayout
         android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="@dimen/extra_small_margin"
-        android:layout_below="@id/button_add_item"
+        android:layout_below="@id/text_view_selected_items"
         >
-        <android.support.v7.widget.RecyclerView
+        &lt;!&ndash;<android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_selected_items"
             android:layout_below="@id/linear_layout"
             android:layout_width="0dp"
@@ -112,18 +135,17 @@
             android:layout_weight="1"
             >
 
-        </android.support.v7.widget.RecyclerView>
-
-        <Button
+        </android.support.v7.widget.RecyclerView>&ndash;&gt;
+        &lt;!&ndash;<Button
             android:id="@+id/button_done"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="Done"
             android:background="@color/tw__transparent"
             android:padding="@dimen/extra_small_margin"
             android:onClick="onDoneClick"
-            />
-    </LinearLayout>
+            />&ndash;&gt;
+    </LinearLayout>-->
 
     <ListView
         android:id="@+id/list_view_search_result"
@@ -132,8 +154,10 @@
         android:layout_margin="@dimen/extra_small_margin"
         android:divider="@color/primary_light"
         android:dividerHeight="3.0sp"
-        android:layout_below="@id/linear_layout">
+        android:layout_below="@id/button_done">
     </ListView>
+
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_item"
@@ -145,5 +169,6 @@
         android:layout_alignParentRight="true"
         style="@style/FAB"
         android:src="@drawable/ic_edit_48" />
+
 
 </RelativeLayout>

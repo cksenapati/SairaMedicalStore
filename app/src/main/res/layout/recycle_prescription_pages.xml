@@ -1,0 +1,32 @@
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_recycle_item"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_margin="5dp"
+    card_view:cardCornerRadius="4dp">
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_single_prescription_page"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image_view_single_prescription_page"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light_black"/>
+        <ImageView
+            android:id="@+id/image_view_remove_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:padding="@dimen/double_extra_small_margin"
+            android:src="@drawable/ic_remove_24px"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

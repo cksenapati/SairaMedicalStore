@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="com.example.android.sairamedicalstore.ui.ProductDetailsActivity"
+    tools:context="com.example.android.sairamedicalstore.ui.medicine.ProductDetailsActivity"
     tools:layout_editor_absoluteX="8dp"
     tools:layout_editor_absoluteY="8dp">
 
@@ -37,6 +37,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/image_view_go_back"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="@dimen/extra_small_margin"
+                        android:src="@drawable/ic_back_arrow_white_48"/>
                     <TextView
                         android:id="@+id/text_view_toolbar"
                         android:layout_width="0dp"
@@ -46,13 +53,7 @@
                         android:text="Medicine Details"
                         android:textColor="@color/tw__solid_white"
                         android:textSize="@dimen/small_text_size" />
-                    <ImageView
-                        android:id="@+id/image_view_search"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/search_white_48"
-                        android:layout_gravity="right"
-                        android:padding="@dimen/extra_small_margin"/>
+
                     <ImageView
                         android:id="@+id/image_view_cart"
                         android:layout_width="wrap_content"
@@ -140,7 +141,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:textSize="@dimen/extra_small_text_size" />
+                            android:textSize="@dimen/double_extra_small_text_size" />
 
                         <TextView
                             android:id="@+id/text_view_product_manufacturer"
@@ -159,6 +160,13 @@
                             android:textStyle="bold" />
                     </LinearLayout>
 
+                    <ImageView
+                        android:id="@+id/image_view_prescription_required"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:padding="@dimen/extra_small_margin"
+                        android:src="@drawable/ic_prescription" />
                 </LinearLayout>
 
                 <TextView
@@ -169,6 +177,7 @@
                     android:gravity="center"
                     android:padding="@dimen/small_margin"
                     android:text="OUT OF STUCK"
+                    android:visibility="gone"
                     android:textColor="@color/tw__solid_white"
                     android:textSize="@dimen/small_text_size" />
 
@@ -226,9 +235,8 @@
             android:id="@+id/text_view_add_to_cart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/small_margin"
+            android:padding="@dimen/extra_small_margin"
             android:background="@color/primary_dark"
-            android:text="Add to cart"
             android:textColor="@color/tw__solid_white"
             android:textSize="@dimen/regular_text_size"
             android:onClick="onAddToCartClick"

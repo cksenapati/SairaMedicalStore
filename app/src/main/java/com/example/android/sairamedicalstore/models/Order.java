@@ -15,7 +15,7 @@ public class Order implements Serializable {
     String orderId,orderStatus,transactionId,paymentMethod,orderPlaceBy;
     Cart cart;
     Address orderDeliveryAddress;
-    ArrayList<String> orderPrescriptionIds;
+    HashMap<String,Prescription> orderPrescriptions;
     ArrayList<String> orderComplaintIds;
     private HashMap<String, Object> timestampCreated,timestampDeliveryScheduledOn;
     private HashMap<String,Double> orderPricingDetails;
@@ -28,7 +28,7 @@ public class Order implements Serializable {
     }
 
     public Order(String orderId, String orderStatus,String transactionId,String paymentMethod, String orderPlaceBy ,Cart cart, Address orderDeliveryAddress,
-                 ArrayList<String> orderPrescriptionIds, ArrayList<String> orderComplaintIds, HashMap<String, Object> timestampOrderPlaced,HashMap<String, Object> timestampDeliveryScheduledOn,
+                 HashMap<String,Prescription> orderPrescriptions, ArrayList<String> orderComplaintIds, HashMap<String, Object> timestampOrderPlaced,HashMap<String, Object> timestampDeliveryScheduledOn,
                  HashMap<String, Double> orderPricingDetails, HashMap<String, Double> individualProductPricing,
                  OrderReturnDetails orderReturnDetails,OrderCancellationDetails orderCancelDetails) {
         this.orderId = orderId;
@@ -38,7 +38,7 @@ public class Order implements Serializable {
         this.orderPlaceBy = orderPlaceBy;
         this.cart = cart;
         this.orderDeliveryAddress = orderDeliveryAddress;
-        this.orderPrescriptionIds = orderPrescriptionIds;
+        this.orderPrescriptions = orderPrescriptions;
         this.orderComplaintIds = orderComplaintIds;
         this.timestampCreated = timestampOrderPlaced;
         this.timestampDeliveryScheduledOn = timestampDeliveryScheduledOn;
@@ -106,12 +106,12 @@ public class Order implements Serializable {
 
 
 
-    public ArrayList<String> getOrderPrescriptionIds() {
-        return orderPrescriptionIds;
+    public HashMap<String,Prescription> getOrderPrescriptions() {
+        return orderPrescriptions;
     }
 
-    public void setOrderPrescriptionIds(ArrayList<String> orderPrescriptionIds) {
-        this.orderPrescriptionIds = orderPrescriptionIds;
+    public void setOrderPrescriptions(HashMap<String,Prescription> orderPrescriptions) {
+        this.orderPrescriptions = orderPrescriptions;
     }
 
     public ArrayList<String> getOrderComplaintIds() {

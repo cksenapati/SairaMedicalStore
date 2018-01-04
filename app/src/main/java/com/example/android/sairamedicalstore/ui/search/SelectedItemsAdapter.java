@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.models.SelectedItem;
+import com.example.android.sairamedicalstore.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -60,7 +61,7 @@ class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdapter.Vie
 
     @Override
     public void onBindViewHolder(SelectedItemsAdapter.ViewHolder holder, int position) {
-        holder.mTextViewItemName.setText(mArrayListSelectedItems.get(position).getItemName());
+        holder.mTextViewItemName.setText(Utils.toLowerCaseExceptFirstLetter(mArrayListSelectedItems.get(position).getItemName()));
     }
 
     @Override

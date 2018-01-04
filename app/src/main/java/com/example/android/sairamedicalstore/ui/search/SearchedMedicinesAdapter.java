@@ -35,6 +35,7 @@ public class SearchedMedicinesAdapter extends FirebaseListAdapter<Medicine> {
 
         String displayableMedicineName = Utils.toLowerCaseExceptFirstLetter(medicine.getMedicineName());
         String displayableManufacturerName = Utils.toLowerCaseExceptFirstLetter(medicine.getMedicineManufacturerName());
+        String displayableMedicineType = Utils.toLowerCaseExceptFirstLetter(medicine.getMedicineType());
 
         ImageView imageViewSingleMedicine = (ImageView) view.findViewById(R.id.image_view_single_medicine);
         Glide.with(imageViewSingleMedicine.getContext())
@@ -51,7 +52,7 @@ public class SearchedMedicinesAdapter extends FirebaseListAdapter<Medicine> {
         textViewSingleMedicinePricePerPack.setText("Rs " + String.valueOf(medicine.getPricePerPack()) + " per pack");
 
         TextView textViewSingleMedicineType = (TextView) view.findViewById(R.id.text_view_single_medicine_type);
-        textViewSingleMedicineType.setText(medicine.getMedicineType()+" (" + medicine.getNoOfItemsInOnePack() + " items in a pack)");
+        textViewSingleMedicineType.setText(displayableMedicineType+" (" + medicine.getNoOfItemsInOnePack() + " items in a pack)");
 
     }
 

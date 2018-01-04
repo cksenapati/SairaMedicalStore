@@ -16,7 +16,7 @@ import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
 import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.User;
-import com.example.android.sairamedicalstore.ui.ProductDetailsActivity;
+import com.example.android.sairamedicalstore.ui.medicine.ProductDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.Map;

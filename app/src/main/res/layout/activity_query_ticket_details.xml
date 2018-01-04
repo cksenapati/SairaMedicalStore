@@ -115,7 +115,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/small_text_size"
                 android:textColor="@color/primary_text"
-                android:text="Query Title : "
                 android:layout_margin="@dimen/extra_small_margin"/>
 
 
@@ -138,7 +137,6 @@
                 android:visibility="gone"
                 android:textSize="@dimen/small_text_size"
                 android:textColor="@color/primary_text"
-                android:text="Query Text : "
                 android:layout_margin="@dimen/extra_small_margin"/>
 
             <EditText
@@ -160,7 +158,6 @@
                 android:visibility="gone"
                 android:textSize="@dimen/extra_small_text_size"
                 android:textColor="@color/primary_text"
-                android:text="Resolver Response : "
                 android:layout_margin="@dimen/extra_small_margin"/>
 
             <EditText
@@ -184,8 +181,7 @@
                 android:visibility="gone"
                 android:gravity="left"
                 android:textSize="@dimen/small_text_size"
-                android:padding="@dimen/extra_small_margin"
-                android:text="Posted by : "/>
+                android:padding="@dimen/extra_small_margin"/>
 
             <TextView
                 android:id="@+id/text_view_query_posted_on"
@@ -194,8 +190,7 @@
                 android:gravity="left"
                 android:visibility="gone"
                 android:textSize="@dimen/small_text_size"
-                android:padding="@dimen/extra_small_margin"
-                android:text="Posted on : "/>
+                android:padding="@dimen/extra_small_margin"/>
 
 
 
@@ -206,8 +201,7 @@
                 android:visibility="gone"
                 android:gravity="left"
                 android:textSize="@dimen/small_text_size"
-                android:padding="@dimen/extra_small_margin"
-                android:text="Closed by : "/>
+                android:padding="@dimen/extra_small_margin"/>
 
             <TextView
                 android:id="@+id/text_view_query_closed_on"

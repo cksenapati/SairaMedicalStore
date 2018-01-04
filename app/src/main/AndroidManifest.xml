@@ -34,9 +34,9 @@
         <activity
             android:name=".ui.MainActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ui.medicine.AddNewMedicine" />
+        <activity android:name=".ui.medicine.AddOrUpdateMedicineActivity" />
         <activity android:name=".ui.search.SearchActivity" />
-        <activity android:name=".ui.ProductDetailsActivity" />
+        <activity android:name=".ui.medicine.ProductDetailsActivity" />
         <activity android:name=".ui.offer.CreateOrUpdateOfferActivity" />
         <activity android:name=".ui.poster.CreateOrUpdatePoster" />
         <activity android:name=".ui.poster.PosterDetailsActivity" />
@@ -51,7 +51,8 @@
         <activity android:name=".ui.profile.UpdatePhoneNumberActivity" />
         <activity android:name=".ui.customerSupport.CustomerSupportActivity" />
         <activity android:name=".ui.customerSupport.QueryTicketDetailsActivity" />
-        <activity android:name=".ui.customerSupport.AddOrUpdateFaqActivity"></activity>
+        <activity android:name=".ui.customerSupport.AddOrUpdateFaqActivity" />
+        <activity android:name=".ui.prescription.MyPrescriptionsActivity"></activity>
     </application>
 
 </manifest>

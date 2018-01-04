@@ -42,8 +42,8 @@ public class SearchedOrdersAdapter extends FirebaseListAdapter<Order> {
                 new Date(order.getTimestampOrderPlacedLong())));
 
         TextView textViewOrderStatus = (TextView) view.findViewById(R.id.text_view_order_status);
-        textViewOrderStatus.setText(order.getOrderStatus());
-        textViewOrderStatus.setTextColor( getOrderStatusTextColor(order.getOrderStatus()));
+        textViewOrderStatus.setText(Utils.toLowerCaseExceptFirstLetter(order.getOrderStatus()));
+        textViewOrderStatus.setTextColor(getOrderStatusTextColor(order.getOrderStatus()));
 
         TextView textViewOrderTotalPrice = (TextView) view.findViewById(R.id.text_view_order_total_price);
 

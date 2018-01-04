@@ -6,7 +6,6 @@ import android.widget.Toast;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Cart;
 import com.example.android.sairamedicalstore.models.User;
-import com.example.android.sairamedicalstore.ui.ProductDetailsActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.DataSnapshot;
