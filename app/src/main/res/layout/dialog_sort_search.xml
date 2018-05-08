@@ -20,39 +20,35 @@
         android:textSize="@dimen/small_text_size"
         android:textStyle="bold"/>
 
-   <!--<Spinner
-       android:id="@+id/spinner_reasons"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_margin="@dimen/extra_small_margin"
-       android:background="@drawable/gradient_spinner"
-       android:popupBackground="#DFFFFFFF"
-       android:padding="@dimen/extra_small_margin">
-   </Spinner>-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioGroup
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/radio_group_sort_by_options"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="left"
+            android:padding="@dimen/extra_small_margin"
+            android:backgroundTint="@color/primary"
+            android:orientation="vertical">
+        </RadioGroup>
+        <RadioGroup
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/radio_group_sort_by_options2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="left"
+            android:visibility="gone"
+            android:padding="@dimen/extra_small_margin"
+            android:backgroundTint="@color/primary"
+            android:orientation="vertical">
+        </RadioGroup>
+    </LinearLayout>
 
-    <RadioGroup
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/radio_group_sort_by_options"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:padding="@dimen/extra_small_margin"
-        android:backgroundTint="@color/primary"
-        android:orientation="vertical">
-        <!--<RadioButton
-            android:id="@+id/radio_button_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/primary"
-            android:text="Phone"/>
-        <RadioButton
-            android:id="@+id/radio_button_mail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/primary"
-            android:checked="true"
-            android:text="Mail"/>-->
-    </RadioGroup>
+
 
     <LinearLayout
         android:layout_width="match_parent"

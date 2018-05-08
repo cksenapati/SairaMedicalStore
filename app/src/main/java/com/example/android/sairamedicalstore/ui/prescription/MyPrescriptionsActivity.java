@@ -8,10 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -24,9 +22,11 @@ import android.widget.Toast;
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Prescription;
+import com.example.android.sairamedicalstore.models.PrescriptionPage;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.operations.PrescriptionOperations;
 import com.example.android.sairamedicalstore.ui.cart.CartActivity;
+import com.example.android.sairamedicalstore.ui.search.SearchActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.DataSnapshot;
@@ -55,7 +55,7 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
 
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mFirebaseActivePrescriptionStorageRef;
-    Firebase mFirebaseCurrentUserAllPrescriptionsRef;
+    Firebase mFirebaseAllPrescriptionsRef;
 
 
     User mCurrentUser;
@@ -64,8 +64,9 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
     String mActivityVisitPurpose,mSearchedPrescriptionName;
     int mMaxNumberOfPrescriptions;
 
-    public static ArrayList<String> mArrayListAllPagesOfActivePrescription;
+    public static ArrayList<PrescriptionPage> mArrayListAllPagesOfActivePrescription;
     ArrayList<Prescription> mArrayListSelectedPrescriptions;
+    public static HashMap<String,Uri> mHashMapNewUploadedPageStorageUris;
 
     private static final int RC_PRESCRIPTION_PAGE_PICKER =  1;
 
@@ -105,6 +106,12 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
         mTextViewSaveOrUpdatePrescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mArrayListAllPagesOfActivePrescription.size() <= 0)
+                {
+                    Toast.makeText(MyPrescriptionsActivity.this,"Add Pics to Update prescription",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (mTextViewSaveOrUpdatePrescription.getText().equals("Save"))
                     openSaveDataDialog();
                 else
@@ -202,21 +209,15 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == RC_PRESCRIPTION_PAGE_PICKER)
         {
             if(resultCode == RESULT_OK){
 
-                String prescriptionId;
-                if (mActivePrescription == null)
-                    prescriptionId = mActivePrescriptionIdForNewPrescription;
-                else
-                    prescriptionId = mActivePrescription.getPrescriptionId();
-
-                StorageReference selectedPhotoRef = mFirebaseStorage.getReference().child(Constants.FIREBASE_LOCATION_All_PRESCRIPTIONS).
-                        child(Utils.encodeEmail(mCurrentUser.getEmail())).child(prescriptionId).child(data.getData().getLastPathSegment());
+                StorageReference selectedPhotoRef = mFirebaseStorage.getReference().child(Constants.FIREBASE_LOCATION_TEMPORARY_STORAGE)
+                        .child(data.getData().getLastPathSegment());
 
                 UploadTask uploadTask = selectedPhotoRef.putFile(data.getData());
                 uploadTask.addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -224,7 +225,7 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
                         // When the image has successfully uploaded, we get its download URL
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         try {
-                            addNewPageToActivePrescription(downloadUrl.toString());
+                            addNewPageToActivePrescription(downloadUrl.toString(),data.getData());
                         }catch (Exception ex){}
                     }
                 });
@@ -239,9 +240,14 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
 
     }
 
-    public void addNewPageToActivePrescription(String imageDownloadURI)
+    public void addNewPageToActivePrescription(String imageDownloadURI, Uri storageUri)
     {
-        mArrayListAllPagesOfActivePrescription.add(imageDownloadURI);
+
+        String PrescriptionPageId = mFirebaseAllPrescriptionsRef.child(mActivePrescriptionIdForNewPrescription).push().getKey();
+        PrescriptionPage newPage = new PrescriptionPage(PrescriptionPageId,imageDownloadURI,mActivePrescriptionIdForNewPrescription,true,null,null);
+        mArrayListAllPagesOfActivePrescription.add(newPage);
+
+        mHashMapNewUploadedPageStorageUris.put(PrescriptionPageId,storageUri);
 
         displayActivePrescriptionPages();
     }
@@ -260,23 +266,6 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
 
     public void initialization()
     {
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        *//* Common toolbar setup *//*
-        setSupportActionBar(toolbar);
-
-        *//* Add back button to the action bar *//*
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-        if (mActivityVisitPurpose != null && mActivityVisitPurpose.equals(Constants.ACTIVITY_VISIT_PURPOSE_SELECT))
-            setTitle("Select Prescription");
-        else
-            setTitle("My Prescriptions");
-*/
-/*
-        mLinearLayoutActivePrescriptionAllPages = (LinearLayout) findViewById(R.id.linear_layout_active_prescription_all_pages);
-*/
         mScrollView = (ScrollView) findViewById(R.id.scrollView);
 
         mRecyclerViewActivePrescriptionAllPages = (RecyclerView) findViewById(R.id.recycler_view_active_prescription_all_pages);
@@ -291,11 +280,13 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
         mTextViewSelectedPrescriptions = (TextView) findViewById(R.id.text_view_selected_prescription);
 
         mArrayListAllPagesOfActivePrescription = new ArrayList<>();
+        mHashMapNewUploadedPageStorageUris = new HashMap<>();
 
-        mFirebaseCurrentUserAllPrescriptionsRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_PRESCRIPTIONS).child(Utils.encodeEmail(mCurrentUser.getEmail()));
+
+        mFirebaseAllPrescriptionsRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_PRESCRIPTIONS);
 
         mFirebaseStorage = FirebaseStorage.getInstance();
-        mActivePrescriptionIdForNewPrescription = mFirebaseCurrentUserAllPrescriptionsRef.push().getKey();
+        mActivePrescriptionIdForNewPrescription = mFirebaseAllPrescriptionsRef.push().getKey();
 
         mMaxNumberOfPrescriptions = 5;
 
@@ -312,7 +303,7 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
         mTextViewShowMorePrescriptions.setVisibility(View.GONE);
 
         if (mSearchedPrescriptionName != null && mSearchedPrescriptionName.length() > 0)
-            mFirebaseCurrentUserAllPrescriptionsRef.orderByChild("prescriptionName").startAt(mSearchedPrescriptionName).
+            mFirebaseAllPrescriptionsRef.orderByChild("prescriptionName").startAt(mSearchedPrescriptionName).
                     endAt(mSearchedPrescriptionName + "~").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -329,6 +320,10 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
                         int count = 0;
                         for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                             final Prescription currentPrescription = snapshot.getValue(Prescription.class);
+
+                            if (!currentPrescription.getPrescriptionOwnerEmail().equals(mCurrentUser.getEmail()))
+                                continue;
+
                             createRecyclerView(currentPrescription);
 
                             RecyclerView recyclerView = createRecyclerView(currentPrescription);
@@ -374,7 +369,8 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
                 }
             });
         else
-            mFirebaseCurrentUserAllPrescriptionsRef.addValueEventListener(new ValueEventListener() {
+            mFirebaseAllPrescriptionsRef.orderByChild(Constants.FIREBASE_PROPERTY_PRESCRIPTION_OWNER_EMAIL).
+                    equalTo(mCurrentUser.getEmail()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists())
@@ -390,6 +386,7 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
                         int count = 0;
                         for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                             final Prescription currentPrescription = snapshot.getValue(Prescription.class);
+
                             createRecyclerView(currentPrescription);
 
                             RecyclerView recyclerView = createRecyclerView(currentPrescription);
@@ -438,10 +435,11 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
 
     public RecyclerView createRecyclerView(Prescription currentPrescription)
     {
-        ArrayList<String> prescriptionPages = new ArrayList<>();
+        ArrayList<PrescriptionPage> arrayListPrescriptionPages = new ArrayList<>();
 
-        for (Map.Entry<String,String> eachPage:currentPrescription.getPrescriptionPages().entrySet()) {
-            prescriptionPages.add(eachPage.getValue());
+        for (Map.Entry<String,PrescriptionPage> eachPage:currentPrescription.getPrescriptionPages().entrySet()) {
+            if (eachPage.getValue().isActive())
+                arrayListPrescriptionPages.add(eachPage.getValue());
         }
 
         RecyclerView recyclerView = new RecyclerView(MyPrescriptionsActivity.this);
@@ -457,7 +455,7 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager  = new LinearLayoutManager(MyPrescriptionsActivity.this,LinearLayoutManager.HORIZONTAL,false);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerView.Adapter adapter = new DisplayPrescriptionPagesAdapter(prescriptionPages,false,MyPrescriptionsActivity.this);
+        RecyclerView.Adapter adapter = new DisplayPrescriptionPagesAdapter(arrayListPrescriptionPages,false,MyPrescriptionsActivity.this);
         recyclerView.setAdapter(adapter);
 
         return recyclerView;
@@ -558,31 +556,37 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
 
     public void addNewPrescription(String prescriptionName)
     {
-        HashMap<String,String> tempHashMapPrescriptionPages = new HashMap<>();
+        HashMap<String,PrescriptionPage> tempHashMapPrescriptionPages = new HashMap<>();
 
-        int count = 1;
-        for (String eachPage: mArrayListAllPagesOfActivePrescription) {
-            tempHashMapPrescriptionPages.put("page"+count , eachPage);
-            count++;
+        for (PrescriptionPage eachPage: mArrayListAllPagesOfActivePrescription) {
+            tempHashMapPrescriptionPages.put(eachPage.getPrescriptionPageId() , eachPage);
         }
 
+        Prescription prescription = new Prescription(mActivePrescriptionIdForNewPrescription,tempHashMapPrescriptionPages,prescriptionName,mCurrentUser.getEmail(),null);
+
+
         PrescriptionOperations obj = new PrescriptionOperations(this);
-        obj.addNewPrescription(mActivePrescriptionIdForNewPrescription,tempHashMapPrescriptionPages,prescriptionName);
+        obj.addNewPrescription(prescription);
     }
 
     public void updateOldPrescription()
     {
-        HashMap<String,String> tempHashMapPrescriptionPages = new HashMap<>();
+        HashMap<String,PrescriptionPage> tempHashMapPrescriptionPages = new HashMap<>();
 
-        int count = 1;
-        for (String eachPage: mArrayListAllPagesOfActivePrescription) {
-            tempHashMapPrescriptionPages.put("page"+count , eachPage);
-            count++;
+        for (PrescriptionPage eachPage: mArrayListAllPagesOfActivePrescription) {
+            tempHashMapPrescriptionPages.put(eachPage.getPrescriptionPageId() , eachPage);
         }
+
+        /*for (Map.Entry<String,PrescriptionPage> eachOldPage :mActivePrescription.getPrescriptionPages().entrySet()) {
+            if (!tempHashMapPrescriptionPages.containsKey(eachOldPage.getKey())) {
+                eachOldPage.getValue().setActive(false);
+                tempHashMapPrescriptionPages.put(eachOldPage.getKey(), eachOldPage.getValue());
+            }
+        }*/
+
 
         PrescriptionOperations obj = new PrescriptionOperations(this);
         obj.updateSavedPrescription(mActivePrescription.getPrescriptionId(),tempHashMapPrescriptionPages);
-
     }
 
     public void openSaveDataDialog()
@@ -627,10 +631,16 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
         TextView textViewErrorMessage = (TextView) showActionOptionsDialog.findViewById(R.id.text_view_error_message);
         TextView textViewEditPrescription = (TextView) showActionOptionsDialog.findViewById(R.id.text_view_action_option_1);
         TextView textViewSelectPrescription = (TextView) showActionOptionsDialog.findViewById(R.id.text_view_action_option_2);
+        TextView textViewDeletePrescription = (TextView) showActionOptionsDialog.findViewById(R.id.text_view_action_option_3);
+        TextView textViewSendForEvaluation = (TextView) showActionOptionsDialog.findViewById(R.id.text_view_action_option_4);
+        TextView textViewViewPrescription = (TextView) showActionOptionsDialog.findViewById(R.id.text_view_action_option_5);
         TextView textViewDialogTitle= (TextView) showActionOptionsDialog.findViewById(R.id.text_view_dialog_title);
 
         textViewDialogTitle.setText(Utils.toLowerCaseExceptFirstLetter(clickedPrescription.getPrescriptionName()));
         textViewEditPrescription.setText("Edit this prescription");
+        textViewDeletePrescription.setText("Delete this prescription");
+        textViewSendForEvaluation.setText("Send for Evaluation");
+        textViewViewPrescription.setText("View Prescription");
 
         if (mActivityVisitPurpose != null && mActivityVisitPurpose.equals(Constants.ACTIVITY_VISIT_PURPOSE_SELECT)) {
             textViewSelectPrescription.setVisibility(View.VISIBLE);
@@ -667,6 +677,52 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
             }
         });
 
+        textViewDeletePrescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mFirebaseAllPrescriptionsRef.child(clickedPrescription.getPrescriptionId()).setValue(null);
+                    Toast.makeText(MyPrescriptionsActivity.this,"Prescription deleted successfully. ",Toast.LENGTH_SHORT).show();
+
+                    if (mActivePrescription != null && mActivePrescription.getPrescriptionId().equals(clickedPrescription.getPrescriptionId()))
+                    {
+                        mTextViewSaveOrUpdatePrescription.setText("Save");
+                        mTextViewNewOrUpdatePrescription.setText("New Prescription");
+                        mRecyclerViewActivePrescriptionAllPages.setAdapter(null);
+                        mArrayListAllPagesOfActivePrescription.clear();
+                        mActivePrescription = null;
+                    }
+
+                    displaySavedPrescriptions();
+
+                }catch (Exception ex){
+                    Toast.makeText(MyPrescriptionsActivity.this,"Unable to delete. Try again",Toast.LENGTH_SHORT).show();
+                }
+                finally {
+                    showActionOptionsDialog.dismiss();
+                }
+            }
+        });
+
+        textViewSendForEvaluation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PrescriptionOperations obj = new PrescriptionOperations(MyPrescriptionsActivity.this);
+                obj.SendPrescriptionForEvaluation(clickedPrescription.getPrescriptionId());
+            }
+        });
+
+        textViewViewPrescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentToEvaluatePrescriptionActivity = new Intent(MyPrescriptionsActivity.this, EvaluatePrescriptionActivity.class);
+                intentToEvaluatePrescriptionActivity.putExtra("currentPrescription",clickedPrescription);
+                startActivity(intentToEvaluatePrescriptionActivity);
+
+                showActionOptionsDialog.dismiss();
+            }
+        });
+
     }
 
     public void setupForPrescriptionUpdateProcess()
@@ -676,8 +732,9 @@ public class MyPrescriptionsActivity extends AppCompatActivity {
 
         mArrayListAllPagesOfActivePrescription.clear();
 
-        for (Map.Entry<String,String> eachPage :mActivePrescription.getPrescriptionPages().entrySet()) {
-            mArrayListAllPagesOfActivePrescription.add(eachPage.getValue());
+        for (Map.Entry<String,PrescriptionPage> eachPage :mActivePrescription.getPrescriptionPages().entrySet()) {
+            if (eachPage.getValue().isActive())
+              mArrayListAllPagesOfActivePrescription.add(eachPage.getValue());
         }
         mTextViewNewOrUpdatePrescription.setText("Update " + Utils.toLowerCaseExceptFirstLetter(mActivePrescription.getPrescriptionName()));
         mTextViewSaveOrUpdatePrescription.setText("Update");

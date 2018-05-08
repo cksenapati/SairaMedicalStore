@@ -15,6 +15,7 @@ import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.DisplayProduct;
 import com.example.android.sairamedicalstore.models.DefaultKeyValuePair;
 import com.example.android.sairamedicalstore.ui.medicine.ProductDetailsActivity;
+import com.example.android.sairamedicalstore.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -66,8 +67,8 @@ class DisplayProductsAdapter extends RecyclerView.Adapter<DisplayProductsAdapter
         Glide.with(holder.mImageViewItem.getContext())
                 .load(getImageUrlToDisplay(position))
                 .into(holder.mImageViewItem);
-        holder.mTextViewName.setText(mArrayListDisplayProducts.get(position).getProductName());
-        holder.mTextViewPrice.setText(String.valueOf(mArrayListDisplayProducts.get(position).getPricePerPack()));
+        holder.mTextViewName.setText(Utils.toLowerCaseExceptFirstLetter(mArrayListDisplayProducts.get(position).getProductName()));
+        holder.mTextViewPrice.setText("Rs "+String.valueOf(mArrayListDisplayProducts.get(position).getPricePerPack()));
         holder.mImageViewItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

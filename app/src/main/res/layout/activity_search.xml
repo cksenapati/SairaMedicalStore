@@ -85,17 +85,7 @@
 
 
     </android.support.design.widget.AppBarLayout>
-    <!--<Button
-        android:id="@+id/button_add_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/extra_small_margin"
-        android:layout_marginRight="@dimen/extra_small_margin"
-        android:text="Add New Item"
-        android:onClick="onAddClick"
-        android:visibility="gone"
-        android:layout_below="@id/app_bar_layout"
-        />-->
+
 
     <TextView
         android:id="@+id/text_view_selected_items"
@@ -119,33 +109,13 @@
         android:layout_marginRight="@dimen/extra_small_margin"
         android:onClick="onDoneClick"/>
 
-    <!--<LinearLayout
-        android:id="@+id/linear_layout"
+    <ImageView
+        android:id="@+id/image_view_data_not_found"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="@dimen/extra_small_margin"
-        android:layout_below="@id/text_view_selected_items"
-        >
-        &lt;!&ndash;<android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_selected_items"
-            android:layout_below="@id/linear_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            >
-
-        </android.support.v7.widget.RecyclerView>&ndash;&gt;
-        &lt;!&ndash;<Button
-            android:id="@+id/button_done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Done"
-            android:background="@color/tw__transparent"
-            android:padding="@dimen/extra_small_margin"
-            android:onClick="onDoneClick"
-            />&ndash;&gt;
-    </LinearLayout>-->
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_below="@id/app_bar_layout"
+        android:src="@drawable/data_not_found"/>
 
     <ListView
         android:id="@+id/list_view_search_result"

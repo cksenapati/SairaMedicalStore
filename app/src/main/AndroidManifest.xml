@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.SEND" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- if you want to load images from a file OR from the internet -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -41,8 +43,6 @@
         <activity android:name=".ui.poster.CreateOrUpdatePoster" />
         <activity android:name=".ui.poster.PosterDetailsActivity" />
         <activity android:name=".ui.cart.CartActivity" />
-        <activity android:name=".ui.prescription.PrescriptionsActivity" />
-        <activity android:name=".ui.prescription.AddNewPrescriptionActivity" />
         <activity android:name=".ui.address.DeliveryAddressActivity" />
         <activity android:name=".ui.address.AddOrUpdateAddressActivity" />
         <activity android:name=".ui.order.OrderDetailsActivity" />
@@ -52,7 +52,21 @@
         <activity android:name=".ui.customerSupport.CustomerSupportActivity" />
         <activity android:name=".ui.customerSupport.QueryTicketDetailsActivity" />
         <activity android:name=".ui.customerSupport.AddOrUpdateFaqActivity" />
-        <activity android:name=".ui.prescription.MyPrescriptionsActivity"></activity>
+        <activity android:name=".ui.prescription.MyPrescriptionsActivity" />
+        <activity android:name=".ui.prescription.EvaluatePrescriptionActivity" />
+        <activity android:name=".ui.mediaFileUpload.ViewImageSlideshowActivity" />
+        <activity android:name=".ui.deliverableAddress.DeliverableAddressActivity" />
+
+        <!--<provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.android.sairamedicalstore.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>-->
+
     </application>
 
 </manifest>

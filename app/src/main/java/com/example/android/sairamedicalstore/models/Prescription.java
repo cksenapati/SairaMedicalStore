@@ -11,17 +11,21 @@ import java.util.HashMap;
  */
 
 public class Prescription implements Serializable {
-    String prescriptionId,prescriptionName;
+    String prescriptionId,prescriptionName,prescriptionOwnerEmail;
+    boolean isSentForEvaluation;
     private HashMap<String, Object> timestampUploaded;
-    private HashMap<String, String> prescriptionPages;
+    private HashMap<String, PrescriptionPage> prescriptionPages;
 
     public Prescription() {
     }
 
-    public Prescription(String prescriptionId, HashMap<String, String> prescriptionPages, String prescriptionName, HashMap<String, Object> timestampUploaded) {
+    public Prescription(String prescriptionId, HashMap<String, PrescriptionPage> prescriptionPages, String prescriptionName,
+                        String prescriptionOwnerEmail,HashMap<String, Object> timestampUploaded) {
         this.prescriptionId = prescriptionId;
         this.prescriptionPages = prescriptionPages;
         this.prescriptionName = prescriptionName;
+        isSentForEvaluation = false;
+        this.prescriptionOwnerEmail = prescriptionOwnerEmail;
         this.timestampUploaded = timestampUploaded;
     }
 
@@ -33,11 +37,11 @@ public class Prescription implements Serializable {
         this.prescriptionId = prescriptionId;
     }
 
-    public HashMap<String, String> getPrescriptionPages() {
+    public HashMap<String, PrescriptionPage> getPrescriptionPages() {
         return prescriptionPages;
     }
 
-    public void setPrescriptionPages(HashMap<String, String> prescriptionPages) {
+    public void setPrescriptionPages(HashMap<String, PrescriptionPage> prescriptionPages) {
         this.prescriptionPages = prescriptionPages;
     }
 
@@ -49,8 +53,24 @@ public class Prescription implements Serializable {
         this.prescriptionName = prescriptionName;
     }
 
+    public String getPrescriptionOwnerEmail() {
+        return prescriptionOwnerEmail;
+    }
+
+    public void setPrescriptionOwnerEmail(String prescriptionOwnerEmail) {
+        this.prescriptionOwnerEmail = prescriptionOwnerEmail;
+    }
+
     public HashMap<String, Object> getTimestampUploaded() {
         return timestampUploaded;
+    }
+
+    public boolean isSentForEvaluation() {
+        return isSentForEvaluation;
+    }
+
+    public void setSentForEvaluation(boolean sentForEvaluation) {
+        isSentForEvaluation = sentForEvaluation;
     }
 
     @JsonIgnore

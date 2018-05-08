@@ -11,7 +11,11 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.android.sairamedicalstore.R;
+import com.example.android.sairamedicalstore.models.PrescriptionPage;
 
 import java.util.ArrayList;
 
@@ -22,11 +26,11 @@ import java.util.ArrayList;
 
 class DisplayPrescriptionPagesAdapter extends RecyclerView.Adapter<DisplayPrescriptionPagesAdapter.ViewHolder> {
 
-    private ArrayList<String> mArrayListAllPagesOfCurrentPrescription;
+    private ArrayList<PrescriptionPage> mArrayListAllPagesOfCurrentPrescription;
     private boolean isPrescriptionActive;
     private Activity mActivity;
 
-    public DisplayPrescriptionPagesAdapter(ArrayList<String> data,boolean isPrescriptionActive, Activity activity) {
+    public DisplayPrescriptionPagesAdapter(ArrayList<PrescriptionPage> data,boolean isPrescriptionActive, Activity activity) {
         this.mArrayListAllPagesOfCurrentPrescription = data;
         this.isPrescriptionActive = isPrescriptionActive;
         this.mActivity = activity;
@@ -63,7 +67,7 @@ class DisplayPrescriptionPagesAdapter extends RecyclerView.Adapter<DisplayPrescr
     @Override
     public void onBindViewHolder(final DisplayPrescriptionPagesAdapter.ViewHolder holder, final int position) {
         Glide.with(holder.mImageViewSinglePrescriptionPage.getContext())
-                .load(mArrayListAllPagesOfCurrentPrescription.get(position))
+                .load(mArrayListAllPagesOfCurrentPrescription.get(position).getImageUri())
                 .into(holder.mImageViewSinglePrescriptionPage);
 
         if (isPrescriptionActive)
@@ -74,7 +78,7 @@ class DisplayPrescriptionPagesAdapter extends RecyclerView.Adapter<DisplayPrescr
         holder.mImageViewSinglePrescriptionPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openImageDialog(mArrayListAllPagesOfCurrentPrescription.get(position));
+                openImageDialog(mArrayListAllPagesOfCurrentPrescription.get(position).getImageUri());
             }
         });
 
@@ -84,6 +88,7 @@ class DisplayPrescriptionPagesAdapter extends RecyclerView.Adapter<DisplayPrescr
                 //holder.mImageViewSinglePrescriptionPage.setVisibility(View.GONE);
                 mArrayListAllPagesOfCurrentPrescription.remove(position);
                 notifyItemRemoved(position);
+                notifyItemRangeChanged(position, mArrayListAllPagesOfCurrentPrescription.size());
                 Toast.makeText(mActivity,"Page Removed",  Toast.LENGTH_SHORT).show();
 
             }
@@ -105,9 +110,20 @@ class DisplayPrescriptionPagesAdapter extends RecyclerView.Adapter<DisplayPrescr
 
         Glide.with(imageViewDialogImage.getContext())
                 .load(imageUri)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        viewImageDialog.show();
+                        return false;
+                    }
+                })
                 .into(imageViewDialogImage);
 
-        viewImageDialog.show();
 
         imageViewCloseDialog.setOnClickListener(new View.OnClickListener() {
             @Override

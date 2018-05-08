@@ -92,9 +92,11 @@ public class ViewOrUploadImageActivity extends AppCompatActivity {
                         // When the image has successfully uploaded, we get its download URL
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         try {
-                            removeOldProfilePic(mCurrentUser.getPhotoURL());
+                            String oldPicDownloadUrl = mCurrentUser.getPhotoURL();
                             mCurrentUser.setPhotoURL(downloadUrl.toString());
                             mFirebaseCurrentUserRef.setValue(mCurrentUser);
+
+                            removeOldProfilePic(oldPicDownloadUrl);
                         }catch (Exception ex){}
                     }
                 });

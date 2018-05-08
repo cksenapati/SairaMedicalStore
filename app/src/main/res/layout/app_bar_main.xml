@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:background="@color/primary_light"
     tools:context="com.example.android.sairamedicalstore.ui.MainActivity"
     tools:layout_editor_absoluteX="8dp"
     tools:layout_editor_absoluteY="8dp">
@@ -107,7 +108,6 @@
             android:id="@+id/linear_layout_main_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primary_light"
             android:orientation="vertical">
 
             <com.daimajia.slider.library.SliderLayout
@@ -119,12 +119,6 @@
                 custom:pager_animation="Accordion"
                 custom:pager_animation_span="1100" />
 
-            <!--<android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </android.support.v7.widget.RecyclerView>-->
 
             <LinearLayout
                 android:id="@+id/linear_layout_for_recycler_view"
@@ -132,6 +126,195 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_manage_users"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/extra_small_margin"
+                android:layout_marginLeft="@dimen/extra_small_margin"
+                android:layout_marginRight="@dimen/extra_small_margin"
+                android:background="@color/tw__solid_white"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:textSize="@dimen/small_text_size"
+                    android:textColor="@color/primary_text"
+                    android:padding="@dimen/extra_small_margin"
+                    android:text="Manage Users"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_go_next_24"
+                    android:padding="@dimen/extra_small_margin"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_all_orders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/extra_small_margin"
+                android:layout_marginLeft="@dimen/extra_small_margin"
+                android:layout_marginRight="@dimen/extra_small_margin"
+                android:background="@color/tw__solid_white"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:textSize="@dimen/small_text_size"
+                    android:textColor="@color/primary_text"
+                    android:padding="@dimen/extra_small_margin"
+                    android:text="All Orders"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_go_next_24"
+                    android:padding="@dimen/extra_small_margin"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_evaluate_prescriptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/extra_small_margin"
+                android:layout_marginLeft="@dimen/extra_small_margin"
+                android:layout_marginRight="@dimen/extra_small_margin"
+                android:visibility="gone"
+                android:background="@color/tw__solid_white"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:textSize="@dimen/small_text_size"
+                    android:textColor="@color/primary_text"
+                    android:padding="@dimen/extra_small_margin"
+                    android:text="Evaluate Prescriptions"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_go_next_24"
+                    android:padding="@dimen/extra_small_margin"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_manage_posters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/extra_small_margin"
+                android:layout_marginLeft="@dimen/extra_small_margin"
+                android:layout_marginRight="@dimen/extra_small_margin"
+                android:visibility="gone"
+                android:background="@color/tw__solid_white"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:textSize="@dimen/small_text_size"
+                    android:textColor="@color/primary_text"
+                    android:padding="@dimen/extra_small_margin"
+                    android:text="Manage Posters"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_go_next_24"
+                    android:padding="@dimen/extra_small_margin"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_manage_offers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/extra_small_margin"
+                android:layout_marginLeft="@dimen/extra_small_margin"
+                android:layout_marginRight="@dimen/extra_small_margin"
+                android:visibility="gone"
+                android:background="@color/tw__solid_white"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:textSize="@dimen/small_text_size"
+                    android:textColor="@color/primary_text"
+                    android:padding="@dimen/extra_small_margin"
+                    android:text="Manage Offers"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_go_next_24"
+                    android:padding="@dimen/extra_small_margin"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_manage_deliverable_addresses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/extra_small_margin"
+                android:layout_marginLeft="@dimen/extra_small_margin"
+                android:layout_marginRight="@dimen/extra_small_margin"
+                android:visibility="gone"
+                android:background="@color/tw__solid_white"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:textSize="@dimen/small_text_size"
+                    android:textColor="@color/primary_text"
+                    android:padding="@dimen/extra_small_margin"
+                    android:text="Deliverable Addresses"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_go_next_24"
+                    android:padding="@dimen/extra_small_margin"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_manage_default_medicine_pics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/extra_small_margin"
+                android:layout_marginLeft="@dimen/extra_small_margin"
+                android:layout_marginRight="@dimen/extra_small_margin"
+                android:visibility="gone"
+                android:background="@color/tw__solid_white"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:textSize="@dimen/small_text_size"
+                    android:textColor="@color/primary_text"
+                    android:padding="@dimen/extra_small_margin"
+                    android:text="Default Medicine Pics"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_go_next_24"
+                    android:padding="@dimen/extra_small_margin"/>
             </LinearLayout>
 
         </LinearLayout>

@@ -155,7 +155,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="fill_parent"
                     android:layout_margin="@dimen/extra_small_margin"
-                    android:background="@color/tw__solid_white" />
+                    android:background="@drawable/gradient_spinner" />
             </LinearLayout>
 
             <LinearLayout
@@ -177,7 +177,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/extra_small_margin"
-                    android:background="@color/tw__solid_white" />
+                    android:background="@drawable/gradient_spinner" />
             </LinearLayout>
             <EditText
                 android:id="@+id/edit_text_no_of_items_in_one_pack"
@@ -218,7 +218,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/extra_small_margin"
-                    android:background="@color/tw__solid_white" />
+                    android:background="@drawable/gradient_spinner" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/linear_layout_loose_medicine_availability"
@@ -239,7 +239,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/extra_small_margin"
-                    android:background="@color/tw__solid_white" />
+                    android:background="@drawable/gradient_spinner" />
             </LinearLayout>
 
             <Button

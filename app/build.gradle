@@ -33,18 +33,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     /*For Card view*/
-
     /*For Google-login*/
-
     /*For Firebase*/
-
     /*For Glide(Image view)*/
-
     /*For Image slide show*/
-
     /*For horizontal listview*/
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
@@ -66,6 +60,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.msg91.sendotp.library:library:3.1'
     testCompile 'junit:junit:4.12'
+    compile files('libs/mail.jar')
 }
 
 /*For Google-login*/

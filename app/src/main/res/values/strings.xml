@@ -109,5 +109,24 @@
         <item>Other</item>
     </string-array>
 
+    <!-- Spinner value for user type reason -->
+    <string-array name="user_type_options">
+        <item>END USER</item>
+        <item>DEVELOPER</item>
+        <item>OWNER</item>
+        <item>EMPLOYEE</item>
+    </string-array>
+
+    <!-- Spinner value for active options -->
+    <string-array name="active_options">
+        <item>ACTIVE</item>
+        <item>IN ACTIVE</item>
+    </string-array>
+
+    <!-- Spinner value for pin code search by options-->
+    <string-array name="pin_code_search_by_options">
+        <item>PIN</item>
+        <item>Address</item>
+    </string-array>
 
 </resources>

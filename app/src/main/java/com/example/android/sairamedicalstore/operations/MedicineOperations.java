@@ -32,7 +32,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -68,11 +70,12 @@ public class MedicineOperations {
         HashMap<String, Object> timestampLastUpdate = timestampCreated;
 
 
+        String timeStampInStringFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss").format(new Date());
         HashMap<String, String>  updaterStack = new HashMap<>();
-        updaterStack.put(timestamp.toString(), mCurrentUser.getEmail());
+        updaterStack.put(timeStampInStringFormat, mCurrentUser.getEmail());
 
         HashMap<String, String>  priceStack = new HashMap<>();
-        priceStack.put(timestamp.toString(), String.valueOf(pricePerPack));
+        priceStack.put(timeStampInStringFormat, String.valueOf(pricePerPack));
 
 
         final Medicine newMedicine = new Medicine(medicineId,medicineName, medicineManufacturerName, medicineComposition, medicineCategory, medicineType, medicineImageUrl,

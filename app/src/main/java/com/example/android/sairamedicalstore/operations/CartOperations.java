@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Cart;
+import com.example.android.sairamedicalstore.models.Prescription;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
@@ -24,20 +25,18 @@ public class CartOperations {
 
     User mCurrentUser;
     Activity mActivity;
+    Firebase firebaseCurrentCartRef;
 
     public CartOperations( Activity mActivity) {
         this.mActivity = mActivity;
         this.mCurrentUser = ((SairaMedicalStoreApplication) mActivity.getApplication()).getCurrentUser();
-
+        firebaseCurrentCartRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_CARTS).child(Utils.encodeEmail(mCurrentUser.getEmail()));
     }
 
     public void AddNewProductToCart(final String productId,final int itemCount)
     {
         String encodedEmail = Utils.encodeEmail(mCurrentUser.getEmail());
 
-        final Firebase firebaseAllCartsRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_CARTS);
-
-        final Firebase firebaseCurrentCartRef = firebaseAllCartsRef.child(encodedEmail);
         firebaseCurrentCartRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -91,7 +90,7 @@ public class CartOperations {
                     HashMap<String, Integer> currentProductIdAndItemCount = new HashMap<>();
                     currentProductIdAndItemCount.put(productId,itemCount);
 
-                    Cart newCart = new Cart(1,currentProductIdAndItemCount);
+                    Cart newCart = new Cart(1,null,currentProductIdAndItemCount);
 
                     try {
                         firebaseCurrentCartRef.setValue(newCart);
@@ -112,4 +111,22 @@ public class CartOperations {
         });
 
     }
+
+    public void updateCart(final Cart cartToBeUpdated)
+    {
+        firebaseCurrentCartRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try{
+                    firebaseCurrentCartRef.setValue(cartToBeUpdated);
+                }catch (Exception Ex){}
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
 }

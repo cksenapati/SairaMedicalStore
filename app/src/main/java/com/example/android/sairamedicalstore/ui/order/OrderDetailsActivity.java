@@ -1,11 +1,18 @@
 package com.example.android.sairamedicalstore.ui.order;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +28,7 @@ import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Address;
 import com.example.android.sairamedicalstore.models.Cart;
+import com.example.android.sairamedicalstore.models.FirstPdf;
 import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.Order;
 import com.example.android.sairamedicalstore.models.OrderCancellationDetails;
@@ -28,6 +36,7 @@ import com.example.android.sairamedicalstore.models.OrderReturnDetails;
 import com.example.android.sairamedicalstore.models.Prescription;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.operations.OrderOperations;
+import com.example.android.sairamedicalstore.ui.MainActivity;
 import com.example.android.sairamedicalstore.ui.address.DeliveryAddressActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
@@ -36,11 +45,38 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ServerValue;
 import com.firebase.client.ValueEventListener;
+import com.itextpdf.text.Anchor;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chapter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Section;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 
 
 public class OrderDetailsActivity extends AppCompatActivity {
@@ -79,6 +115,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
     public static Dialog reasonOfReturnOrCancelDialog;
     int selectedItemPositionOfSpinner;
 
+
+    //Mail related
+    Session session;
+    ProgressDialog progressDialog;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +147,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
         mImageViewGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intentGoToMainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                intentGoToMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intentGoToMainActivity);
             }
         });
 
@@ -381,7 +426,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
     public void getAlreadyPlacedOrderDetails()
     {
-        mFirebaseCurrentOrderRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_ORDERS).child(Utils.encodeEmail(mCurrentUser.getEmail())).child(mCurrentOrder.getOrderId());
+        mFirebaseCurrentOrderRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_ORDERS).child(mCurrentOrder.getOrderId());
         mFirebaseCurrentOrderRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -525,60 +570,36 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
     public void getPrescriptionsRecyclerView()
     {
+        mLinearLayoutPrescriptionDetails.removeAllViews();
 
-        Firebase firebaseAllPrescriptionsRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_PRESCRIPTIONS);
+        if(mCurrentOrder.getOrderPrescriptions() != null)
+        {
+            recyclerView = new RecyclerView(OrderDetailsActivity.this);
+            recyclerView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT));
 
-        Firebase firebaseCurrentUserPrescriptionsRef = firebaseAllPrescriptionsRef.child(Utils.encodeEmail(mCurrentUser.getEmail()));
-        firebaseCurrentUserPrescriptionsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                {
-                   /* if(mArrayListSelectedPrescriptions != null)
-                        mArrayListSelectedPrescriptions.clear();
+            RecyclerView.LayoutManager layoutManager  = new LinearLayoutManager(OrderDetailsActivity.this,LinearLayoutManager.HORIZONTAL,false);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(layoutManager);
 
-                    for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                        Prescription eachPrescription = snapshot.getValue(Prescription.class);
-                        if(eachPrescription != null && mCurrentOrder.getOrderPrescriptions().contains(eachPrescription.getPrescriptionId()))
-                            mArrayListSelectedPrescriptions.add(eachPrescription);
-                    }*/
-
-                    if(mCurrentOrder.getOrderPrescriptions() != null)
-                    {
-                        recyclerView = new RecyclerView(OrderDetailsActivity.this);
-                        recyclerView.setLayoutParams(new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT));
-
-                        RecyclerView.LayoutManager layoutManager  = new LinearLayoutManager(OrderDetailsActivity.this,LinearLayoutManager.HORIZONTAL,false);
-                        recyclerView.setHasFixedSize(true);
-                        recyclerView.setLayoutManager(layoutManager);
-
-                        ArrayList<Prescription> arrayListPrescriptions = new ArrayList<>();
-                        for (Map.Entry<String,Prescription> eachPage:mCurrentOrder.getOrderPrescriptions().entrySet()) {
-                            arrayListPrescriptions.add(eachPage.getValue());
-                        }
-
-                        recyclerViewAdapter = new PrescriptionDetailsAdapter(arrayListPrescriptions,OrderDetailsActivity.this);
-
-                        recyclerView.setAdapter(recyclerViewAdapter);
-
-                        mLinearLayoutPrescriptionDetailsActonBar.setVisibility(View.VISIBLE);
-                        mLinearLayoutPrescriptionDetails.addView(recyclerView);
-                    }
-                    else {
-                        mLinearLayoutPrescriptionDetailsActonBar.setVisibility(View.GONE);
-                        mLinearLayoutPrescriptionDetails.setVisibility(View.GONE);
-                    }
-
-                }
+            ArrayList<Prescription> arrayListPrescriptions = new ArrayList<>();
+            for (Map.Entry<String,Prescription> eachPrescription:mCurrentOrder.getOrderPrescriptions().entrySet()) {
+                arrayListPrescriptions.add(eachPrescription.getValue());
             }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            recyclerViewAdapter = new PrescriptionDetailsAdapter(arrayListPrescriptions,OrderDetailsActivity.this);
 
-            }
-        });
+            recyclerView.setAdapter(recyclerViewAdapter);
+
+            mLinearLayoutPrescriptionDetailsActonBar.setVisibility(View.VISIBLE);
+            mLinearLayoutPrescriptionDetails.addView(recyclerView);
+        }
+        else {
+            mLinearLayoutPrescriptionDetailsActonBar.setVisibility(View.GONE);
+            mLinearLayoutPrescriptionDetails.setVisibility(View.GONE);
+        }
+
     }
 
     public void getPaymentDetailsForPlacedOrder()
@@ -641,6 +662,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
             Order returnOrder = obj.createNewOrder(mCurrentOrder);
             if(returnOrder != null) {
                 mCurrentOrder = returnOrder;
+                //sendSuccessMail();
+                generatePdf();
                 updateOrderDetails();
             }
         }
@@ -987,4 +1010,94 @@ public class OrderDetailsActivity extends AppCompatActivity {
     }
 
 
+
+
+
+    //send mail
+    public void sendSuccessMail()
+    {
+        Properties properties = new Properties();
+
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.socketFactory.port", "465");
+        properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.socketFactory.fallback", "false");
+
+
+
+        session = Session.getDefaultInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("chandan10051994@gmail.com","<password>");
+            }
+        });
+
+        progressDialog = ProgressDialog.show(this,"","Sending Mail...",true);
+
+        SendMailAsyncTask sendMail = new SendMailAsyncTask();
+        sendMail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mCurrentOrder.getOrderId());
+    }
+    private class SendMailAsyncTask extends AsyncTask<String, Void, String>
+    {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            if(params.length <1 || params[0] == null)
+                return "Fail";
+
+            try{
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("chandan10051994@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO,InternetAddress.parse(mCurrentUser.getEmail()));
+                message.setSubject("Order " + params[0]);
+                message.setContent("Successfully Placed", "text/html; charset=utf-8");
+
+                Transport.send(message);
+                return "Success";
+
+            }catch (Exception ex){
+                return "Fail";
+            }
+        }
+
+        protected void onPostExecute(String result) {
+            progressDialog.dismiss();
+            if(result.equals("Success")) {
+                Toast.makeText(OrderDetailsActivity.this,"Email was sent successfully.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(OrderDetailsActivity.this,"Email was not sent.", Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+    }
+
+
+    //Generate PDF
+    public void generatePdf()
+    {
+        new FirstPdf(mCurrentOrder);
+
+        File pdfFile = new File(Environment.getExternalStorageDirectory() + "/Saira/OrderInvoice_"+mCurrentOrder.getOrderId()+".pdf");
+        Uri path = Uri.fromFile(pdfFile);
+
+        // Setting the intent for pdf reader
+        Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
+        pdfIntent.setDataAndType(path, "application/pdf");
+        pdfIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        try {
+            startActivity(pdfIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(OrderDetailsActivity.this, "Can't read pdf file", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }

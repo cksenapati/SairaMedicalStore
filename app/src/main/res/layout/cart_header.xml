@@ -48,6 +48,8 @@
                 android:layout_weight="1"
                 android:padding="@dimen/extra_small_margin"
                 android:hint="Pincode"
+                android:inputType="number"
+                android:maxLength="6"
                 />
             <TextView
                 android:id="@+id/text_view_check_pincode"
@@ -64,6 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/extra_small_margin"
+            android:visibility="gone"
             android:text="Error message"/>
     </LinearLayout>
 </LinearLayout>

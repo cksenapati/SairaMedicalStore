@@ -64,8 +64,6 @@ public class MyProfileActivity extends AppCompatActivity {
         });
 
 
-
-
         mImageViewUserProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

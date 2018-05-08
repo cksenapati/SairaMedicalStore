@@ -28,6 +28,7 @@ import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ServerValue;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -35,7 +36,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 import static com.example.android.sairamedicalstore.ui.poster.CreateOrUpdatePoster.mCurrentPosterImageURI;
 
@@ -267,7 +271,7 @@ public class AddOrUpdateMedicineActivity extends AppCompatActivity {
         mArrayListDefaultMedicinePics = new ArrayList<DefaultKeyValuePair>();
 
         mFirebaseStorage = FirebaseStorage.getInstance();
-        mFirebaseStorageReference = mFirebaseStorage.getReference().child("TemporaryPics");
+        mFirebaseStorageReference = mFirebaseStorage.getReference().child(Constants.FIREBASE_LOCATION_TEMPORARY_STORAGE);
 
 
         if (mCurrentMedicine == null)
@@ -282,7 +286,9 @@ public class AddOrUpdateMedicineActivity extends AppCompatActivity {
         mEditTextMedicineName.setText(Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getMedicineName()));
         mEditTextComposition.setText(Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getMedicineComposition()));
         mEditTextMedicineManufacturerName.setText(Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getMedicineManufacturerName()));
-        mEditTextDisplayCategory.setText(Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getDisplayCategory()));
+
+        if(mCurrentMedicine.getDisplayCategory() != null)
+          mEditTextDisplayCategory.setText(Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getDisplayCategory()));
 
         int spinnerPositionForMedicineType = typesAdapter.getPosition(mCurrentMedicine.getMedicineType());
         mSpinnerMedicineType.setSelection(spinnerPositionForMedicineType);
@@ -370,9 +376,32 @@ public class AddOrUpdateMedicineActivity extends AppCompatActivity {
                 mCurrentMedicine.setMedicineType(selectedTypeValue);
                 mCurrentMedicine.setMedicineImageUrl(mMedicineImageUrl);
                 mCurrentMedicine.setNoOfItemsInOnePack(Integer.valueOf(mEditTextItemsInOnePack.getText().toString()));
-                mCurrentMedicine.setPricePerPack(Double.valueOf(mEditTextPricePerPack.getText().toString()));
                 mCurrentMedicine.setMedicineAvailability(selectedAvailabilityValue);
                 mCurrentMedicine.setLooseAvailable(selectedLooseAvailabilityValue);
+                mCurrentMedicine.setPricePerPack(Double.valueOf(mEditTextPricePerPack.getText().toString()));
+
+                HashMap<String, Object> timestampLastUpdate = new HashMap<String, Object>();
+                timestampLastUpdate.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
+                mCurrentMedicine.setTimestampLastUpdate(timestampLastUpdate);
+
+
+                String timeStampInStringFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss").format(new Date());
+                HashMap<String, String>  tempPriceStack,tempUpdaterStack;
+
+                if (mCurrentMedicine.getUpdaterStack() == null)
+                    tempUpdaterStack  = new HashMap<>();
+                else
+                    tempUpdaterStack = mCurrentMedicine.getUpdaterStack();
+                tempUpdaterStack.put(timeStampInStringFormat, mCurrentUser.getEmail());
+                mCurrentMedicine.setUpdaterStack(tempUpdaterStack);
+
+                if (mCurrentMedicine.getPriceStack() == null)
+                    tempPriceStack = new HashMap<>();
+                else
+                    tempPriceStack = mCurrentMedicine.getPriceStack();
+                tempPriceStack.put(timeStampInStringFormat, mEditTextPricePerPack.getText().toString());
+                mCurrentMedicine.setPriceStack(tempPriceStack);
+
 
                 operationObject.UpdateMedicine(mCurrentMedicine,mCurrentMedicineImageURI);
             }
@@ -418,7 +447,26 @@ public class AddOrUpdateMedicineActivity extends AppCompatActivity {
 
     private void setMedicineTypes()
     {
-        Firebase medicineTypesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_MEDICINE_TYPES);
+
+        mArrayListMedicineTypes.clear();
+        for (DefaultKeyValuePair pair :mArrayListDefaultMedicinePics) {
+            mArrayListMedicineTypes.add(pair.getKey());
+        }
+
+        typesAdapter = new ArrayAdapter<String>(AddOrUpdateMedicineActivity.this,
+                android.R.layout.simple_spinner_item, mArrayListMedicineTypes);
+        typesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerMedicineType.setAdapter(typesAdapter);
+
+        //set default pic as capsule as spineer's default value is capsule
+        Glide.with(mImageViewMedicineImage.getContext())
+                .load(mArrayListDefaultMedicinePics.get(getIndexFromArrayList(mSpinnerMedicineType.getSelectedItem().toString())).getValue())
+                .into(mImageViewMedicineImage);
+
+        if (mCurrentMedicine != null)
+            setupForMedicineUpdate();
+
+       /* Firebase medicineTypesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_MEDICINE_TYPES);
         medicineTypesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -450,7 +498,7 @@ public class AddOrUpdateMedicineActivity extends AppCompatActivity {
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-        });
+        });*/
     }
 
 

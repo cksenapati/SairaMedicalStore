@@ -43,10 +43,14 @@ public class ProductsInCartAdapter extends ArrayAdapter<Medicine> {
     int noOfItemsSelected;
     double priceForSelectedNoOfItems;
     ArrayList<DefaultKeyValuePair> mArrayListDefaultMedicinePics;
+    int totalProductsInCart;
+    int count;
 
     public ProductsInCartAdapter(Activity activity, ArrayList<Medicine> arrayListAllProductsInCart) {
         super(activity, 0, arrayListAllProductsInCart);
         mActivity = activity;
+        totalProductsInCart = arrayListAllProductsInCart.size();
+        count = 0;
         mCurrentUser = ((SairaMedicalStoreApplication) mActivity.getApplication()).getCurrentUser();
         mArrayListDefaultMedicinePics = ((SairaMedicalStoreApplication) mActivity.getApplication()).getArrayListDefaultMedicinePics();
     }
@@ -135,9 +139,13 @@ public class ProductsInCartAdapter extends ArrayAdapter<Medicine> {
         priceForSelectedNoOfItems = (double) Math.round( (double)noOfItemsSelected * pricePerSingleItem *100) / 100;
         textViewPriceForSelectedQuantity.setText("RS. "+  Double.toString(priceForSelectedNoOfItems));
 
-        subtotalPrice = subtotalPrice + priceForSelectedNoOfItems;
-        subtotalPrice = (double) Math.round(subtotalPrice *100) / 100;
-        totalPayablePrice = (double) Math.round((subtotalPrice+shippingPrice) *100) / 100;
+        if (count < totalProductsInCart) {
+            subtotalPrice = subtotalPrice + priceForSelectedNoOfItems;
+            subtotalPrice = (double) Math.round(subtotalPrice * 100) / 100;
+            totalPayablePrice = (double) Math.round((subtotalPrice + shippingPrice) * 100) / 100;
+            count++;
+        }
+
         mTextViewSubtotal.setText("RS. "+  Double.toString(subtotalPrice));
         mTextViewShippingCharges.setText("RS. "+  Double.toString(shippingPrice));
         mTextViewOrderTotal.setText("RS. "+  Double.toString(totalPayablePrice));
@@ -187,9 +195,11 @@ public class ProductsInCartAdapter extends ArrayAdapter<Medicine> {
             {
                 if(eachEntry.getKey().equals(productIdToBeRemoved))
                 {
-                    newHashSet.remove(eachEntry.getKey());
+                        newHashSet.remove(eachEntry.getKey());
                     mCurrentCart.setProductIdAndItemCount(newHashSet);
                     mCurrentCart.setNoOfUniqueProductsInCart(mCurrentCart.getNoOfUniqueProductsInCart() - 1);
+                    if (mCurrentCart.getProductIdAndItemCount() == null || mCurrentCart.getProductIdAndItemCount().size() <1)
+                        mCurrentCart = null;
                     firebaseCurrentCartRef.setValue(mCurrentCart);
                     break;
                 }

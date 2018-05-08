@@ -23,6 +23,7 @@ import com.example.android.sairamedicalstore.operations.CartOperations;
 import com.example.android.sairamedicalstore.ui.MainActivity;
 import com.example.android.sairamedicalstore.ui.cart.CartActivity;
 import com.example.android.sairamedicalstore.ui.medicine.AddOrUpdateMedicineActivity;
+import com.example.android.sairamedicalstore.ui.search.SearchActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.DataSnapshot;
@@ -93,6 +94,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
+
+
 
     }
 
@@ -199,10 +204,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         displayProductPic();
         mTextViewProductName.setText(mCurrentMedicine.getMedicineName());
-        mTextViewProductManufacturer.setText("Comp: "+Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getMedicineManufacturerName()));
-        mTextViewProductComposition.setText("Manu:" + Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getMedicineComposition()));
+        mTextViewProductManufacturer.setText("Manufacturer: "+Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getMedicineManufacturerName()));
+        mTextViewProductComposition.setText("Compositions: " + Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getMedicineComposition()));
         mTextViewProductPricePerUnit.setText("RS "+ Double.toString(mCurrentMedicine.getPricePerPack()) + " /"+
-                Integer.toString(mCurrentMedicine.getNoOfItemsInOnePack()) +" "+ mCurrentMedicine.getMedicineType() +"(s)");
+                Integer.toString(mCurrentMedicine.getNoOfItemsInOnePack()) +"\n"+
+                Utils.toLowerCaseExceptFirstLetter(mCurrentMedicine.getMedicineType()) +"(s)");
 
         if (mCurrentMedicine.getMedicineCategory().equals(Constants.MEDICINE_CATEGORY_PRESCRIPTION))
             mImageViewPrescriptionRequired.setVisibility(View.VISIBLE);
@@ -218,6 +224,17 @@ public class ProductDetailsActivity extends AppCompatActivity {
             mTextViewAction.setText("Modify");
             mTextViewAction.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
+
+        mTextViewSubstitute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent searchActivity = new Intent(ProductDetailsActivity.this, SearchActivity.class);
+                searchActivity.putExtra("whatToSearch",Constants.SEARCH_MEDICINE);
+                searchActivity.putExtra("searchOrderBy",Constants.FIREBASE_PROPERTY_MEDICINE_COMPOSITION);
+                searchActivity.putExtra("specialSearch",mCurrentMedicine.getMedicineComposition());
+                startActivity(searchActivity);
+            }
+        });
     }
 
 

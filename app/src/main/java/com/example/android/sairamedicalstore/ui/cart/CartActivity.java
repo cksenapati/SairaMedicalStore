@@ -1,9 +1,11 @@
 package com.example.android.sairamedicalstore.ui.cart;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,13 +16,13 @@ import android.widget.Toast;
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
 import com.example.android.sairamedicalstore.models.Cart;
+import com.example.android.sairamedicalstore.models.DeliverableAddress;
 import com.example.android.sairamedicalstore.models.Medicine;
 import com.example.android.sairamedicalstore.models.Order;
 import com.example.android.sairamedicalstore.models.Prescription;
 import com.example.android.sairamedicalstore.models.User;
 import com.example.android.sairamedicalstore.ui.address.DeliveryAddressActivity;
 import com.example.android.sairamedicalstore.ui.prescription.MyPrescriptionsActivity;
-import com.example.android.sairamedicalstore.ui.prescription.PrescriptionsActivity;
 import com.example.android.sairamedicalstore.utils.Constants;
 import com.example.android.sairamedicalstore.utils.Utils;
 import com.firebase.client.DataSnapshot;
@@ -91,24 +93,7 @@ public class CartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(isAllProductsInCartAvailable)
                 {
-                    if(isPrescriptionsAdded)
-                    {
-                        mHashMapOrderPricingDetails.put("Subtotal",subtotalPrice);
-                        mHashMapOrderPricingDetails.put("Shipping Charges",shippingPrice);
-                        mHashMapOrderPricingDetails.put("COD Charges",0.0);
-
-                        HashMap<String,Prescription> hashMapSelectedPrescriptions = new HashMap<String, Prescription>();
-                        for (int count = 0; count<mArrayListSelectedPrescriptions.size(); count++)
-                            hashMapSelectedPrescriptions.put("prescription"+(count+1),mArrayListSelectedPrescriptions.get(count));
-
-                        mCurrentOrder = new Order(null,null,null,null,mCurrentUser.getEmail(),mCurrentCart,null,hashMapSelectedPrescriptions,null,null,null,mHashMapOrderPricingDetails,null,null,null);
-                        Intent intentToDeliveryAddress = new Intent(CartActivity.this, DeliveryAddressActivity.class);
-                        intentToDeliveryAddress.putExtra("currentOrder",mCurrentOrder);
-                        startActivity(intentToDeliveryAddress);
-                    }
-                    else
-                        Toast.makeText(CartActivity.this,"Please upload required prescriptions.",Toast.LENGTH_LONG).show();
-
+                    checkDeliverable(false);
                 }
                 else
                     Toast.makeText(CartActivity.this,"Remove the Out-Of-Stuck product(s) from cart",Toast.LENGTH_LONG).show();
@@ -120,6 +105,13 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        mTextViewCheckPincode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkDeliverable(true);
             }
         });
     }
@@ -186,15 +178,15 @@ public class CartActivity extends AppCompatActivity {
 
         mArrayListCartProducts = new ArrayList<>();
         mHashMapOrderPricingDetails = new HashMap<>();
+        mArrayListSelectedPrescriptions = new ArrayList<>();
 
         subtotalPrice = 0;
         totalPayablePrice = 0;
-        shippingPrice= 49.0 ;
+        shippingPrice= 0.0 ;
     }
 
     public void getCartObject()
     {
-
         mFirebaseCurrentCartRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -204,6 +196,7 @@ public class CartActivity extends AppCompatActivity {
                         productsInCartAdapter.clear();
                     }
                     mArrayListCartProducts.clear();
+                    mArrayListSelectedPrescriptions.clear();
                     mLinearLayoutUploadPrescription.setVisibility(View.GONE);
                     isPrescriptionsAdded = true;
                     isAllProductsInCartAvailable = true;
@@ -274,6 +267,18 @@ public class CartActivity extends AppCompatActivity {
                             mTextViewProceedToDeliveryAddress.setVisibility(View.GONE);
                         }
 
+                        if (mCurrentCart.getCartPrescriptions() != null)
+                        {
+                            for (Map.Entry eachCartPrescription :mCurrentCart.getCartPrescriptions().entrySet()) {
+                                mArrayListSelectedPrescriptions.add((Prescription) eachCartPrescription.getValue());
+                            }
+
+                            mLinearLayoutUploadPrescription.setVisibility(View.VISIBLE);
+                            isPrescriptionsAdded = true;
+                            mTextViewGoNext.setVisibility(View.GONE);
+                            mTextViewPrescriptionUploaded.setVisibility(View.VISIBLE);
+                        }
+
                     }
                     else
                     {
@@ -281,6 +286,12 @@ public class CartActivity extends AppCompatActivity {
                         mTextViewEmptyCart.setVisibility(View.VISIBLE);
                         mTextViewProceedToDeliveryAddress.setVisibility(View.GONE);
                     }
+                }
+                else
+                {
+                    mListViewCartProducts.setVisibility(View.GONE);
+                    mTextViewEmptyCart.setVisibility(View.VISIBLE);
+                    mTextViewProceedToDeliveryAddress.setVisibility(View.GONE);
                 }
             }
 
@@ -291,6 +302,93 @@ public class CartActivity extends AppCompatActivity {
                 mTextViewProceedToDeliveryAddress.setVisibility(View.GONE);
             }
         });
+    }
+
+    public void checkDeliverable(final boolean isCheckingOnly)
+    {
+        shippingPrice = 0.0;
+
+        if (mEditTextPincode.getText() != null && mEditTextPincode.getText().length() == 6)
+        {
+            Firebase firebaseAllDeliverableAddressesRef = new Firebase(Constants.FIREBASE_URL_SAIRA_All_DELIVERABLE_ADDRESS);
+            firebaseAllDeliverableAddressesRef.child(mEditTextPincode.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists())
+                    {
+                        DeliverableAddress address = dataSnapshot.getValue(DeliverableAddress.class);
+                        if (address != null)
+                        {
+
+                            mTextViewPincodeMessage.setVisibility(View.VISIBLE);
+                            mTextViewPincodeMessage.setTextColor(getResources().getColor(R.color.success_message_text_color));
+                            shippingPrice = address.getDeliveryCharge();
+
+                            if (shippingPrice == 0.0)
+                                mTextViewPincodeMessage.setText("Ships for FREE");
+                            else
+                                mTextViewPincodeMessage.setText("Ships at Rs "+ shippingPrice);
+
+                            if (!isCheckingOnly){
+                                goToDeliveryAddressActivity();
+                            }
+                            else
+                            {
+                                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        mTextViewPincodeMessage.setVisibility(View.VISIBLE);
+                        mTextViewPincodeMessage.setText("Not available for delivery at " + mEditTextPincode.getText());
+                        mTextViewPincodeMessage.setTextColor(getResources().getColor(R.color.tw__composer_red));
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    mTextViewPincodeMessage.setVisibility(View.VISIBLE);
+                    mTextViewPincodeMessage.setText("Something went wrong");
+                    mTextViewPincodeMessage.setTextColor(getResources().getColor(R.color.tw__composer_red));
+                }
+            });
+        }
+        else
+        {
+            mTextViewPincodeMessage.setVisibility(View.VISIBLE);
+            mTextViewPincodeMessage.setText("Enter a valid pincode");
+            mTextViewPincodeMessage.setTextColor(getResources().getColor(R.color.tw__composer_red));
+        }
+
+    }
+
+    public void goToDeliveryAddressActivity()
+    {
+        if(isPrescriptionsAdded)
+        {
+            mHashMapOrderPricingDetails.put("Subtotal",subtotalPrice);
+            mHashMapOrderPricingDetails.put("Shipping Charges",shippingPrice);
+            mHashMapOrderPricingDetails.put("COD Charges",0.0);
+
+            HashMap<String,Prescription> hashMapSelectedPrescriptions = new HashMap<String, Prescription>();
+
+            if (mArrayListSelectedPrescriptions == null || mArrayListSelectedPrescriptions.size() <= 0)
+                hashMapSelectedPrescriptions = null;
+            else {
+                for (int count = 0; count < mArrayListSelectedPrescriptions.size(); count++)
+                    hashMapSelectedPrescriptions.put(mArrayListSelectedPrescriptions.get(count).getPrescriptionName(), mArrayListSelectedPrescriptions.get(count));
+            }
+
+            mCurrentOrder = new Order(null,null,null,null,mCurrentUser.getEmail(),mCurrentCart,null,hashMapSelectedPrescriptions,null,null,null,mHashMapOrderPricingDetails,null,null,null);
+            Intent intentToDeliveryAddress = new Intent(CartActivity.this, DeliveryAddressActivity.class);
+            intentToDeliveryAddress.putExtra("currentOrder",mCurrentOrder);
+            startActivity(intentToDeliveryAddress);
+        }
+        else
+            Toast.makeText(CartActivity.this,"Please upload required prescriptions.",Toast.LENGTH_LONG).show();
+
     }
 
 

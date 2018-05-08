@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.example.android.sairamedicalstore.R;
 import com.example.android.sairamedicalstore.SairaMedicalStoreApplication;
@@ -26,6 +27,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ServerValue;
 import com.firebase.client.ValueEventListener;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -35,12 +37,17 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+
+import static com.example.android.sairamedicalstore.ui.customerSupport.CustomerSupportActivity.CALL_US_ON;
 
 /**
  * A login screen that offers login via email/password.
@@ -57,6 +64,10 @@ public class LoginActivity extends AppCompatActivity {
     public static final int RC_GOOGLE_LOGIN = 1;
     public Boolean alreadyAuthenticated = false;
 
+
+    public static final String DEFAULT_CONTACT_NUMBER = "+91 8763717165";
+    String customerCareNumber = "+91 8763717165";
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +118,40 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
+
+        // Define default config values. Defaults are used when fetched config values are not
+        // available. Eg: if an error occurred fetching values from the server.
+        Map<String, Object> defaultConfigMap = new HashMap<>();
+        defaultConfigMap.put(CALL_US_ON, DEFAULT_CONTACT_NUMBER);
+        mFirebaseRemoteConfig.setDefaults(defaultConfigMap);
+        fetchConfig();
+    }
+
+    public void fetchConfig() {
+        long cacheExpiration = 3600; // 1 hour in seconds
+        // If developer mode is enabled reduce cacheExpiration to 0 so that each fetch goes to the
+        // server. This should not be used in release builds.
+        if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
+            cacheExpiration = 0;
+        }
+        mFirebaseRemoteConfig.fetch(cacheExpiration)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Make the fetched config available
+                        // via FirebaseRemoteConfig get<type> calls, e.g., getLong, getString.
+                        mFirebaseRemoteConfig.activateFetched();
+
+                        customerCareNumber = mFirebaseRemoteConfig.getString(CALL_US_ON);
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
     }
 
     @Override
@@ -124,6 +169,8 @@ public class LoginActivity extends AppCompatActivity {
         setupGoogleSignIn();
 
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
     }
 
     private void setupGoogleSignIn() {
@@ -237,11 +284,20 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (loggedinUser != null) {
 
-                    ((SairaMedicalStoreApplication) sairaMedicalStoreApplication).setCurrentUser(loggedinUser);
-                    getDefaultValues(loggedinUser);
+                    if (loggedinUser.getAccountStatus().equals("ACTIVE"))
+                    {
+                        ((SairaMedicalStoreApplication) sairaMedicalStoreApplication).setCurrentUser(loggedinUser);
+                        getDefaultValues(loggedinUser);
+                    }
+                    else {
+                        Toast.makeText(LoginActivity.this, "Your account has been deactivated.\nPlease contact us on " +
+                                customerCareNumber, Toast.LENGTH_LONG).show();
+                        mAuthProgressDialog.dismiss();
+                        AuthUI.getInstance().signOut(LoginActivity.this);
+                        SignInButton signInButton = (SignInButton)findViewById(R.id.login_with_google);
+                        signInButton.setVisibility(View.VISIBLE);
+                    }
 
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
                 }
             }
 
@@ -278,6 +334,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     ((SairaMedicalStoreApplication) sairaMedicalStoreApplication).
                             setArrayListCommonDefaultValues(mArrayListCommonDefaultValues);
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
                 }
             }
 

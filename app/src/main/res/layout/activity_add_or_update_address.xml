@@ -99,11 +99,13 @@
                 android:layout_margin="@dimen/extra_small_margin"
                 android:hint="City"/>
 
-            <Spinner
-                android:id="@+id/spinner_state"
+            <EditText
+                android:id="@+id/edit_text_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/extra_small_margin" />
+                android:layout_margin="@dimen/extra_small_margin"
+                android:enabled="false"
+                android:hint="State"/>
 
         </LinearLayout>
     </ScrollView>
